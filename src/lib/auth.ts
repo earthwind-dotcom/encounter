@@ -61,15 +61,28 @@ export async function findUserByEmail(db: Db, email: string): Promise<User | nul
   return rows[0] ?? null;
 }
 
+/**
+ * Who starts as admin. In production, only emails listed in ADMIN_EMAILS (comma-separated),
+ * so a stranger can't sign up first on a fresh deploy and take over. Locally, with no list set,
+ * the first account is admin for convenience.
+ */
+async function defaultRole(db: Db, email: string): Promise<Role> {
+  const admins = (process.env.ADMIN_EMAILS ?? '').split(',').map(normalizeEmail).filter(Boolean);
+  if (admins.includes(normalizeEmail(email))) return 'admin';
+  if (admins.length === 0 && process.env.NODE_ENV !== 'production') {
+    const [{ n }] = await db.query<{ n: number }>('SELECT count(*)::int AS n FROM users');
+    if (n === 0) return 'admin';
+  }
+  return 'learner';
+}
+
 export async function createUser(
   db: Db,
   { email, name, password, lang = 'en', role }: { email: string; name: string; password: string; lang?: User['lang']; role?: Role },
 ): Promise<User> {
-  // The very first account is the admin, so a fresh deploy can be set up without a console.
-  const [{ n }] = await db.query<{ n: number }>('SELECT count(*)::int AS n FROM users');
   const rows = await db.query<User>(
     `INSERT INTO users (email, name, password_hash, lang, role) VALUES ($1, $2, $3, $4, $5) RETURNING ${USER_COLUMNS}`,
-    [normalizeEmail(email), name.trim(), await hashPassword(password), lang, role ?? (n === 0 ? 'admin' : 'learner')],
+    [normalizeEmail(email), name.trim(), await hashPassword(password), lang, role ?? (await defaultRole(db, email))],
   );
   return rows[0];
 }

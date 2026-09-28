@@ -23,8 +23,9 @@ original single-file site is kept in [`legacy/`](legacy/).
 | Talk to someone | `/talk` → `/facilitate` | Postgres |
 
 Everything is readable without an account. An account adds progress, private notes, and a
-private answer to "where are you with following Jesus?". The first account created on a fresh
-database becomes **admin**; admins make others facilitators from `/facilitate`.
+private answer to "where are you with following Jesus?". In production, accounts whose email
+is listed in the `ADMIN_EMAILS` variable become **admin**; admins make others facilitators from
+`/facilitate`. Locally, with no list set, the first account is admin.
 
 ## Run it
 
@@ -52,5 +53,7 @@ path). Collaborators without the vault edit `content/course/*.md` directly and s
 
 Railway, project **encounter**: a `web` service built from this repo's `main` branch, plus a
 Postgres database. Every push to `main` deploys. Migrations run on first request. Health check:
-`/api/health`. Environment: `DATABASE_URL` (from the Postgres service), `SITE_URL` once there is
-a domain.
+`/api/health`. Environment: `DATABASE_URL` (from the Postgres service), `SITE_URL` (the public URL),
+`ADMIN_EMAILS` (comma-separated).
+
+Live: https://web-production-40b70.up.railway.app

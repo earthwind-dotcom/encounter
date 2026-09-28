@@ -45,6 +45,22 @@ describe('accounts', () => {
     expect(await authenticate(db, 'x@example.org', 'nope')).toBeNull();
     expect(await authenticate(db, 'nobody@example.org', 'long enough pw')).toBeNull();
   });
+  it('in production, makes admin only the emails in ADMIN_EMAILS', async () => {
+    const env = process.env as Record<string, string | undefined>;
+    const prev = { node: env.NODE_ENV, admins: env.ADMIN_EMAILS };
+    env.NODE_ENV = 'production';
+    try {
+      env.ADMIN_EMAILS = '';
+      const first = await createUser(db, { email: 'stranger@example.org', name: 'S', password: 'long enough pw' });
+      expect(first.role).toBe('learner');
+      env.ADMIN_EMAILS = 'Owner@Example.org, other@example.org';
+      const owner = await createUser(db, { email: 'owner@example.org', name: 'O', password: 'long enough pw' });
+      expect(owner.role).toBe('admin');
+    } finally {
+      env.NODE_ENV = prev.node;
+      env.ADMIN_EMAILS = prev.admins;
+    }
+  });
   it('rejects a duplicate email', async () => {
     await createUser(db, { email: 'd@example.org', name: 'D', password: 'long enough pw' });
     await expect(createUser(db, { email: 'D@example.org', name: 'D2', password: 'long enough pw' })).rejects.toThrow();
