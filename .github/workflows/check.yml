@@ -5,31 +5,20 @@ on:
   pull_request:
 
 jobs:
-  conventions:
+  app:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Check marginalia.html against the conventions
-        run: python3 check.py marginalia.html
-
-      - name: Test that the checks actually catch violations
-        run: python3 test_check.py
-
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-
-      - name: Install test dependencies
-        run: npm install --no-audit --no-fund
-
-      - name: Drive the page in a DOM
-        run: node test_dom.js
-
-      - name: Install Pillow for preview images
-        run: pip install pillow
-
-      - name: Build the static site and check its output
-        run: python3 test_site.py
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Types
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint
+      - name: Tests (auth, content rules, links, translations)
+        run: npm test
+      - name: Build
+        run: npm run build

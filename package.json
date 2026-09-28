@@ -1,13 +1,43 @@
 {
-  "name": "marginalia",
+  "name": "encounter",
+  "version": "0.1.0",
   "private": true,
-  "description": "Behaviour tests for marginalia.html. The site itself has no dependencies.",
+  "description": "Encounter: an honest, research-grounded path to meeting Jesus and reading the Bible well.",
   "scripts": {
-    "test": "node test_dom.js && python3 check.py marginalia.html && python3 test_check.py && python3 test_site.py",
-    "build": "python3 build_site.py",
-    "serve": "python3 -m http.server -d dist 8000"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "check:content": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-content.mts",
+    "import:legacy": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/import-legacy.mts",
+    "migrate": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/migrate.mts",
+    "import:vault": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/import-vault.mts"
+  },
+  "engines": {
+    "node": ">=20.9"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "^0.5.8",
+    "gray-matter": "^4.0.3",
+    "marked": "^18.0.14",
+    "next": "^16.2.12",
+    "postgres": "^3.4.9",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "server-only": "^0.0.1",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
-    "jsdom": "^26.0.0"
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^20.19.43",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.2.12",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^6.0.3",
+    "vitest": "^3.2.7"
   }
 }
