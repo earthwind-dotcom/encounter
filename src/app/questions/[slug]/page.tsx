@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { getLang } from '@/lib/lang';
 import { getQuestion, getQuestions, renderMarkdown, withBadges } from '@/lib/content';
 import { learnerState } from '@/lib/learner';
-import { t } from '@/lib/i18n';
+import { pick, t } from '@/lib/i18n';
 import { LearnerTools } from '@/components/learner-tools';
 import { Marked } from 'marked';
 
@@ -92,7 +92,7 @@ export default async function QuestionPage({ params }: { params: Promise<{ slug:
         )}
         {next && next.slug !== slug && (
           <Link href={`/questions/${next.slug}`} className="card mt-4 block p-5 text-[var(--ink)] hover:border-[var(--accent)]">
-            <span className="kicker">Next question</span>
+            <span className="kicker">{pick({ en: 'Next question', es: 'Siguiente pregunta', pt: 'Próxima pergunta' }, lang)}</span>
             <span className="mt-2 block text-[1.02rem] leading-snug">{next.title}</span>
           </Link>
         )}

@@ -80,6 +80,26 @@ describe('hard questions', () => {
   });
 });
 
+describe('translations of hard questions', () => {
+  for (const lang of ['es', 'pt'] as const) {
+    const localized = getQuestions(lang).filter((q) => q.translated);
+    it(`${lang}: keeps the English order, labels and an open-door ending`, () => {
+      for (const q of localized) {
+        const en = questions.find((x) => x.slug === q.slug)!;
+        expect(en, q.slug).toBeTruthy();
+        expect(q.order, q.slug).toBe(en.order);
+        expect(q.theme, q.slug).toBe(en.theme);
+        expect(q.standing.map((s) => s.label), q.slug).toEqual(en.standing.map((s) => s.label));
+        expect(q.body.match(/^## /gm)?.length, `${q.slug}: same number of sections`).toBe(en.body.match(/^## /gm)?.length);
+        expect(q.body, q.slug).toMatch(lang === 'es' ? /## Dónde te deja esto/ : /## Onde isso deixa você/);
+      }
+    });
+  }
+  it('has Spanish for every question', () => {
+    expect(getQuestions('es').filter((q) => q.translated).length).toBe(questions.length);
+  });
+});
+
 describe('course', () => {
   it('has all thirteen sessions in four units', () => {
     expect(sessions.map((s) => s.n)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
