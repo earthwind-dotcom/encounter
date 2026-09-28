@@ -19,6 +19,9 @@ export function SiteHeader({ lang, user }: { lang: Lang; user: { name: string; r
           <span className="hidden sm:inline text-[.95rem] italic text-[var(--ink-soft)]">{t('tagline', lang)}</span>
         </Link>
         <div className="flex items-center gap-3">
+          <Link href="/search" className="kicker hover:text-[var(--ink)]" aria-label={t('search', lang)}>
+            {t('search', lang)}
+          </Link>
           <LangSwitch lang={lang} />
           <ThemeToggle label={t('theme', lang)} />
           {user ? (

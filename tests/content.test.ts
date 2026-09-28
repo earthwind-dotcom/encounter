@@ -17,7 +17,7 @@ const lib = getLibrary();
 
 // Every internal path the app serves, for link checking.
 const routes = new Set<string>([
-  '/', '/questions', '/course', '/library', '/talk', '/privacy', '/about', '/account', '/signin', '/signup',
+  '/', '/questions', '/course', '/library', '/talk', '/privacy', '/about', '/account', '/signin', '/signup', '/search',
   ...questions.map((q) => `/questions/${q.slug}`),
   ...sessions.map((s) => `/course/${s.n}`),
   ...lib.encounter.articles.map((a) => `/course/pathway/${a.slug}`),
