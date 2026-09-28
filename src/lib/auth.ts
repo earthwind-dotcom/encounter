@@ -165,3 +165,45 @@ export const throttle = {
   succeed: (ip: string, key: string) => void attempts.delete(`k:${ip}|${key}`),
   reset: () => attempts.clear(),
 };
+
+/**
+ * Password reset without email: an admin issues a single-use link that expires in 24 hours and
+ * passes it to the person directly. Only the token's hash is stored. Using it signs the person
+ * out everywhere else. Replace with an emailed link once an email provider exists.
+ */
+const RESET_HOURS = 24;
+
+export async function createPasswordReset(db: Db, userId: number, createdBy: number): Promise<string> {
+  const token = randomBytes(32).toString('base64url');
+  await db.query('UPDATE password_resets SET used_at = now() WHERE user_id = $1 AND used_at IS NULL', [userId]);
+  await db.query('INSERT INTO password_resets (id, user_id, expires_at, created_by) VALUES ($1, $2, $3, $4)', [
+    sha256(token),
+    userId,
+    new Date(Date.now() + RESET_HOURS * 3_600_000).toISOString(),
+    createdBy,
+  ]);
+  return token;
+}
+
+/** The user a live reset token belongs to, or null. */
+export async function checkPasswordReset(db: Db, token: string): Promise<{ id: number; name: string } | null> {
+  const rows = await db.query<{ id: number; name: string }>(
+    `SELECT u.id, u.name FROM password_resets r JOIN users u ON u.id = r.user_id
+      WHERE r.id = $1 AND r.used_at IS NULL AND r.expires_at > now()`,
+    [sha256(token)],
+  );
+  return rows[0] ?? null;
+}
+
+export async function redeemPasswordReset(db: Db, token: string, newPassword: string): Promise<number | null> {
+  const rows = await db.query<{ user_id: number }>(
+    `UPDATE password_resets SET used_at = now()
+      WHERE id = $1 AND used_at IS NULL AND expires_at > now() RETURNING user_id`,
+    [sha256(token)],
+  );
+  const userId = rows[0]?.user_id;
+  if (!userId) return null;
+  await db.query('UPDATE users SET password_hash = $1 WHERE id = $2', [await hashPassword(newPassword), userId]);
+  await db.query('DELETE FROM sessions WHERE user_id = $1', [userId]);
+  return userId;
+}

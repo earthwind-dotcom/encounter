@@ -106,7 +106,7 @@ describe('migrations', () => {
   it('are safe to run twice', async () => {
     await migrate(db);
     const rows = await db.query<{ id: number }>('SELECT id FROM schema_migrations ORDER BY id');
-    expect(rows.map((r) => r.id)).toEqual([1, 2, 3, 4]);
+    expect(rows.map((r) => r.id)).toEqual([1, 2, 3, 4, 5]);
   });
 });
 
@@ -136,5 +136,31 @@ describe('cohorts', () => {
     const c = await createCohort(db, 'Old', fac.id);
     await db.query('UPDATE cohorts SET archived = true WHERE id = $1', [c.id]);
     expect(await joinCohort(db, fac.id, c.code)).toBeNull();
+  });
+});
+
+describe('password reset links', () => {
+  it('work once, change the password, and sign the person out elsewhere', async () => {
+    const { createPasswordReset, checkPasswordReset, redeemPasswordReset } = await import('@/lib/auth');
+    const admin = await createUser(db, { email: 'a@example.org', name: 'A', password: 'long enough pw', role: 'admin' });
+    const u = await createUser(db, { email: 'r@example.org', name: 'R', password: 'old password 1' });
+    const session = await createSession(db, u.id);
+    const token = await createPasswordReset(db, u.id, admin.id);
+    expect((await checkPasswordReset(db, token))?.id).toBe(u.id);
+    expect(await redeemPasswordReset(db, token, 'new password 22')).toBe(u.id);
+    expect(await authenticate(db, 'r@example.org', 'new password 22')).not.toBeNull();
+    expect(await authenticate(db, 'r@example.org', 'old password 1')).toBeNull();
+    expect(await getSessionUser(db, session)).toBeNull();
+    expect(await redeemPasswordReset(db, token, 'again password 3')).toBeNull();
+  });
+  it('expire, and a newer link cancels older ones', async () => {
+    const { createPasswordReset, checkPasswordReset } = await import('@/lib/auth');
+    const u = await createUser(db, { email: 'x2@example.org', name: 'X', password: 'long enough pw' });
+    const first = await createPasswordReset(db, u.id, u.id);
+    const second = await createPasswordReset(db, u.id, u.id);
+    expect(await checkPasswordReset(db, first)).toBeNull();
+    expect(await checkPasswordReset(db, second)).not.toBeNull();
+    await db.query("UPDATE password_resets SET expires_at = now() - interval '1 minute'");
+    expect(await checkPasswordReset(db, second)).toBeNull();
   });
 });

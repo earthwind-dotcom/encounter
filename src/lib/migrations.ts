@@ -94,4 +94,18 @@ export const MIGRATIONS: { id: number; name: string; sql: string }[] = [
       CREATE INDEX IF NOT EXISTS cohort_members_user_idx ON cohort_members(user_id);
     `,
   },
+  {
+    id: 5,
+    name: 'single-use password reset links, issued by an admin',
+    sql: `
+      CREATE TABLE IF NOT EXISTS password_resets (
+        id         text PRIMARY KEY,
+        user_id    integer NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        expires_at timestamptz NOT NULL,
+        used_at    timestamptz,
+        created_by integer REFERENCES users(id) ON DELETE SET NULL,
+        created_at timestamptz NOT NULL DEFAULT now()
+      );
+    `,
+  },
 ];

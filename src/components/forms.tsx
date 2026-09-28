@@ -16,6 +16,9 @@ export function SignInForm({ next }: { next: string }) {
       <p className="mt-6 text-[.95rem] text-[var(--ink-soft)]">
         New here? <Link href={`/signup?next=${encodeURIComponent(next)}`}>Create an account</Link>. You don’t need one to read anything.
       </p>
+      <p className="mt-2 text-[.95rem] text-[var(--ink-soft)]">
+        Forgot your password? <Link href="/talk">Tell us</Link> and we’ll send you a link to choose a new one.
+      </p>
     </form>
   );
 }

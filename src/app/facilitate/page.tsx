@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { requireFacilitator } from '@/lib/session';
 import { getDb } from '@/lib/db';
 import { setRequestStatus, setRole } from '@/app/actions';
+import { ResetLinkButton } from '@/components/reset-form';
 
 export const metadata: Metadata = { title: 'Facilitator desk', robots: { index: false } };
 
@@ -91,6 +92,7 @@ export default async function Facilitate() {
                             <button className="kicker ml-3 cursor-pointer hover:text-[var(--accent)]">make {r}</button>
                           </form>
                         ))}
+                    {u.id !== me.id && <ResetLinkButton userId={u.id} />}
                   </td>
                 </tr>
               ))}

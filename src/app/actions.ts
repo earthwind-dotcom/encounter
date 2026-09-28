@@ -243,3 +243,29 @@ export async function archiveCohortAction(cohortId: number, archived: boolean) {
   await db.query('UPDATE cohorts SET archived = $1 WHERE id = $2', [archived, cohortId]);
   revalidatePath('/facilitate/groups');
 }
+
+// ---------- password reset (admin-issued link) ----------
+
+export async function issueResetLink(userId: number): Promise<string | null> {
+  const user = await getCurrentUser();
+  if (!user || user.role !== 'admin') return null;
+  const { createPasswordReset } = await import('@/lib/auth');
+  const token = await createPasswordReset(await getDb(), userId, user.id);
+  return `/reset/${token}`;
+}
+
+export async function resetPassword(_: FormState, form: FormData): Promise<FormState> {
+  const token = String(form.get('token') ?? '');
+  const password = String(form.get('password') ?? '');
+  if (password.length < MIN_PASSWORD_LENGTH || password.length > 200) return { error: `Use at least ${MIN_PASSWORD_LENGTH} characters.` };
+  const ip = await clientIp();
+  if (throttle.isBlocked(ip, 'reset')) return { error: 'Too many attempts. Please wait a few minutes.' };
+  const { redeemPasswordReset } = await import('@/lib/auth');
+  const userId = await redeemPasswordReset(await getDb(), token, password);
+  if (!userId) {
+    throttle.fail(ip, 'reset');
+    return { error: 'This link has expired or was already used. Ask for a new one.' };
+  }
+  await startSession(userId);
+  redirect('/account');
+}
