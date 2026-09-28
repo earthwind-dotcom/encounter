@@ -16,7 +16,7 @@ source: "Session 03 — Who was Jesus as a matter of history.md"
 **The question**
 Strip the church away. What can a historian actually say?
 
-**The text — Mark 1:9–11**
+**The text: Mark 1:9–11**
 > In those days Jesus came from Nazareth of Galilee and was baptized by John in the Jordan.
 > And just as he was coming up out of the water, he saw the heavens torn apart and the
 > Spirit descending like a dove on him. And a voice came from heaven, "You are my Son, the

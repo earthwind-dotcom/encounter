@@ -18,15 +18,15 @@ Christians call the Bible God's word. What do they actually mean, and do I have 
 flat to take it seriously?
 
 **The texts**
-- **John 1:1, 14** — "In the beginning was the Word, and the Word was with God, and the Word was God… And the Word became flesh and lived among us."
-- **2 Timothy 3:16–17** — "All scripture is inspired by God (*God-breathed*) and is useful for teaching, for reproof, for correction, and for training in righteousness."
-- **Luke 24:27** — "Beginning with Moses and all the prophets, he interpreted to them the things about himself in all the scriptures."
+- **John 1:1, 14**: "In the beginning was the Word, and the Word was with God, and the Word was God… And the Word became flesh and lived among us."
+- **2 Timothy 3:16–17**: "All scripture is inspired by God (*God-breathed*) and is useful for teaching, for reproof, for correction, and for training in righteousness."
+- **Luke 24:27**: "Beginning with Moses and all the prophets, he interpreted to them the things about himself in all the scriptures."
 
 *Kinds of writing: John 1 is a poetic prologue; 2 Timothy is a pastoral letter; Luke 24 is narrative.*
 
 **What Christians actually say**
 - The "Word of God," in John 1, is a person: "the Word became flesh." The first and deepest meaning of the phrase is Jesus, not a book. The Bible is the church's trusted witness that points to him. *[the plain reading of John 1; widely held across the church]*
-- One way to hold it together: revealed (Jesus), written (Scripture), proclaimed (a sermon) — all called "word" because the last two point to the first. *[Barth's model; one major view]*
+- One way to hold it together: revealed (Jesus), written (Scripture), proclaimed (a sermon): all called "word" because the last two point to the first. *[Barth's model; one major view]*
 - On how the Bible was written, two main views: (a) God worked through real people writing as people of their time, with their own idioms and limits, the way God worked through a real human life in Jesus; (b) the text, rightly interpreted, contains no error in anything it affirms. *[two major views; both are held by thoughtful people]*
 - "Take it seriously, not literally." Reading each part as the kind of writing it is (poem as poem, parable as parable) is how nearly all biblical scholars read, and it is often the *more* faithful reading. *[near consensus as a method]*
 

@@ -76,14 +76,16 @@ voices (Bart Ehrman) presented fairly. Every source is listed on the page that u
 - Tests for auth, content rules (no em dashes, only the five labels, every link resolves,
   translations kept), and CI.
 
-### Phase 2: Finish the course content. **Next. Highest priority.**
+### Phase 2: Finish the course content. **In progress.**
 
-The platform's worth is its content. Eight sessions are outlines.
+The platform's worth is its content.
 
-1. Review sessions 4 and 9 (written by a parallel agent, citations unchecked). Mark `reviewed`.
-2. Research and write sessions 5, 6, 7, 8, 10, 11, 12, 13 in the vault format. Session 6 has
-   a worksheet (`turn-the-other-cheek`); session 5 a thin partial (`praus-meek`); the rest need
-   new research. See the vault note "Direction & Status" on the research gap.
+1. **Done 2026-09-28:** all 13 sessions now have full participant and facilitator guides.
+   Sessions 5–8 and 10–13 were drafted by an agent from the Stage 1 spec, the
+   `turn-the-other-cheek` worksheet, and standard scholarship. **All 13 are `draft`:** none has
+   been reviewed, and 4, 9 and 5–13 have unchecked citations. Review them in order, check every
+   source against publisher records, and set `status: reviewed` in the vault file.
+2. Spanish (and later Portuguese) for the sessions.
 3. Add the missing topics the vault flagged: a session or Hard Question on **the Holy Spirit**,
    on **evil**, and on **suffering** as its own session. Testimony, with permission.
 4. More Hard Questions, human-written with pastoral review before publishing:

@@ -16,7 +16,7 @@ source: "Session 04 — The world he walked into.md"
 **The question**
 What did his first hearers assume that we have to be told?
 
-**The text — Luke 15:11–12, 20**
+**The text: Luke 15:11–12, 20**
 > Then Jesus said, "There was a man who had two sons. The younger of them said to his
 > father, 'Father, give me the share of the property that will belong to me.' So he divided
 > his property between them." … "So he set off and went to his father. But while he was

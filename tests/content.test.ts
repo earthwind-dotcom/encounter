@@ -31,6 +31,13 @@ describe('voice', () => {
       expect(readFileSync(path.join(ROOT, 'content/questions', f), 'utf8'), f).not.toMatch(/—/);
     }
   });
+  it('keeps the course free of em dashes', () => {
+    for (const f of readdirSync(path.join(ROOT, 'content/course')).filter((x) => x.endsWith('.md'))) {
+      // `source:` names the vault file verbatim and is never shown.
+      const text = readFileSync(path.join(ROOT, 'content/course', f), 'utf8').replace(/^source: .*$/m, '');
+      expect(text, f).not.toMatch(/\u2014/);
+    }
+  });
   it('keeps the imported library free of em dashes too', () => {
     for (const s of Object.values(lib)) for (const a of s.articles) expect(a.html, a.id).not.toMatch(/—|&mdash;/);
   });

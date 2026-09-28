@@ -16,7 +16,7 @@ source: "Session 01 — Where did these documents come from.md"
 **The question**
 Can these accounts be trusted at all?
 
-**The text — Luke 1:1–4**
+**The text: Luke 1:1–4**
 > Since many have undertaken to set down an orderly account of the events that have been
 > fulfilled among us, just as they were handed on to us by those who from the beginning
 > were eyewitnesses and servants of the word, I too decided, after investigating everything

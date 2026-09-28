@@ -31,6 +31,9 @@ if (!existsSync(CURRICULUM)) {
 }
 mkdirSync(OUT, { recursive: true });
 
+// The site allows no em dashes (docs/EDITORIAL.md); the vault uses them in headings like
+// "**The text — Mark 1:9–11**". Convert on the way in rather than editing the vault.
+const noEmDash = (s: string) => s.replace(/\s+\u2014\s+/g, ': ').replace(/\u2014/g, ', ');
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 const unwiki = (s: string) => s.replace(/\[\[([^\]|]+)\|([^\]]+)\]\]/g, '$2').replace(/\[\[([^\]]+)\]\]/g, (_, t: string) => t.split('/').pop()!);
 
@@ -68,7 +71,7 @@ for (const f of readdirSync(path.join(CURRICULUM, 'Sessions'))) {
   if (m) written.set(Number(m[1]), path.join(CURRICULUM, 'Sessions', f));
 }
 
-const yamlSafe = (s: string) => JSON.stringify(s);
+const yamlSafe = (s: string) => JSON.stringify(noEmDash(s));
 let wrote = 0;
 for (const s of specSessions) {
   const target = path.join(OUT, `session-${String(s.n).padStart(2, '0')}.md`);
@@ -97,11 +100,11 @@ for (const s of specSessions) {
     const participant = text.match(/## Participant handout[^\n]*\n([\s\S]*?)(?=\n---\s*\n## Facilitator guide|\n## Facilitator guide)/)?.[1]?.trim() ?? '';
     const facilitator = text.match(/## Facilitator guide\s*\n([\s\S]*)$/)?.[1]?.trim() ?? '';
     fm.push(`status: ${yamlSafe(String(src.data.status ?? 'draft'))}`);
-    fm.push(`source: ${yamlSafe(path.basename(file))}`);
+    fm.push(`source: ${JSON.stringify(path.basename(file))}`); // the vault filename, verbatim
     body = `<!-- participant -->\n\n${participant}\n\n<!-- facilitator -->\n\n${facilitator}\n`;
   } else {
     fm.push('status: "outline"');
-    fm.push('source: "Stage 1 — The Course (13 sessions).md"');
+    fm.push(`source: ${JSON.stringify('Stage 1 — The Course (13 sessions).md')}`); // verbatim
     const brief = s.brief
       .split('\n')
       .map((l) => l.replace(/^ {2}/, ''))
@@ -110,7 +113,7 @@ for (const s of specSessions) {
       `<!-- participant -->\n\n**The question**\n${s.bullets.question ?? ''}\n\n**The text**\n${s.bullets.text ?? ''}\n\n` +
       `**What we will look at**\n${brief}\n\n**Try this**\n${s.bullets.practice ?? ''}\n\n**One next step**\n${s.bullets['next step'] ?? ''}\n`;
   }
-  writeFileSync(target, `---\n${fm.join('\n')}\n---\n\n${body}`);
+  writeFileSync(target, `---\n${fm.join('\n')}\n---\n\n${noEmDash(body)}`);
   wrote++;
 }
 
@@ -118,7 +121,7 @@ for (const s of specSessions) {
 const gospel = matter(readFileSync(path.join(CURRICULUM, 'The Gospel, Plainly.md'), 'utf8'));
 writeFileSync(
   path.join(OUT, 'gospel-plainly.md'),
-  `---\ntitle: "The Gospel, Plainly"\naudience: facilitator\n---\n\n${unwiki(gospel.content).replace(/^# .+\n/m, '').trim()}\n`,
+  `---\ntitle: "The Gospel, Plainly"\naudience: facilitator\n---\n\n${noEmDash(unwiki(gospel.content)).replace(/^# .+\n/m, '').trim()}\n`,
 );
 
 writeFileSync(path.join(OUT, 'units.json'), JSON.stringify(UNITS, null, 2) + '\n');

@@ -17,7 +17,7 @@ source: "Session 09 — The resurrection, the evidence and the claim.md"
 **The question**
 What exactly are we being asked to believe, and on what basis?
 
-**The text — 1 Corinthians 15:3–8**
+**The text: 1 Corinthians 15:3–8**
 > For I handed on to you as of first importance what I in turn had received: that Christ
 > died for our sins in accordance with the scriptures, and that he was buried, and that he
 > was raised on the third day in accordance with the scriptures, and that he appeared to
@@ -28,7 +28,7 @@ What exactly are we being asked to believe, and on what basis?
 
 *Kind of writing: not Paul's own words. He says he is passing on something he was given. This is a set formula, older than the letter it sits in.*
 
-**The second text — Mark 16:8**
+**The second text: Mark 16:8**
 > So they went out and fled from the tomb, for terror and amazement had seized them; and
 > they said nothing to anyone, for they were afraid. *(NRSV)*
 

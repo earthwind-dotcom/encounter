@@ -53,7 +53,7 @@ Then stop. Let it sit. Don't fill the silence.
 - Afterward, tell them plainly what's true: you belong to him now, this is the start and
   not the finish, and nobody expects you to have it together. Then connect them to the next
   real thing: a practice from the course, a person,
-  Stage 2 — Practicing, and eventually Stage 3 — Threshold & Continuing.
+  Stage 2: Practicing, and eventually Stage 3: Threshold & Continuing.
 
 ## What not to do
 
@@ -66,5 +66,5 @@ Then stop. Let it sit. Don't fill the silence.
 
 ## Related
 
-- _Curriculum Overview · Stage 1 — The Course (13 sessions) · Stage 3 — Threshold & Continuing
-- Language Bridge · _Read Me — How This Works
+- _Curriculum Overview · Stage 1: The Course (13 sessions) · Stage 3: Threshold & Continuing
+- Language Bridge · _Read Me: How This Works
