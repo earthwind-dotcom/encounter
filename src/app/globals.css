@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Everything below is in the base layer so Tailwind utilities on an element win over it. */
+@layer base {
+
 /* ============================================================
    Encounter design tokens. Warm paper, ink, and an ember accent.
    Every color is a token so dark mode is one redefinition.
@@ -274,3 +277,6 @@ textarea.input { min-height: 8rem; resize: vertical; line-height: 1.5; }
   body { background: #fff; color: #000; font-size: 11pt; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+.prose > h2:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+}

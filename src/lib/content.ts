@@ -171,3 +171,40 @@ export const getQuestions = cache((lang: Lang = 'en'): Question[] => {
 });
 
 export const getQuestion = (slug: string, lang: Lang = 'en') => getQuestions(lang).find((q) => q.slug === slug) ?? null;
+
+// ---------- about ----------
+
+/**
+ * About pages. Marginalia's Colophon was imported into library.json; a Markdown file in
+ * content/about/<slug>.md replaces the imported page of the same slug (or adds a new one).
+ * That's how the Colophon was rewritten for Encounter without touching the import.
+ */
+export interface AboutPage {
+  slug: string;
+  n: string;
+  title: Localized;
+  ref: string;
+  html?: string; // imported legacy page
+  md?: { eyebrow: string; lede: string; body: string; revised: string };
+}
+
+export const getAboutPages = cache((): AboutPage[] => {
+  const dir = path.join(CONTENT, 'about');
+  const overrides = new Map<string, AboutPage>();
+  if (existsSync(dir)) {
+    for (const f of readdirSync(dir).filter((x) => x.endsWith('.md'))) {
+      const { data, content } = matter(readFileSync(path.join(dir, f), 'utf8'));
+      const slug = f.replace(/\.md$/, '');
+      overrides.set(slug, {
+        slug,
+        n: String(data.n ?? ''),
+        title: { en: String(data.title) },
+        ref: String(data.ref ?? ''),
+        md: { eyebrow: String(data.eyebrow ?? ''), lede: String(data.lede ?? ''), body: content.trim(), revised: String(data.revised ?? '') },
+      });
+    }
+  }
+  const legacy: AboutPage[] = getLibrary().colophon.articles.map((a) => overrides.get(a.slug) ?? { slug: a.slug, n: a.n, title: a.title, ref: a.ref, html: a.html });
+  const extra = [...overrides.values()].filter((o) => !legacy.some((l) => l.slug === o.slug));
+  return [...legacy, ...extra].sort((a, b) => a.n.localeCompare(b.n));
+});

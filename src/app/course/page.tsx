@@ -66,7 +66,7 @@ export default async function CoursePage() {
           {(Object.keys(UNITS) as (keyof typeof UNITS)[]).map((u) => (
             <section key={u} className="mb-12" aria-labelledby={`unit-${u}`}>
               <header className="border-b border-[var(--rule)] pb-3">
-                <p className="kicker kicker-accent">Unit {u}</p>
+                <p className="kicker kicker-accent">{pick({ en: 'Unit', es: 'Unidad', pt: 'Unidade' }, lang)} {u}</p>
                 <h2 id={`unit-${u}`} className="mt-1 text-[1.5rem] font-medium">{pick(UNITS[u], lang)}</h2>
                 <p className="text-[.98rem] italic text-[var(--ink-soft)]">{pick(UNITS[u].q, lang)}</p>
               </header>

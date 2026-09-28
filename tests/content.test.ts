@@ -31,6 +31,18 @@ describe('voice', () => {
       expect(readFileSync(path.join(ROOT, 'content/questions', f), 'utf8'), f).not.toMatch(/—/);
     }
   });
+  it('keeps the About pages free of em dashes', () => {
+    for (const f of readdirSync(path.join(ROOT, 'content/about'))) {
+      expect(readFileSync(path.join(ROOT, 'content/about', f), 'utf8'), f).not.toMatch(/\u2014/);
+    }
+  });
+  it('no longer calls the site Marginalia on its About pages, except to explain the name', () => {
+    const what = readFileSync(path.join(ROOT, 'content/about/what.md'), 'utf8');
+    for (const f of ['method.md', 'status.md', 'coming.md']) {
+      expect(readFileSync(path.join(ROOT, 'content/about', f), 'utf8'), f).not.toMatch(/Marginalia is|Marginalia's/);
+    }
+    expect(what).toMatch(/started as \*\*Marginalia\*\*/);
+  });
   it('keeps the course free of em dashes', () => {
     for (const f of readdirSync(path.join(ROOT, 'content/course')).filter((x) => x.endsWith('.md'))) {
       // `source:` names the vault file verbatim and is never shown.

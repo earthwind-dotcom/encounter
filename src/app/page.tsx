@@ -108,7 +108,7 @@ export default async function Home() {
             const list = sessions.filter((s) => s.unit === u);
             return (
               <li key={u} className="card p-5">
-                <span className="kicker kicker-accent">Unit {u} · {list.length}</span>
+                <span className="kicker kicker-accent">{pick({ en: 'Unit', es: 'Unidad', pt: 'Unidade' }, lang)} {u} · {list.length}</span>
                 <span className="mt-2 block text-[1.15rem] font-medium">{pick(UNITS[u], lang)}</span>
                 <span className="mt-1 block text-[.93rem] italic text-[var(--ink-soft)]">{pick(UNITS[u].q, lang)}</span>
               </li>
@@ -122,7 +122,7 @@ export default async function Home() {
           <div>
             <h2 className="kicker">{c('honestTitle')}</h2>
             <p className="mt-3 text-[1.02rem] text-[var(--ink-soft)]">{c('honestBody')}</p>
-            <Link href="/about/method" className="mt-4 inline-block">How the work is done →</Link>
+            <Link href="/about/method" className="mt-4 inline-block">{pick({ en: 'How the work is done', es: 'Cómo se hace el trabajo', pt: 'Como o trabalho é feito' }, lang)} →</Link>
           </div>
           <ul className="flex flex-wrap content-start gap-2">
             {Object.values(CONFIDENCE).map((l) => (
