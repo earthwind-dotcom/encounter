@@ -5,7 +5,9 @@ import { getDb } from '@/lib/db';
 import { canFacilitate } from '@/lib/auth';
 import { getLibrary, getQuestions, getSessions } from '@/lib/content';
 import { completedKeys } from '@/lib/learner';
-import { deleteAccount, signOut } from '@/app/actions';
+import { deleteAccount, leaveCohortAction, signOut } from '@/app/actions';
+import { cohortsForMember } from '@/lib/cohorts';
+import { JoinCohortForm } from '@/components/cohort-forms';
 import { StagePicker } from '@/components/stage-picker';
 
 export const metadata: Metadata = { title: 'Your path', robots: { index: false } };
@@ -29,13 +31,14 @@ function describe(key: string): { title: string; href: string } {
 export default async function Account() {
   const user = await requireUser('/account');
   const db = await getDb();
-  const [done, stageRows, notes] = await Promise.all([
+  const [done, stageRows, notes, groups] = await Promise.all([
     completedKeys(user.id),
     db.query<{ stage: string }>('SELECT stage FROM journey_stage WHERE user_id = $1', [user.id]),
     db.query<{ item_key: string; body: string; updated_at: Date }>(
       'SELECT item_key, body, updated_at FROM notes WHERE user_id = $1 ORDER BY updated_at DESC LIMIT 50',
       [user.id],
     ),
+    cohortsForMember(db, user.id),
   ]);
   const sessions = getSessions();
   const nextSession = sessions.find((s) => !done.has(`course:${s.n}`));
@@ -73,6 +76,32 @@ export default async function Account() {
           <Link href="/course/pathway/offer">read what it means in plain words</Link> or <Link href="/talk">talk to someone</Link>.
         </p>
         <StagePicker initial={stageRows[0]?.stage ?? null} />
+      </section>
+
+      <section className="mt-14 max-w-3xl" aria-labelledby="groups">
+        <h2 id="groups" className="text-[1.4rem] font-medium">Your group</h2>
+        {groups.length > 0 ? (
+          <ul className="mt-3 list-none p-0">
+            {groups.map((g) => (
+              <li key={g.id} className="flex flex-wrap items-baseline justify-between gap-3 border-t border-[var(--rule)] py-3">
+                <span>
+                  <span className="font-medium">{g.name}</span>
+                  {g.facilitator_name && <span className="text-[.95rem] text-[var(--ink-soft)]"> · with {g.facilitator_name}</span>}
+                </span>
+                <form action={leaveCohortAction.bind(null, g.id)}>
+                  <button className="kicker cursor-pointer hover:text-[var(--accent)]">Leave</button>
+                </form>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-1 text-[.98rem] text-[var(--ink-soft)]">Doing the course with a group? Enter the code your facilitator gave you.</p>
+        )}
+        <p className="mt-2 text-[.88rem] italic text-[var(--faint)]">
+          Your facilitator will see which sessions you’ve marked done, so they know how you’re getting on. Never your notes, and never your
+          answer above.
+        </p>
+        <JoinCohortForm />
       </section>
 
       <section className="mt-14 max-w-3xl" aria-labelledby="notes">

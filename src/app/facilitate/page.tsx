@@ -36,6 +36,9 @@ export default async function Facilitate() {
         <div className="card px-5 py-3"><span className="kicker">Accounts</span><span className="block text-[1.6rem]">{counts.users}</span></div>
         <div className="card px-5 py-3"><span className="kicker">Say “ready to start”</span><span className="block text-[1.6rem]">{counts.ready}</span></div>
         <div className="card px-5 py-3"><span className="kicker">Say “following”</span><span className="block text-[1.6rem]">{counts.following}</span></div>
+ <Link href="/facilitate/groups" className="card px-5 py-3 text-[var(--ink)] hover:border-[var(--accent)]">
+          <span className="kicker">Course</span><span className="block">Groups →</span>
+        </Link>
         <Link href="/course/gospel-plainly" className="card px-5 py-3 text-[var(--ink)] hover:border-[var(--accent)]">
           <span className="kicker">Guide</span><span className="block">The Gospel, Plainly →</span>
         </Link>

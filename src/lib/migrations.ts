@@ -71,4 +71,27 @@ export const MIGRATIONS: { id: number; name: string; sql: string }[] = [
       );
     `,
   },
+  {
+    id: 4,
+    name: 'cohorts: a facilitated group working through the course together',
+    sql: `
+      CREATE TABLE IF NOT EXISTS cohorts (
+        id             serial PRIMARY KEY,
+        name           text NOT NULL,
+        code           text NOT NULL UNIQUE,
+        facilitator_id integer REFERENCES users(id) ON DELETE SET NULL,
+        starts_on      date,
+        archived       boolean NOT NULL DEFAULT false,
+        created_at     timestamptz NOT NULL DEFAULT now()
+      );
+      -- Membership shares completion with the group's facilitator. Never notes, never stage.
+      CREATE TABLE IF NOT EXISTS cohort_members (
+        cohort_id integer NOT NULL REFERENCES cohorts(id) ON DELETE CASCADE,
+        user_id   integer NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        joined_at timestamptz NOT NULL DEFAULT now(),
+        PRIMARY KEY (cohort_id, user_id)
+      );
+      CREATE INDEX IF NOT EXISTS cohort_members_user_idx ON cohort_members(user_id);
+    `,
+  },
 ];

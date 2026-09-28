@@ -106,6 +106,35 @@ describe('migrations', () => {
   it('are safe to run twice', async () => {
     await migrate(db);
     const rows = await db.query<{ id: number }>('SELECT id FROM schema_migrations ORDER BY id');
-    expect(rows.map((r) => r.id)).toEqual([1, 2, 3]);
+    expect(rows.map((r) => r.id)).toEqual([1, 2, 3, 4]);
+  });
+});
+
+describe('cohorts', () => {
+  it('lets a learner join by code and shows the facilitator completion only', async () => {
+    const { createCohort, joinCohort, cohortProgress, canManageCohort, normalizeCode } = await import('@/lib/cohorts');
+    const fac = await createUser(db, { email: 'f@example.org', name: 'Fac', password: 'long enough pw', role: 'facilitator' });
+    const other = await createUser(db, { email: 'o@example.org', name: 'Other', password: 'long enough pw', role: 'facilitator' });
+    const learner = await createUser(db, { email: 'l@example.org', name: 'Learner', password: 'long enough pw' });
+    const c = await createCohort(db, 'Spring', fac.id);
+    expect(c.code).toMatch(/^[A-HJ-NP-Z2-9]{6}$/);
+    expect(await joinCohort(db, learner.id, 'nope')).toBeNull();
+    expect((await joinCohort(db, learner.id, ` ${c.code.toLowerCase()} `))?.id).toBe(c.id);
+    await db.query("INSERT INTO progress (user_id, item_key) VALUES ($1, 'course:3'), ($1, 'question:hell')", [learner.id]);
+    await db.query("INSERT INTO notes (user_id, item_key, body) VALUES ($1, 'course:3', 'secret')", [learner.id]);
+    const p = await cohortProgress(db, c.id);
+    expect(p).toEqual([expect.objectContaining({ name: 'Learner', done: [3] })]);
+    expect(JSON.stringify(p)).not.toContain('secret');
+    expect(await canManageCohort(db, fac, c.id)).toBe(true);
+    expect(await canManageCohort(db, other, c.id)).toBe(false);
+    expect(await canManageCohort(db, learner, c.id)).toBe(false);
+    expect(normalizeCode('ab-c 12')).toBe('ABC12');
+  });
+  it('refuses to join an archived group', async () => {
+    const { createCohort, joinCohort } = await import('@/lib/cohorts');
+    const fac = await createUser(db, { email: 'f2@example.org', name: 'Fac', password: 'long enough pw', role: 'facilitator' });
+    const c = await createCohort(db, 'Old', fac.id);
+    await db.query('UPDATE cohorts SET archived = true WHERE id = $1', [c.id]);
+    expect(await joinCohort(db, fac.id, c.code)).toBeNull();
   });
 });

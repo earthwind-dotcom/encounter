@@ -196,3 +196,50 @@ export async function setRole(userId: number, role: 'learner' | 'facilitator' | 
   await (await getDb()).query('UPDATE users SET role = $1 WHERE id = $2', [role, userId]);
   revalidatePath('/facilitate');
 }
+
+// ---------- cohorts ----------
+
+export async function createCohortAction(_: FormState, form: FormData): Promise<FormState> {
+  const user = await getCurrentUser();
+  if (!user || (user.role !== 'facilitator' && user.role !== 'admin')) return { error: 'Only facilitators can start a group.' };
+  const name = String(form.get('name') ?? '').trim();
+  if (!name) return { error: 'Give the group a name.' };
+  const startsOn = String(form.get('starts_on') ?? '');
+  const { createCohort } = await import('@/lib/cohorts');
+  await createCohort(await getDb(), name, user.id, /^\d{4}-\d{2}-\d{2}$/.test(startsOn) ? startsOn : null);
+  revalidatePath('/facilitate/groups');
+  return { ok: true };
+}
+
+export async function joinCohortAction(_: FormState, form: FormData): Promise<FormState> {
+  const user = await getCurrentUser();
+  if (!user) return { error: 'Sign in first.' };
+  const ip = await clientIp();
+  if (throttle.isBlocked(ip, 'join')) return { error: 'Too many attempts. Please wait a few minutes.' };
+  const { joinCohort } = await import('@/lib/cohorts');
+  const cohort = await joinCohort(await getDb(), user.id, String(form.get('code') ?? ''));
+  if (!cohort) {
+    throttle.fail(ip, 'join');
+    return { error: 'That code doesn’t match a group. Check it with your facilitator.' };
+  }
+  revalidatePath('/account');
+  return { ok: true };
+}
+
+export async function leaveCohortAction(cohortId: number) {
+  const user = await getCurrentUser();
+  if (!user) return;
+  const { leaveCohort } = await import('@/lib/cohorts');
+  await leaveCohort(await getDb(), user.id, cohortId);
+  revalidatePath('/account');
+}
+
+export async function archiveCohortAction(cohortId: number, archived: boolean) {
+  const user = await getCurrentUser();
+  if (!user) return;
+  const { canManageCohort } = await import('@/lib/cohorts');
+  const db = await getDb();
+  if (!(await canManageCohort(db, user, cohortId))) return;
+  await db.query('UPDATE cohorts SET archived = $1 WHERE id = $2', [archived, cohortId]);
+  revalidatePath('/facilitate/groups');
+}

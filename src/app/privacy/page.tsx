@@ -22,6 +22,11 @@ export default function Privacy() {
           <li><strong>Your notes.</strong> Private to you. Facilitators and admins can’t read them in the app.</li>
           <li><strong>Where you are with following Jesus</strong>, only if you choose to say. It’s for you, not a scoreboard.</li>
         </ul>
+        <h2>If you join a group</h2>
+        <p>
+          The group’s facilitator can see your name and which course sessions you’ve marked done. Not your notes, and not your answer to
+          where you are with following Jesus. You can leave a group at any time from your page.
+        </p>
         <h2>If you send a message</h2>
         <p>
           We keep your name, how to reach you, and what you wrote, so someone can reply. Only the people who answer messages can see them.
