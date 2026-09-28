@@ -76,6 +76,17 @@ voices (Bart Ehrman) presented fairly. Every source is listed on the page that u
 - Tests for auth, content rules (no em dashes, only the five labels, every link resolves,
   translations kept), and CI.
 
+Also shipped the same day, beyond the original Phase 1 scope:
+
+- **18 Hard Questions**, all in English and Spanish.
+- **All 13 course sessions** written (drafts awaiting review).
+- **Groups** (the core of Phase 3's cohorts): a facilitator starts a group, members join with a
+  code, the facilitator sees session completion only.
+- **Site search** (restored from Marginalia), accent-insensitive.
+- **Admin-issued password reset links** (stopgap until email).
+- **About pages rewritten** for Encounter, including an honest status page.
+- **Interface in Spanish and Portuguese** on all public pages.
+
 ### Phase 2: Finish the course content. **In progress.**
 
 The platform's worth is its content.
@@ -102,9 +113,8 @@ The platform's worth is its content.
 
 ### Phase 3: The learning experience (industry-leading LMS features)
 
-- **Cohorts.** A facilitator creates a group with an invite code; members join; the facilitator
-  sees attendance and completion (never notes), schedules sessions, and prints handouts.
-  Tables: `cohorts`, `cohort_members`, `cohort_sessions`.
+- **Cohorts.** *Done 2026-09-28 (`/facilitate/groups`).* Still to add: scheduling each week's
+  session date, attendance, and a facilitator note per member that the member can see.
 - **Printable handouts** per session (a print stylesheet exists; add a one-page layout).
 - **Self-paced mode** with gentle nudges: "one session a week" email reminders (needs an email
   provider; see Phase 5) and a weekly practice card.
@@ -112,7 +122,7 @@ The platform's worth is its content.
   daily check-in, the habit loop YouVersion does well, pointed at Jesus.
 - **Passage reader**: open the session's primary text inline (licensed translation needed:
   NRSVue, NET or WEB; the WEB is public domain and a safe start).
-- **Search** across questions, sessions and library.
+- **Search** across questions, sessions and library. *Done 2026-09-28 (`/search`).*
 - **Video and audio**: a short (5 to 8 minute) talk per session and per Hard Question, the thing
   Alpha and RightNow do well. Audio versions for commuters.
 - **Accessibility**: WCAG 2.2 AA audit; screen-reader pass.
