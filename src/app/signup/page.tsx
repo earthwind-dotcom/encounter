@@ -5,7 +5,12 @@ import { SignUpForm } from '@/components/forms';
 import { getLang } from '@/lib/lang';
 import { pick } from '@/lib/i18n';
 
-export const metadata: Metadata = { title: 'Create an account', robots: { index: false } };
+export async function generateMetadata(): Promise<Metadata> {
+  const lang = await getLang();
+  return {
+    title: pick({ en: 'Create an account', es: 'Crear una cuenta', pt: 'Criar uma conta' }, lang), robots: { index: false },
+  };
+}
 
 export default async function SignUp({ searchParams }: { searchParams: Promise<{ next?: string }> }) {
   const next = (await searchParams).next ?? '/account';

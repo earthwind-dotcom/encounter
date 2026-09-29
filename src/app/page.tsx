@@ -48,7 +48,7 @@ export default async function Home() {
   const lang = await getLang();
   const c = (k: keyof typeof copy) => pick(copy[k], lang);
   const questions = getQuestions(lang).slice(0, 6);
-  const sessions = getSessions();
+  const sessions = getSessions(lang);
 
   return (
     <>

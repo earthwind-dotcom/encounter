@@ -6,10 +6,13 @@ import { getCurrentUser } from '@/lib/session';
 import { completedKeys } from '@/lib/learner';
 import { pick, t, type Lang } from '@/lib/i18n';
 
-export const metadata: Metadata = {
-  title: 'The Course',
-  description: 'Thirteen sessions from first curiosity to following Jesus: the sources, the person, the claim, and the life.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const lang = await getLang();
+  return {
+    title: pick({ en: 'The Course', es: 'El curso', pt: 'O curso' }, lang),
+    description: pick({ en: 'Thirteen sessions from first curiosity to following Jesus: the sources, the person, the claim, and the life.', es: 'Trece sesiones, de la primera curiosidad a seguir a Jesús: las fuentes, la persona, la afirmación y la vida.', pt: 'Treze sessões, da primeira curiosidade a seguir Jesus: as fontes, a pessoa, a afirmação e a vida.' }, lang),
+  };
+}
 
 const STATUS: Record<string, Record<Lang, string>> = {
   outline: { en: 'Outline', es: 'Esquema', pt: 'Esboço' },
@@ -20,7 +23,7 @@ const STATUS: Record<string, Record<Lang, string>> = {
 
 export default async function CoursePage() {
   const lang = await getLang();
-  const sessions = getSessions();
+  const sessions = getSessions(lang);
   const pathway = getLibrary().encounter.articles;
   const user = await getCurrentUser();
   const done = user ? await completedKeys(user.id) : new Set<string>();

@@ -9,21 +9,27 @@ import { learnerState } from '@/lib/learner';
 import { pick, t } from '@/lib/i18n';
 import { LearnerTools } from '@/components/learner-tools';
 
+const SESSION = { en: 'Session', es: 'Sesión', pt: 'Sessão' };
+const UNIT = { en: 'Unit', es: 'Unidad', pt: 'Unidade' };
+
 export function generateStaticParams() {
   return getSessions().map((s) => ({ n: String(s.n) }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ n: string }> }): Promise<Metadata> {
-  const s = getSession(Number((await params).n));
-  return s ? { title: `Session ${s.n}: ${s.title}`, description: s.question } : {};
+  const lang = await getLang();
+  const s = getSession(Number((await params).n), lang);
+  return s ? { title: `${pick(SESSION, lang)} ${s.n}: ${s.title}`, description: s.question } : {};
 }
 
 export default async function SessionPage({ params }: { params: Promise<{ n: string }> }) {
   const n = Number((await params).n);
-  const s = getSession(n);
-  if (!s) notFound();
   const lang = await getLang();
-  const all = getSessions();
+  const s = getSession(n, lang);
+  if (!s) notFound();
+  const all = getSessions(lang);
+  // The language the text is actually in: the reader's, or English when there's no translation yet.
+  const textLang = s.translated ? lang : 'en';
   const prev = all.find((x) => x.n === n - 1);
   const next = all.find((x) => x.n === n + 1);
   const user = await getCurrentUser();
@@ -31,13 +37,13 @@ export default async function SessionPage({ params }: { params: Promise<{ n: str
   const tools = await learnerState(`course:${n}`, lang);
 
   return (
-    <article className="shell pt-12" lang="en">
+    <article className="shell pt-12" lang={textLang}>
       <div className="max-w-[var(--measure)]">
         <p className="kicker">
-          <Link href="/course" className="kicker kicker-accent">{t('navCourse', lang)}</Link> · Unit {s.unit}, {pick(UNITS[s.unit], lang)} · Session {String(n).padStart(2, '0')}
+          <Link href="/course" className="kicker kicker-accent">{t('navCourse', lang)}</Link> · {pick(UNIT, lang)} {s.unit}, {pick(UNITS[s.unit], lang)} · {pick(SESSION, lang)} {String(n).padStart(2, '0')}
         </p>
         <h1 className="mt-3 text-[clamp(2rem,1.4rem+2.4vw,3rem)] font-medium leading-[1.1] tracking-[-.01em] text-balance">{s.title}</h1>
-        {lang !== 'en' && <p className="article"><span className="xlate block">{t('notTranslated', lang)}</span></p>}
+        {!s.translated && <p className="article"><span className="xlate block">{t('notTranslated', lang)}</span></p>}
 
         {s.status !== 'published' && s.status !== 'reviewed' && (
           <p className="mt-6 rounded border border-dashed border-[var(--rule)] p-4 mono text-[.74rem] leading-relaxed text-[var(--faint)]">
@@ -54,7 +60,7 @@ export default async function SessionPage({ params }: { params: Promise<{ n: str
           <dd className="m-0">{s.passage}</dd>
         </dl>
 
-        <div className="prose mt-10" dangerouslySetInnerHTML={{ __html: renderMarkdown(s.participant, 'en') }} />
+        <div className="prose mt-10" dangerouslySetInnerHTML={{ __html: renderMarkdown(s.participant, textLang) }} />
 
         {s.invitation && (
           <section className="mt-12 border-l-2 border-[var(--accent)] pl-5" aria-labelledby="invite">
@@ -81,20 +87,20 @@ export default async function SessionPage({ params }: { params: Promise<{ n: str
         {facilitator && s.facilitator && (
           <details className="card mt-12 p-5">
             <summary className="kicker kicker-accent cursor-pointer">{pick({ en: 'Facilitator guide', es: 'Guía para facilitadores', pt: 'Guia do facilitador' }, lang)}</summary>
-            <div className="prose mt-6" dangerouslySetInnerHTML={{ __html: renderMarkdown(s.facilitator, 'en') }} />
+            <div className="prose mt-6" dangerouslySetInnerHTML={{ __html: renderMarkdown(s.facilitator, textLang) }} />
           </details>
         )}
 
-        <nav className="no-print mt-12 grid grid-cols-2 gap-4" aria-label="Sessions">
+        <nav className="no-print mt-12 grid grid-cols-2 gap-4" aria-label={pick({ en: 'Sessions', es: 'Sesiones', pt: 'Sessões' }, lang)}>
           {prev ? (
             <Link href={`/course/${prev.n}`} className="card block p-4 text-[var(--ink)] hover:border-[var(--accent)]">
-              <span className="kicker">← Session {prev.n}</span>
+              <span className="kicker">← {pick(SESSION, lang)} {prev.n}</span>
               <span className="mt-1 block text-[.98rem] leading-snug">{prev.title}</span>
             </Link>
           ) : <span />}
           {next && (
             <Link href={`/course/${next.n}`} className="card block p-4 text-right text-[var(--ink)] hover:border-[var(--accent)]">
-              <span className="kicker">Session {next.n} →</span>
+              <span className="kicker">{pick(SESSION, lang)} {next.n} →</span>
               <span className="mt-1 block text-[.98rem] leading-snug">{next.title}</span>
             </Link>
           )}

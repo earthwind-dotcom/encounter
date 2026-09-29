@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getLang } from '@/lib/lang';
-import { getAboutPages, renderMarkdown } from '@/lib/content';
+import { getAboutMd, getAboutPages, renderMarkdown } from '@/lib/content';
 import { pick, t } from '@/lib/i18n';
 import { ArticleHtml } from '@/components/article-html';
 
@@ -13,7 +13,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const a = getAboutPages().find((x) => x.slug === slug);
-  return a ? { title: a.title.en } : {};
+  return a ? { title: pick(a.title, await getLang()) } : {};
 }
 
 export default async function AboutArticle({ params }: { params: Promise<{ slug: string }> }) {
@@ -22,6 +22,7 @@ export default async function AboutArticle({ params }: { params: Promise<{ slug:
   const pages = getAboutPages();
   const page = pages.find((p) => p.slug === slug);
   if (!page) notFound();
+  const doc = page.md ? getAboutMd(slug, lang) : null;
 
   return (
     <div className="shell grid gap-10 pt-10 lg:grid-cols-[220px_1fr] lg:gap-16">
@@ -51,14 +52,20 @@ export default async function AboutArticle({ params }: { params: Promise<{ slug:
         {page.html ? (
           <ArticleHtml html={page.html} />
         ) : (
-          <article className="article" lang="en">
-            {lang !== 'en' && <p className="xlate">{t('notTranslated', lang)}</p>}
-            <p className="eyebrow">{page.md!.eyebrow}</p>
-            <h1>{page.title.en}</h1>
-            {page.md!.lede && <p className="lede">{page.md!.lede}</p>}
-            {page.md!.revised && <p className="entrydate">Revised {page.md!.revised}</p>}
-            <div className="prose" dangerouslySetInnerHTML={{ __html: renderMarkdown(page.md!.body, lang) }} />
-          </article>
+          doc && (
+            <article className="article" lang={doc.lang}>
+              {doc.lang !== lang && <p className="xlate">{t('notTranslated', lang)}</p>}
+              <p className="eyebrow">{doc.md.eyebrow}</p>
+              <h1>{doc.title}</h1>
+              {doc.md.lede && <p className="lede">{doc.md.lede}</p>}
+              {doc.md.revised && (
+                <p className="entrydate">
+                  {pick({ en: 'Revised', es: 'Revisado', pt: 'Revisado' }, lang)} {doc.md.revised}
+                </p>
+              )}
+              <div className="prose" dangerouslySetInnerHTML={{ __html: renderMarkdown(doc.md.body, doc.lang) }} />
+            </article>
+          )
         )}
       </div>
     </div>

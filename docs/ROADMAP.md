@@ -96,7 +96,14 @@ The platform's worth is its content.
    `turn-the-other-cheek` worksheet, and standard scholarship. **All 13 are `draft`:** none has
    been reviewed, and 4, 9 and 5–13 have unchecked citations. Review them in order, check every
    source against publisher records, and set `status: reviewed` in the vault file.
-2. Spanish (and later Portuguese) for the sessions.
+2. **Done 2026-09-28:** Spanish for all 13 sessions (participant and facilitator guides), The
+   Gospel, Plainly, and the four About pages, plus the rest of the interface (account, groups,
+   facilitator desk, privacy, password reset, error messages). Bible passages are working
+   translations labelled as such; pick a licensed Spanish text (NVI or DHH) at review. Spanish
+   files are `session-NN.es.md` beside the English and are not touched by the vault importer, so
+   **when an English session changes, update its Spanish file in the same PR**. Tests check that
+   each Spanish session keeps its unit, status and every confidence label. Still to translate:
+   22 Library articles (about 27,000 words). Portuguese next.
 3. Add the missing topics the vault flagged: a session or Hard Question on **the Holy Spirit**,
    on **evil**, and on **suffering** as its own session. Testimony, with permission.
 4. More Hard Questions, human-written with pastoral review before publishing:

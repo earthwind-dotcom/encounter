@@ -52,6 +52,8 @@ const dict = {
   standing: { en: 'Where the evidence stands', es: 'Dónde está la evidencia', pt: 'Onde está a evidência' },
   furtherReading: { en: 'Further reading', es: 'Para leer más', pt: 'Para ler mais' },
   related: { en: 'Keep going', es: 'Sigue', pt: 'Continue' },
+  desk: { en: 'Facilitator desk', es: 'Mesa de facilitadores', pt: 'Mesa dos facilitadores' },
+  session: { en: 'Session', es: 'Sesión', pt: 'Sessão' },
   footerNote: {
     en: 'Honest about the evidence. Clear about the invitation. Free to say no.',
     es: 'Honestos con la evidencia. Claros con la invitación. Libres para decir que no.',

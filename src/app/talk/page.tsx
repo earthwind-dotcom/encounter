@@ -4,10 +4,13 @@ import { getLang } from '@/lib/lang';
 import { pick, t } from '@/lib/i18n';
 import { TalkForm } from '@/components/forms';
 
-export const metadata: Metadata = {
-  title: 'Talk to someone',
-  description: 'Ask a question, talk something through, or say you want to follow Jesus. A real person reads every message.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const lang = await getLang();
+  return {
+    title: pick({ en: 'Talk to someone', es: 'Habla con alguien', pt: 'Fale com alguém' }, lang),
+    description: pick({ en: 'Ask a question, talk something through, or say you want to follow Jesus. A real person reads every message.', es: 'Haz una pregunta, platica algo a fondo o di que quieres seguir a Jesús. Una persona real lee cada mensaje.', pt: 'Faça uma pergunta, converse sobre algo ou diga que quer seguir Jesus. Uma pessoa real lê cada mensagem.' }, lang),
+  };
+}
 
 export default async function Talk() {
   const [user, lang] = await Promise.all([getCurrentUser(), getLang()]);

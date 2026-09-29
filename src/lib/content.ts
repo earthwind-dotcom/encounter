@@ -84,21 +84,29 @@ export interface Session {
   status: 'outline' | 'draft' | 'reviewed' | 'published';
   participant: string;
   facilitator: string;
+  /** False when the reader asked for another language and this is the English fallback. */
+  translated: boolean;
 }
 
-export const getSessions = cache((): Session[] => {
+function readSession(file: string, translated: boolean): Session {
+  const { data, content } = matter(readFileSync(file, 'utf8'));
+  const [, participant = '', facilitator = ''] = content.split(/<!-- (?:participant|facilitator) -->/);
+  return { ...(data as Omit<Session, 'participant' | 'facilitator' | 'translated'>), participant: participant.trim(), facilitator: facilitator.trim(), translated };
+}
+
+/** Sessions in the reader's language where a translation exists (session-NN.<lang>.md), English otherwise. */
+export const getSessions = cache((lang: Lang = 'en'): Session[] => {
   const dir = path.join(CONTENT, 'course');
   return readdirSync(dir)
     .filter((f) => /^session-\d+\.md$/.test(f))
     .map((f) => {
-      const { data, content } = matter(readFileSync(path.join(dir, f), 'utf8'));
-      const [, participant = '', facilitator = ''] = content.split(/<!-- (?:participant|facilitator) -->/);
-      return { ...(data as Omit<Session, 'participant' | 'facilitator'>), participant: participant.trim(), facilitator: facilitator.trim() };
+      const localized = path.join(dir, f.replace(/\.md$/, `.${lang}.md`));
+      return lang !== 'en' && existsSync(localized) ? readSession(localized, true) : readSession(path.join(dir, f), lang === 'en');
     })
     .sort((a, b) => a.n - b.n);
 });
 
-export const getSession = (n: number) => getSessions().find((s) => s.n === n) ?? null;
+export const getSession = (n: number, lang: Lang = 'en') => getSessions(lang).find((s) => s.n === n) ?? null;
 
 export const UNITS = {
   A: { en: 'The Sources', es: 'Las fuentes', pt: 'As fontes', q: { en: 'What are we reading, and how do we read it?', es: '¿Qué estamos leyendo, y cómo lo leemos?', pt: 'O que estamos lendo, e como lemos?' } },
@@ -107,11 +115,13 @@ export const UNITS = {
   D: { en: 'Living It', es: 'Vivirlo', pt: 'Vivendo isso', q: { en: 'If I am in, what does a life look like?', es: 'Si me sumo, ¿cómo se ve una vida así?', pt: 'Se eu entrar, como é essa vida?' } },
 } as const;
 
-export function getFacilitatorDoc(name: string): { title: string; html: string } | null {
-  const f = path.join(CONTENT, 'course', `${name}.md`);
+export function getFacilitatorDoc(name: string, lang: Lang = 'en'): { title: string; html: string; lang: Lang } | null {
+  const localized = path.join(CONTENT, 'course', `${name}.${lang}.md`);
+  const f = lang !== 'en' && existsSync(localized) ? localized : path.join(CONTENT, 'course', `${name}.md`);
   if (!existsSync(f)) return null;
   const { data, content } = matter(readFileSync(f, 'utf8'));
-  return { title: String(data.title ?? name), html: renderMarkdown(content) };
+  const used = f === localized ? lang : 'en';
+  return { title: String(data.title ?? name), html: renderMarkdown(content, used), lang: used };
 }
 
 // ---------- hard questions ----------
@@ -186,22 +196,43 @@ export interface AboutPage {
   ref: string;
   html?: string; // imported legacy page
   md?: { eyebrow: string; lede: string; body: string; revised: string };
+  /** Languages this page is written in. The imported pages carry their own switcher. */
+  langs?: Lang[];
+}
+
+type AboutMd = NonNullable<AboutPage['md']>;
+const readAboutMd = (file: string) => {
+  const { data, content } = matter(readFileSync(file, 'utf8'));
+  return { data, md: { eyebrow: String(data.eyebrow ?? ''), lede: String(data.lede ?? ''), body: content.trim(), revised: String(data.revised ?? '') } as AboutMd };
+};
+
+/** An About page's Markdown in the reader's language (<slug>.<lang>.md), English otherwise. */
+export function getAboutMd(slug: string, lang: Lang): { title: string; md: AboutMd; lang: Lang } | null {
+  const dir = path.join(CONTENT, 'about');
+  const localized = path.join(dir, `${slug}.${lang}.md`);
+  const f = lang !== 'en' && existsSync(localized) ? localized : path.join(dir, `${slug}.md`);
+  if (!existsSync(f)) return null;
+  const { data, md } = readAboutMd(f);
+  return { title: String(data.title), md, lang: f === localized ? lang : 'en' };
 }
 
 export const getAboutPages = cache((): AboutPage[] => {
   const dir = path.join(CONTENT, 'about');
   const overrides = new Map<string, AboutPage>();
   if (existsSync(dir)) {
-    for (const f of readdirSync(dir).filter((x) => x.endsWith('.md'))) {
-      const { data, content } = matter(readFileSync(path.join(dir, f), 'utf8'));
+    for (const f of readdirSync(dir).filter((x) => /^[a-z-]+\.md$/.test(x))) {
+      const { data, md } = readAboutMd(path.join(dir, f));
       const slug = f.replace(/\.md$/, '');
-      overrides.set(slug, {
-        slug,
-        n: String(data.n ?? ''),
-        title: { en: String(data.title) },
-        ref: String(data.ref ?? ''),
-        md: { eyebrow: String(data.eyebrow ?? ''), lede: String(data.lede ?? ''), body: content.trim(), revised: String(data.revised ?? '') },
-      });
+      const title: Localized = { en: String(data.title) };
+      const langs: Lang[] = ['en'];
+      for (const l of ['es', 'pt'] as const) {
+        const tf = path.join(dir, `${slug}.${l}.md`);
+        if (existsSync(tf)) {
+          title[l] = String(readAboutMd(tf).data.title);
+          langs.push(l);
+        }
+      }
+      overrides.set(slug, { slug, n: String(data.n ?? ''), title, ref: String(data.ref ?? ''), md, langs });
     }
   }
   const legacy: AboutPage[] = getLibrary().colophon.articles.map((a) => overrides.get(a.slug) ?? { slug: a.slug, n: a.n, title: a.title, ref: a.ref, html: a.html });
