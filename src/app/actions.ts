@@ -19,8 +19,34 @@ import {
 } from '@/lib/auth';
 import { getCurrentUser } from '@/lib/session';
 import { LANG_COOKIE, isLang } from '@/lib/i18n';
+import { getLang } from '@/lib/lang';
 
 export type FormState = { error?: string; ok?: boolean } | undefined;
+
+/** Error messages, written in English here and shown in the reader's language. */
+const ERRORS: Record<string, { es: string; pt: string }> = {
+  'Tell us what to call you.': { es: 'Dinos cómo llamarte.', pt: 'Diga como devemos chamar você.' },
+  'That email address does not look right.': { es: 'Ese correo no parece correcto.', pt: 'Esse e-mail não parece correto.' },
+  [`Use at least ${MIN_PASSWORD_LENGTH} characters.`]: { es: `Usa al menos ${MIN_PASSWORD_LENGTH} caracteres.`, pt: `Use pelo menos ${MIN_PASSWORD_LENGTH} caracteres.` },
+  'Please agree to how we handle your data.': { es: 'Por favor acepta cómo manejamos tus datos.', pt: 'Por favor, aceite como tratamos seus dados.' },
+  'Too many attempts. Please wait a few minutes.': { es: 'Demasiados intentos. Espera unos minutos, por favor.', pt: 'Tentativas demais. Espere alguns minutos, por favor.' },
+  'An account with that email already exists. Try signing in.': { es: 'Ya existe una cuenta con ese correo. Intenta entrar.', pt: 'Já existe uma conta com esse e-mail. Tente entrar.' },
+  'That email and password do not match.': { es: 'El correo y la contraseña no coinciden.', pt: 'O e-mail e a senha não correspondem.' },
+  'Leave an email or phone number so someone can reply.': { es: 'Deja un correo o un teléfono para que alguien pueda responderte.', pt: 'Deixe um e-mail ou telefone para que alguém possa responder.' },
+  'Write a sentence or two, whatever you want to say.': { es: 'Escribe una o dos frases, lo que quieras decir.', pt: 'Escreva uma ou duas frases, o que quiser dizer.' },
+  'Please agree to how we handle your message.': { es: 'Por favor acepta cómo manejamos tu mensaje.', pt: 'Por favor, aceite como tratamos sua mensagem.' },
+  'Thanks. We have your earlier messages; please give us a little time.': { es: 'Gracias. Ya tenemos tus mensajes anteriores; danos un poco de tiempo, por favor.', pt: 'Obrigado. Já temos suas mensagens anteriores; dê-nos um pouco de tempo, por favor.' },
+  'Only facilitators can start a group.': { es: 'Solo los facilitadores pueden crear un grupo.', pt: 'Só facilitadores podem criar um grupo.' },
+  'Give the group a name.': { es: 'Ponle un nombre al grupo.', pt: 'Dê um nome ao grupo.' },
+  'Sign in first.': { es: 'Primero entra a tu cuenta.', pt: 'Entre na sua conta primeiro.' },
+  'That code doesn’t match a group. Check it with your facilitator.': { es: 'Ese código no corresponde a ningún grupo. Revísalo con tu facilitador.', pt: 'Esse código não corresponde a nenhum grupo. Confira com seu facilitador.' },
+  'This link has expired or was already used. Ask for a new one.': { es: 'Este enlace venció o ya se usó. Pide uno nuevo.', pt: 'Este link expirou ou já foi usado. Peça um novo.' },
+};
+
+async function fail(message: string): Promise<FormState> {
+  const lang = await getLang();
+  return { error: lang === 'en' ? message : (ERRORS[message]?.[lang] ?? message) };
+}
 
 const safeNext = (v: FormDataEntryValue | null) => {
   const s = typeof v === 'string' ? v : '';
@@ -65,13 +91,13 @@ const SignUp = z.object({
 
 export async function signUp(_: FormState, form: FormData): Promise<FormState> {
   const parsed = SignUp.safeParse(Object.fromEntries(form));
-  if (!parsed.success) return { error: parsed.error.issues[0].message };
+  if (!parsed.success) return fail(parsed.error.issues[0].message);
   const ip = await clientIp();
-  if (throttle.isBlocked(ip, 'signup')) return { error: 'Too many attempts. Please wait a few minutes.' };
+  if (throttle.isBlocked(ip, 'signup')) return fail('Too many attempts. Please wait a few minutes.');
   const db = await getDb();
   if (await findUserByEmail(db, parsed.data.email)) {
     throttle.fail(ip, 'signup');
-    return { error: 'An account with that email already exists. Try signing in.' };
+    return fail('An account with that email already exists. Try signing in.');
   }
   const lang = (await cookies()).get(LANG_COOKIE)?.value;
   const user = await createUser(db, { ...parsed.data, lang: isLang(lang) ? lang : 'en' });
@@ -83,11 +109,11 @@ export async function signIn(_: FormState, form: FormData): Promise<FormState> {
   const email = normalizeEmail(form.get('email'));
   const password = String(form.get('password') ?? '');
   const ip = await clientIp();
-  if (throttle.isBlocked(ip, email)) return { error: 'Too many attempts. Please wait a few minutes.' };
+  if (throttle.isBlocked(ip, email)) return fail('Too many attempts. Please wait a few minutes.');
   const user = await authenticate(await getDb(), email, password);
   if (!user) {
     throttle.fail(ip, email);
-    return { error: 'That email and password do not match.' };
+    return fail('That email and password do not match.');
   }
   throttle.succeed(ip, email);
   await startSession(user.id);
@@ -170,9 +196,9 @@ const Talk = z.object({
 
 export async function requestConversation(_: FormState, form: FormData): Promise<FormState> {
   const parsed = Talk.safeParse(Object.fromEntries(form));
-  if (!parsed.success) return { error: parsed.error.issues[0].message };
+  if (!parsed.success) return fail(parsed.error.issues[0].message);
   const ip = await clientIp();
-  if (throttle.isBlocked(ip, 'talk')) return { error: 'Thanks. We have your earlier messages; please give us a little time.' };
+  if (throttle.isBlocked(ip, 'talk')) return fail('Thanks. We have your earlier messages; please give us a little time.');
   throttle.fail(ip, 'talk'); // counts every request, so one IP can send at most five per 15 minutes
   const user = await getCurrentUser();
   const lang = (await cookies()).get(LANG_COOKIE)?.value;
@@ -201,9 +227,9 @@ export async function setRole(userId: number, role: 'learner' | 'facilitator' | 
 
 export async function createCohortAction(_: FormState, form: FormData): Promise<FormState> {
   const user = await getCurrentUser();
-  if (!user || (user.role !== 'facilitator' && user.role !== 'admin')) return { error: 'Only facilitators can start a group.' };
+  if (!user || (user.role !== 'facilitator' && user.role !== 'admin')) return fail('Only facilitators can start a group.');
   const name = String(form.get('name') ?? '').trim();
-  if (!name) return { error: 'Give the group a name.' };
+  if (!name) return fail('Give the group a name.');
   const startsOn = String(form.get('starts_on') ?? '');
   const { createCohort } = await import('@/lib/cohorts');
   await createCohort(await getDb(), name, user.id, /^\d{4}-\d{2}-\d{2}$/.test(startsOn) ? startsOn : null);
@@ -213,14 +239,14 @@ export async function createCohortAction(_: FormState, form: FormData): Promise<
 
 export async function joinCohortAction(_: FormState, form: FormData): Promise<FormState> {
   const user = await getCurrentUser();
-  if (!user) return { error: 'Sign in first.' };
+  if (!user) return fail('Sign in first.');
   const ip = await clientIp();
-  if (throttle.isBlocked(ip, 'join')) return { error: 'Too many attempts. Please wait a few minutes.' };
+  if (throttle.isBlocked(ip, 'join')) return fail('Too many attempts. Please wait a few minutes.');
   const { joinCohort } = await import('@/lib/cohorts');
   const cohort = await joinCohort(await getDb(), user.id, String(form.get('code') ?? ''));
   if (!cohort) {
     throttle.fail(ip, 'join');
-    return { error: 'That code doesn’t match a group. Check it with your facilitator.' };
+    return fail('That code doesn’t match a group. Check it with your facilitator.');
   }
   revalidatePath('/account');
   return { ok: true };
@@ -257,14 +283,14 @@ export async function issueResetLink(userId: number): Promise<string | null> {
 export async function resetPassword(_: FormState, form: FormData): Promise<FormState> {
   const token = String(form.get('token') ?? '');
   const password = String(form.get('password') ?? '');
-  if (password.length < MIN_PASSWORD_LENGTH || password.length > 200) return { error: `Use at least ${MIN_PASSWORD_LENGTH} characters.` };
+  if (password.length < MIN_PASSWORD_LENGTH || password.length > 200) return fail(`Use at least ${MIN_PASSWORD_LENGTH} characters.`);
   const ip = await clientIp();
-  if (throttle.isBlocked(ip, 'reset')) return { error: 'Too many attempts. Please wait a few minutes.' };
+  if (throttle.isBlocked(ip, 'reset')) return fail('Too many attempts. Please wait a few minutes.');
   const { redeemPasswordReset } = await import('@/lib/auth');
   const userId = await redeemPasswordReset(await getDb(), token, password);
   if (!userId) {
     throttle.fail(ip, 'reset');
-    return { error: 'This link has expired or was already used. Ask for a new one.' };
+    return fail('This link has expired or was already used. Ask for a new one.');
   }
   await startSession(userId);
   redirect('/account');

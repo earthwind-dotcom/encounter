@@ -6,10 +6,13 @@ import { getCurrentUser } from '@/lib/session';
 import { completedKeys } from '@/lib/learner';
 import { pick, t, type Lang } from '@/lib/i18n';
 
-export const metadata: Metadata = {
-  title: 'Hard Questions',
-  description: 'Honest, research-grounded answers to the questions that stop people from taking Jesus seriously.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const lang = await getLang();
+  return {
+    title: pick({ en: 'Hard Questions', es: 'Preguntas difíciles', pt: 'Perguntas difíceis' }, lang),
+    description: pick({ en: 'Honest, research-grounded answers to the questions that stop people from taking Jesus seriously.', es: 'Respuestas honestas y basadas en investigación a las preguntas que impiden tomar en serio a Jesús.', pt: 'Respostas honestas e baseadas em pesquisa às perguntas que impedem as pessoas de levar Jesus a sério.' }, lang),
+  };
+}
 
 const THEMES: Record<string, Record<Lang, string>> = {
   history: { en: 'History', es: 'Historia', pt: 'História' },

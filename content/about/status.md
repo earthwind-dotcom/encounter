@@ -25,9 +25,11 @@ revised: "28 September 2026"
 
 ## In progress
 
-- **Translation.** The interface is in English, Spanish and Portuguese. Hard Questions are in
-  English and Spanish. The course and most of the Library are English only, and each page says so
-  when you switch language rather than quietly showing you the wrong thing.
+- **Translation.** The interface is in English, Spanish and Portuguese. Hard Questions, the
+  course (participant and facilitator guides) and these About pages are in English and Spanish.
+  Most of the Library is English only, and each page says so when you switch language rather than
+  quietly showing you the wrong thing. Bible passages in the Spanish course are working
+  translations, labelled as such, until a licensed Spanish text is chosen.
 - **Portuguese** hasn't been read by a native speaker. Treat it as a working draft.
 
 ## Not started

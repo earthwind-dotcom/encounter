@@ -4,10 +4,13 @@ import { getLang } from '@/lib/lang';
 import { getLibrary, LIBRARY_SECTIONS, type LibraryKey } from '@/lib/content';
 import { pick, t } from '@/lib/i18n';
 
-export const metadata: Metadata = {
-  title: 'Library',
-  description: 'Sermons with their research shown, word studies, and studies of where the biblical texts came from.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const lang = await getLang();
+  return {
+    title: pick({ en: 'Library', es: 'Biblioteca', pt: 'Biblioteca' }, lang),
+    description: pick({ en: 'Sermons with their research shown, word studies, and studies of where the biblical texts came from.', es: 'Sermones con su investigación a la vista, estudios de palabras y estudios de dónde vienen los textos bíblicos.', pt: 'Sermões com a pesquisa à mostra, estudos de palavras e estudos de onde vieram os textos bíblicos.' }, lang),
+  };
+}
 
 export default async function LibraryPage() {
   const lang = await getLang();

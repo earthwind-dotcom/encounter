@@ -2,7 +2,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import matter from 'gray-matter';
-import { getLibrary, getQuestions, getSessions, renderMarkdown, withBadges } from '@/lib/content';
+import { getAboutMd, getAboutPages, getLibrary, getQuestions, getSessions, renderMarkdown, withBadges } from '@/lib/content';
 import { CONFIDENCE } from '@/lib/i18n';
 
 /**
@@ -129,6 +129,46 @@ describe('course', () => {
   });
   it('renders every session without leftover wiki links', () => {
     for (const s of sessions) expect(renderMarkdown(s.participant + s.facilitator)).not.toMatch(/\[\[/);
+  });
+});
+
+describe('translations of the course', () => {
+  const es = getSessions('es');
+  // Counts the confidence badges a text will render, so a translation can't drop or invent one.
+  const badges = (md: string) => (withBadges(md, 'es').match(/class="conf"/g) ?? []).length;
+
+  it('has Spanish for every session', () => {
+    expect(es.filter((s) => s.translated).map((s) => s.n)).toEqual(sessions.map((s) => s.n));
+  });
+  it('keeps each session\'s number, unit, status and invitation', () => {
+    for (const s of es) {
+      const en = sessions.find((x) => x.n === s.n)!;
+      expect([s.unit, s.status, Boolean(s.invitation)], `session ${s.n}`).toEqual([en.unit, en.status, Boolean(en.invitation)]);
+    }
+  });
+  it('translates both the participant and the facilitator guide, with the same confidence labels', () => {
+    for (const s of es) {
+      const en = sessions.find((x) => x.n === s.n)!;
+      expect(s.facilitator.length, `session ${s.n}`).toBeGreaterThan(500);
+      expect(badges(s.participant), `session ${s.n} participant`).toBe(badges(en.participant));
+      expect(badges(s.facilitator), `session ${s.n} facilitator`).toBe(badges(en.facilitator));
+    }
+  });
+  it('falls back to English, marked as untranslated, for a language without a translation', () => {
+    expect(getSessions('pt').every((s) => !s.translated)).toBe(true);
+    expect(getSessions('pt')[0].title).toBe(sessions[0].title);
+  });
+});
+
+describe('translations of the About pages', () => {
+  it('has Spanish for every rewritten About page, with the same sections', () => {
+    for (const page of getAboutPages().filter((p) => p.md)) {
+      const en = getAboutMd(page.slug, 'en')!;
+      const es = getAboutMd(page.slug, 'es');
+      expect(es?.lang, page.slug).toBe('es');
+      expect(es!.md.body.match(/^## /gm)?.length, page.slug).toBe(en.md.body.match(/^## /gm)?.length);
+      expect(page.title.es, page.slug).toBeTruthy();
+    }
   });
 });
 

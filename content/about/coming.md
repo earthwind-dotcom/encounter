@@ -18,9 +18,10 @@ The next ones, some of which need pastoral care as well as scholarship before th
 why a loving God would need a sacrifice; whether Christianity is anti-women; sexuality and
 gender; the Crusades, colonialism and slavery; the Holy Spirit; evil.
 
-## The course, in Spanish
+## The Library in Spanish, then Portuguese
 
-Hard Questions are already in Spanish. The thirteen sessions come next, then Portuguese.
+Hard Questions and the course are in Spanish. The Library's remaining sermons and studies come
+next, then Portuguese for everything.
 
 ## Running it with a group
 

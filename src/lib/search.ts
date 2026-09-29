@@ -35,10 +35,10 @@ interface Doc {
 function corpus(lang: Lang): Doc[] {
   const docs: Doc[] = [];
   for (const q of getQuestions(lang)) {
-    docs.push({ href: `/questions/${q.slug}`, section: 'Hard Questions', title: q.title, text: strip(`${q.short} ${q.body} ${q.standing.map((s) => s.claim).join(' ')}`), weight: 3 });
+    docs.push({ href: `/questions/${q.slug}`, section: pick({ en: 'Hard Questions', es: 'Preguntas difíciles', pt: 'Perguntas difíceis' }, lang), title: q.title, text: strip(`${q.short} ${q.body} ${q.standing.map((s) => s.claim).join(' ')}`), weight: 3 });
   }
-  for (const s of getSessions()) {
-    docs.push({ href: `/course/${s.n}`, section: `Session ${s.n}`, title: s.title, text: strip(`${s.question} ${s.passage} ${s.participant}`), weight: 2 });
+  for (const s of getSessions(lang)) {
+    docs.push({ href: `/course/${s.n}`, section: `${pick({ en: 'Session', es: 'Sesión', pt: 'Sessão' }, lang)} ${s.n}`, title: s.title, text: strip(`${s.question} ${s.passage} ${s.participant}`), weight: 2 });
   }
   const lib = getLibrary();
   for (const key of Object.keys(LIBRARY_SECTIONS) as LibraryKey[]) {
@@ -47,7 +47,7 @@ function corpus(lang: Lang): Doc[] {
     }
   }
   for (const a of lib.encounter.articles) {
-    docs.push({ href: `/course/pathway/${a.slug}`, section: 'Pathway', title: pick(a.title, lang), text: a.text, weight: 1 });
+    docs.push({ href: `/course/pathway/${a.slug}`, section: pick({ en: 'Pathway', es: 'El camino', pt: 'O caminho' }, lang), title: pick(a.title, lang), text: a.text, weight: 1 });
   }
   return docs;
 }

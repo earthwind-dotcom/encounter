@@ -58,6 +58,15 @@ This is Next.js 16, which differs from older versions: `params` and `cookies()` 
 3. `npm test` checks labels, em dashes, the open-door ending, and that every link resolves.
 4. Leave `reviewed` unset. The reviewer sets `reviewed: true`.
 
+## Translations
+
+Spanish lives beside the English: `content/questions/<slug>.es.md`, `content/course/session-NN.es.md`,
+`content/course/gospel-plainly.es.md`, `content/about/<slug>.es.md`. Keep the confidence labels in
+English inside the brackets (`*[consensus: ...]*`, `*[my read]*`) so they render as translated
+badges, and don't let a label wrap across a line break. Change an English file, change its Spanish
+file in the same PR; `npm test` fails if a Spanish session loses a label or changes status.
+Interface strings are in `src/lib/i18n.ts` or a `COPY` object at the top of the page.
+
 ## Adding a database change
 
 Append a migration to `src/lib/migrations.ts`. Never edit one that has shipped. Make every

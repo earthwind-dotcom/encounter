@@ -4,7 +4,12 @@ import { getLang } from '@/lib/lang';
 import { fold, search } from '@/lib/search';
 import { pick, t } from '@/lib/i18n';
 
-export const metadata: Metadata = { title: 'Search', robots: { index: false } };
+export async function generateMetadata(): Promise<Metadata> {
+  const lang = await getLang();
+  return {
+    title: pick({ en: 'Search', es: 'Buscar', pt: 'Buscar' }, lang), robots: { index: false },
+  };
+}
 
 function Highlight({ text, term }: { text: string; term: string }) {
   const i = term ? fold(text).indexOf(term) : -1;
