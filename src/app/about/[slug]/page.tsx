@@ -25,10 +25,11 @@ export default async function AboutArticle({ params }: { params: Promise<{ slug:
   const doc = page.md ? getAboutMd(slug, lang) : null;
 
   return (
-    <div className="shell grid gap-10 pt-10 lg:grid-cols-[220px_1fr] lg:gap-16">
-      <nav aria-label={t('navAbout', lang)} className="no-print lg:sticky lg:top-8 lg:self-start">
-        <p className="kicker mb-4">{t('navAbout', lang)}</p>
-        <ol className="flex list-none flex-wrap gap-2 p-0 lg:block">
+    <div className="shell grid gap-8 pt-10 lg:grid-cols-[250px_minmax(0,1fr)] lg:gap-10">
+      <nav aria-label={t('navAbout', lang)} className="no-print lg:sticky lg:top-24 lg:self-start">
+        <div className="glass p-4">
+        <p className="kicker mb-3 px-2">{t('navAbout', lang)}</p>
+        <ol className="-mx-1 flex list-none gap-1.5 overflow-x-auto p-0 px-1 pb-1 lg:mx-0 lg:block lg:space-y-0.5 lg:overflow-visible lg:px-0 lg:pb-0">
           {pages.map((p) => {
             const current = p.slug === slug;
             return (
@@ -36,19 +37,21 @@ export default async function AboutArticle({ params }: { params: Promise<{ slug:
                 <Link
                   href={`/about/${p.slug}`}
                   aria-current={current ? 'page' : undefined}
-                  className={`block py-1.5 text-[.95rem] leading-snug lg:-ml-4 lg:border-l-2 lg:pl-3.5 ${
-                    current ? 'text-[var(--ink)] lg:border-[var(--accent)]' : 'text-[var(--ink-soft)] lg:border-transparent'
-                  } max-lg:rounded max-lg:border max-lg:border-[var(--rule)] max-lg:px-2.5`}
+                  className={`block rounded-xl px-2.5 py-2 text-[.9rem] leading-snug transition-colors ${
+                    current ? 'bg-[var(--accent-soft)] text-[var(--accent)]' : 'text-[var(--ink-soft)] hover:bg-[var(--glass-inner-hover)] hover:text-[var(--ink)]'
+                  } max-lg:whitespace-nowrap max-lg:border max-lg:border-[var(--rule)]`}
                 >
-                  <span className="mono hidden text-[.66rem] text-[var(--faint)] lg:block">{p.n}</span>
+                  <span className="mono hidden text-[.62rem] text-[var(--faint)] lg:block">{p.n}</span>
                   {pick(p.title, lang)}
                 </Link>
               </li>
             );
           })}
         </ol>
+        </div>
       </nav>
-      <div className="min-w-0 max-w-[var(--measure)] pb-10">
+      <div className="glass rise min-w-0 rounded-[24px] p-6 sm:p-10 lg:p-12">
+        <div className="max-w-[var(--measure)]">
         {page.html ? (
           <ArticleHtml html={page.html} />
         ) : (
@@ -67,6 +70,7 @@ export default async function AboutArticle({ params }: { params: Promise<{ slug:
             </article>
           )
         )}
+        </div>
       </div>
     </div>
   );

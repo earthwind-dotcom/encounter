@@ -1,7 +1,9 @@
 import Link from 'next/link';
+import { ArrowRight, Compass, HelpCircle, Library, MessageCircle, Sparkles } from 'lucide-react';
 import { getLang } from '@/lib/lang';
-import { getQuestions, getSessions, UNITS } from '@/lib/content';
-import { CONFIDENCE, pick, type Lang } from '@/lib/i18n';
+import { getLibrary, getQuestions, getSessions, LIBRARY_SECTIONS, UNITS, withBadges, type LibraryKey } from '@/lib/content';
+import { pick, t, type Lang } from '@/lib/i18n';
+import { ConfidenceLegend, IconTile, SectionHead } from '@/components/ui';
 
 const copy = {
   heroTitle: {
@@ -42,103 +44,177 @@ const copy = {
   inviteCta: { en: 'Read it in plain words', es: 'Léelo en palabras sencillas', pt: 'Leia em palavras simples' },
   talkCta: { en: 'Talk to a real person', es: 'Habla con una persona real', pt: 'Fale com uma pessoa real' },
   allQuestions: { en: 'All hard questions', es: 'Todas las preguntas', pt: 'Todas as perguntas' },
+  badge: { en: 'An honest path to meeting Jesus', es: 'Un camino honesto para conocer a Jesús', pt: 'Um caminho honesto para conhecer Jesus' },
+  statQ: { en: 'hard questions', es: 'preguntas difíciles', pt: 'perguntas difíceis' },
+  statS: { en: 'sessions', es: 'sesiones', pt: 'sessões' },
+  statL: { en: 'research articles', es: 'artículos de investigación', pt: 'artigos de pesquisa' },
+  preview: { en: 'A hard question, answered', es: 'Una pregunta difícil, respondida', pt: 'Uma pergunta difícil, respondida' },
+  readFull: { en: 'Read the full answer', es: 'Lee la respuesta completa', pt: 'Leia a resposta completa' },
+  evidence: { en: 'Where the evidence stands', es: 'Dónde está la evidencia', pt: 'Onde está a evidência' },
+  explore: { en: 'Explore', es: 'Explora', pt: 'Explore' },
+  unit: { en: 'Unit', es: 'Unidad', pt: 'Unidade' },
+  ways: { en: 'Three ways in', es: 'Tres maneras de entrar', pt: 'Três maneiras de entrar' },
+  qTitle: { en: 'The questions people actually ask', es: 'Las preguntas que la gente de verdad hace', pt: 'As perguntas que as pessoas realmente fazem' },
 } satisfies Record<string, Record<Lang, string>>;
 
 export default async function Home() {
   const lang = await getLang();
   const c = (k: keyof typeof copy) => pick(copy[k], lang);
-  const questions = getQuestions(lang).slice(0, 6);
+  const all = getQuestions(lang);
+  const questions = all.slice(0, 6);
   const sessions = getSessions(lang);
+  const lib = getLibrary();
+  const articles = (Object.keys(LIBRARY_SECTIONS) as LibraryKey[]).reduce((n, k) => n + lib[k].articles.length, 0);
+  // The hero shows a real Hard Question with its labelled claims: the method, not a promise of it.
+  const featured = all.find((q) => q.standing.length >= 2) ?? all[0];
 
   return (
     <>
-      <section className="shell pt-16 pb-14 sm:pt-24">
-        <p className="kicker kicker-accent">Encounter</p>
-        <h1 className="mt-4 max-w-[18ch] text-[clamp(2.4rem,1.5rem+3.6vw,4.2rem)] font-medium leading-[1.04] tracking-[-.02em] text-balance">
-          {c('heroTitle')}
-        </h1>
-        <p className="mt-6 max-w-[60ch] text-[1.15rem] leading-relaxed text-[var(--ink-soft)]">{c('heroBody')}</p>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Link href="/questions" className="btn">{c('doorQ')} →</Link>
-          <Link href="/course" className="btn btn-ghost">{c('startHere')}</Link>
+      <section className="shell grid items-center gap-12 pb-16 pt-14 sm:pt-20 lg:grid-cols-[1.1fr_.9fr] lg:gap-14">
+        <div className="rise">
+          <span className="pill pill-accent"><Sparkles size={13} /> {c('badge')}</span>
+          <h1 className="mt-6 max-w-[16ch] text-[clamp(2.6rem,1.5rem+4.2vw,4.6rem)] font-medium leading-[1.02] tracking-[-.028em] text-balance">
+            {c('heroTitle')}
+          </h1>
+          <p className="dek mt-6 !text-[1.16rem]">{c('heroBody')}</p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/questions" className="btn">{c('doorQ')} <ArrowRight size={16} /></Link>
+            <Link href="/course" className="btn btn-ghost">{c('startHere')}</Link>
+          </div>
+          <ul className="sans m-0 mt-10 flex list-none flex-wrap gap-x-8 gap-y-3 p-0">
+            {(
+              [
+                [all.length, c('statQ')],
+                [sessions.length, c('statS')],
+                [articles, c('statL')],
+              ] as const
+            ).map(([n, l]) => (
+              <li key={l} className="flex items-baseline gap-2">
+                <span className="text-[1.6rem] font-semibold tracking-[-.02em] text-[var(--ink)]">{n}</span>
+                <span className="text-[.86rem] text-[var(--faint)]">{l}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {featured && (
+          <div className="rise rise-2 relative">
+            <div aria-hidden="true" className="absolute inset-0 -z-10 rounded-[40px] lg:-inset-6 bg-[radial-gradient(closest-side,var(--accent-glow),transparent)] opacity-70 blur-2xl" />
+            <Link href={`/questions/${featured.slug}`} className="glass-strong lift group block rounded-[28px] p-6 text-[var(--ink)] sm:p-8">
+              <div className="flex items-center justify-between gap-3">
+                <span className="kicker kicker-accent">{c('preview')}</span>
+                <IconTile className="!h-9 !w-9 !rounded-xl"><HelpCircle size={17} /></IconTile>
+              </div>
+              <p className="mt-5 text-[1.6rem] font-medium leading-tight tracking-[-.01em]">{featured.title}</p>
+              <p className="mt-3 line-clamp-4 text-[1rem] leading-relaxed text-[var(--ink-soft)]">{featured.short}</p>
+              <div className="well mt-6 p-4">
+                <p className="kicker mb-3">{c('evidence')}</p>
+                <ul className="m-0 list-none space-y-2.5 p-0">
+                  {featured.standing.slice(0, 3).map((s, i) => (
+                    <li key={i} className="text-[.92rem] leading-snug text-[var(--ink-soft)]">
+                      <span dangerouslySetInnerHTML={{ __html: withBadges(`[${s.label}]`, lang) }} /> {s.claim}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <span className="sans mt-6 inline-flex items-center gap-1.5 text-[.9rem] font-medium text-[var(--accent)]">
+                {c('readFull')} <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
+              </span>
+            </Link>
+          </div>
+        )}
+      </section>
+
+      <section className="shell" aria-label={c('ways')}>
+        <div className="grid gap-4 md:grid-cols-3">
+          {(
+            [
+              ['/questions', 'doorQ', 'doorQ2', <HelpCircle key="q" size={20} />],
+              ['/course', 'doorC', 'doorC2', <Compass key="c" size={20} />],
+              ['/library', 'doorL', 'doorL2', <Library key="l" size={20} />],
+            ] as const
+          ).map(([href, h, b, icon], i) => (
+            <Link key={href} href={href} className={`glass lift rise rise-${i + 1} group flex flex-col p-6 text-[var(--ink)]`}>
+              <IconTile>{icon}</IconTile>
+              <span className="mt-5 block text-[1.32rem] font-medium leading-tight">{c(h)}</span>
+              <span className="mt-2 block flex-1 text-[.96rem] leading-normal text-[var(--ink-soft)]">{c(b)}</span>
+              <span className="sans mt-5 inline-flex items-center gap-1.5 text-[.86rem] font-medium text-[var(--accent)]">
+                {c('explore')} <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
+              </span>
+            </Link>
+          ))}
         </div>
       </section>
 
-      <section className="shell grid gap-4 md:grid-cols-3" aria-label="Ways in">
-        {(
-          [
-            ['/questions', 'doorQ', 'doorQ2', '01'],
-            ['/course', 'doorC', 'doorC2', '02'],
-            ['/library', 'doorL', 'doorL2', '03'],
-          ] as const
-        ).map(([href, h, b, n]) => (
-          <Link key={href} href={href} className="card group block p-6 text-[var(--ink)] transition-colors hover:border-[var(--accent)]">
-            <span className="kicker kicker-accent">{n}</span>
-            <span className="mt-3 block text-[1.35rem] font-medium leading-tight group-hover:text-[var(--accent)]">{c(h)}</span>
-            <span className="mt-2 block text-[.98rem] leading-normal text-[var(--ink-soft)]">{c(b)}</span>
-          </Link>
-        ))}
-      </section>
-
-      <section className="shell mt-20">
-        <div className="flex items-baseline justify-between gap-4 border-b border-[var(--rule)] pb-3">
-          <h2 className="kicker">{c('doorQ')}</h2>
-          <Link href="/questions" className="kicker kicker-accent">{c('allQuestions')} →</Link>
-        </div>
-        <ul className="grid gap-x-12 md:grid-cols-2">
+      <section className="shell mt-24" aria-labelledby="home-q">
+        <SectionHead id="home-q" kicker={t('navQuestions', lang)} title={c('qTitle')} href="/questions" linkLabel={c('allQuestions')} />
+        <ul className="m-0 grid list-none gap-4 p-0 md:grid-cols-2 lg:grid-cols-3">
           {questions.map((q) => (
-            <li key={q.slug} className="border-b border-[var(--rule)]">
-              <Link href={`/questions/${q.slug}`} className="group block py-5 text-[var(--ink)]">
-                <span className="block text-[1.2rem] leading-snug group-hover:text-[var(--accent)]">{q.title}</span>
-                <span className="mt-1 line-clamp-2 block text-[.95rem] text-[var(--ink-soft)]">{q.short}</span>
+            <li key={q.slug}>
+              <Link href={`/questions/${q.slug}`} className="glass lift group flex h-full flex-col p-6 text-[var(--ink)]">
+                <span className="mono text-[.72rem] text-[var(--accent)]">{String(q.order).padStart(2, '0')}</span>
+                <span className="mt-2 block text-[1.18rem] font-medium leading-snug">{q.title}</span>
+                <span className="mt-2 line-clamp-3 block flex-1 text-[.93rem] leading-normal text-[var(--ink-soft)]">{q.short}</span>
+                <ArrowRight size={16} className="mt-4 text-[var(--faint)] transition-all group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
               </Link>
             </li>
           ))}
         </ul>
       </section>
 
-      <section className="shell mt-20 grid gap-10 lg:grid-cols-[1fr_1.3fr]">
-        <div>
-          <h2 className="kicker">{c('courseTitle')}</h2>
-          <p className="mt-3 text-[1.6rem] leading-snug">{c('courseBody')}</p>
-          <Link href="/course" className="btn btn-ghost mt-6">{c('startHere')} →</Link>
-        </div>
-        <ol className="grid gap-3 sm:grid-cols-2">
-          {(Object.keys(UNITS) as (keyof typeof UNITS)[]).map((u) => {
-            const list = sessions.filter((s) => s.unit === u);
-            return (
-              <li key={u} className="card p-5">
-                <span className="kicker kicker-accent">{pick({ en: 'Unit', es: 'Unidad', pt: 'Unidade' }, lang)} {u} · {list.length}</span>
-                <span className="mt-2 block text-[1.15rem] font-medium">{pick(UNITS[u], lang)}</span>
-                <span className="mt-1 block text-[.93rem] italic text-[var(--ink-soft)]">{pick(UNITS[u].q, lang)}</span>
-              </li>
-            );
-          })}
-        </ol>
-      </section>
-
-      <section className="shell mt-20">
-        <div className="card grid gap-8 p-8 md:grid-cols-[1fr_1fr]">
+      <section className="shell mt-24" aria-labelledby="home-course">
+        <div className="glass grid gap-10 p-7 sm:p-10 lg:grid-cols-[.8fr_1.2fr]">
           <div>
-            <h2 className="kicker">{c('honestTitle')}</h2>
-            <p className="mt-3 text-[1.02rem] text-[var(--ink-soft)]">{c('honestBody')}</p>
-            <Link href="/about/method" className="mt-4 inline-block">{pick({ en: 'How the work is done', es: 'Cómo se hace el trabajo', pt: 'Como o trabalho é feito' }, lang)} →</Link>
+            <p className="kicker kicker-accent">{c('courseTitle')}</p>
+            <h2 id="home-course" className="mt-3 text-[clamp(1.6rem,1.2rem+1.4vw,2.2rem)] font-medium leading-tight tracking-[-.012em]">{c('courseBody')}</h2>
+            <p className="mt-4 text-[1rem] text-[var(--ink-soft)]">{c('doorC2')}</p>
+            <Link href="/course" className="btn mt-7">{c('startHere')} <ArrowRight size={16} /></Link>
           </div>
-          <ul className="flex flex-wrap content-start gap-2">
-            {Object.values(CONFIDENCE).map((l) => (
-              <li key={l.en} className="conf !text-[.72rem] !px-3 !py-1.5">{l[lang]}</li>
-            ))}
-          </ul>
+          <ol className="relative m-0 grid list-none gap-3 p-0 sm:grid-cols-2">
+            {(Object.keys(UNITS) as (keyof typeof UNITS)[]).map((u) => {
+              const list = sessions.filter((s) => s.unit === u);
+              const first = list[0];
+              return (
+                <li key={u}>
+                  <Link href={first ? `/course/${first.n}` : '/course'} className="well lift group flex h-full gap-4 p-5 text-[var(--ink)] hover:!bg-[var(--glass-hover)]">
+                    <span className="sans grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[var(--accent)] to-[var(--gold)] text-[.95rem] font-semibold text-[var(--on-accent)]">{u}</span>
+                    <span>
+                      <span className="sans block text-[.74rem] font-medium text-[var(--faint)]">{c('unit')} {u} · {list.length} {c('statS')}</span>
+                      <span className="mt-1 block text-[1.14rem] font-medium leading-snug">{pick(UNITS[u], lang)}</span>
+                      <span className="mt-1 block text-[.9rem] italic leading-snug text-[var(--ink-soft)]">{pick(UNITS[u].q, lang)}</span>
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ol>
         </div>
       </section>
 
-      <section className="shell mt-20">
-        <div className="max-w-[62ch] border-l-2 border-[var(--accent)] pl-6">
-          <h2 className="kicker kicker-accent">{c('inviteTitle')}</h2>
-          <p className="mt-3 text-[1.25rem] leading-relaxed">{c('inviteBody')}</p>
-          <div className="mt-6 flex flex-wrap gap-3">
+      <section className="shell mt-6" aria-labelledby="home-honest">
+        <div className="glass grid gap-10 p-7 sm:p-10 md:grid-cols-[1fr_1.1fr]">
+          <div>
+            <p className="kicker kicker-accent">{c('honestTitle')}</p>
+            <h2 id="home-honest" className="mt-3 text-[clamp(1.6rem,1.2rem+1.4vw,2.2rem)] font-medium leading-tight tracking-[-.012em]">
+              {pick({ en: 'Five labels. Every claim.', es: 'Cinco etiquetas. Cada afirmación.', pt: 'Cinco rótulos. Cada afirmação.' }, lang)}
+            </h2>
+            <p className="mt-4 text-[1.02rem] leading-relaxed text-[var(--ink-soft)]">{c('honestBody')}</p>
+            <Link href="/about/method" className="sans mt-6 inline-flex items-center gap-1.5 text-[.9rem] font-medium">
+              {pick({ en: 'How the work is done', es: 'Cómo se hace el trabajo', pt: 'Como o trabalho é feito' }, lang)} <ArrowRight size={15} />
+            </Link>
+          </div>
+          <ConfidenceLegend lang={lang} />
+        </div>
+      </section>
+
+      <section className="shell mt-24" aria-labelledby="home-invite">
+        <div className="glass-strong relative overflow-hidden rounded-[32px] px-7 py-14 text-center sm:px-12 sm:py-20">
+          <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-0 h-72 w-[42rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,var(--accent-glow),transparent)] blur-2xl" />
+          <p className="kicker kicker-accent relative">{c('inviteTitle')}</p>
+          <p id="home-invite" className="relative mx-auto mt-5 max-w-[46ch] text-[clamp(1.25rem,1rem+.9vw,1.6rem)] leading-relaxed text-balance">{c('inviteBody')}</p>
+          <div className="relative mt-9 flex flex-wrap justify-center gap-3">
             <Link href="/course/pathway/offer" className="btn">{c('inviteCta')}</Link>
-            <Link href="/talk" className="btn btn-ghost">{c('talkCta')}</Link>
+            <Link href="/talk" className="btn btn-ghost"><MessageCircle size={16} /> {c('talkCta')}</Link>
           </div>
         </div>
       </section>

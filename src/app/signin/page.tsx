@@ -4,6 +4,7 @@ import { getCurrentUser } from '@/lib/session';
 import { SignInForm } from '@/components/forms';
 import { getLang } from '@/lib/lang';
 import { pick } from '@/lib/i18n';
+import { AuthShell } from '@/components/auth-shell';
 
 export async function generateMetadata(): Promise<Metadata> {
   const lang = await getLang();
@@ -17,10 +18,11 @@ export default async function SignIn({ searchParams }: { searchParams: Promise<{
   if (await getCurrentUser()) redirect(next.startsWith('/') ? next : '/account');
   const lang = await getLang();
   return (
-    <div className="shell max-w-md pt-16">
-      <p className="kicker kicker-accent">Encounter</p>
-      <h1 className="mt-3 text-[2.2rem] font-medium leading-tight">{pick({ en: 'Welcome back.', es: 'Qué bueno verte de nuevo.', pt: 'Que bom ver você de novo.' }, lang)}</h1>
+    <AuthShell
+      title={pick({ en: 'Welcome back.', es: 'Qué bueno verte de nuevo.', pt: 'Que bom ver você de novo.' }, lang)}
+      intro={pick({ en: 'Pick up where you left off: your place in the course, your notes, and your group.', es: 'Sigue donde te quedaste: tu lugar en el curso, tus notas y tu grupo.', pt: 'Continue de onde parou: seu lugar no curso, suas notas e seu grupo.' }, lang)}
+    >
       <SignInForm next={next} lang={lang} />
-    </div>
+    </AuthShell>
   );
 }
