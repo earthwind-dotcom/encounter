@@ -6,6 +6,8 @@ import { setRequestStatus, setRole } from '@/app/actions';
 import { ResetLinkButton } from '@/components/reset-form';
 import { getLang } from '@/lib/lang';
 import { pick, t, type Lang } from '@/lib/i18n';
+import { BookHeart, Footprints, Inbox, ShieldCheck, Sunrise, Users, UsersRound } from 'lucide-react';
+import { IconTile, PageHeader, Stat } from '@/components/ui';
 
 const COPY = {
   conversations: { en: 'Conversations', es: 'Conversaciones', pt: 'Conversas' },
@@ -15,6 +17,7 @@ const COPY = {
     pt: 'Pessoas que pediram para conversar. Responda pessoalmente, do seu próprio endereço, e marque cada uma quando tiver respondido. Contamos pessoas, não troféus: estes números servem para ver quem precisa de resposta, não para relatar decisões.',
   },
   accounts: { en: 'Accounts', es: 'Cuentas', pt: 'Contas' },
+  waiting: { en: 'Waiting for a reply', es: 'Esperan respuesta', pt: 'Aguardando resposta' },
   sayReady: { en: 'Say “ready to start”', es: 'Dicen «listo para empezar»', pt: 'Dizem “pronto para começar”' },
   sayFollowing: { en: 'Say “following”', es: 'Dicen «siguiéndolo»', pt: 'Dizem “seguindo”' },
   course: { en: 'Course', es: 'Curso', pt: 'Curso' },
@@ -76,42 +79,60 @@ export default async function Facilitate() {
   ]);
   const fmt = (d: Date) => new Date(d).toLocaleString({ en: 'en-US', es: 'es-MX', pt: 'pt-BR' }[lang], { dateStyle: 'medium', timeStyle: 'short' });
 
+  const fresh = requests.filter((r) => r.status === 'new').length;
+  const initials = (n: string) => n.trim().split(/\s+/).slice(0, 2).map((w) => w[0]?.toUpperCase()).join('') || '·';
+
   return (
-    <div className="shell pt-12">
-      <p className="kicker kicker-accent">{t('desk', lang)}</p>
-      <h1 className="mt-3 text-[2.4rem] font-medium leading-tight">{c('conversations')}</h1>
-      <p className="mt-2 max-w-2xl text-[var(--ink-soft)]">
-        {c('intro')}
-      </p>
-      <div className="mt-6 flex flex-wrap gap-4">
-        <div className="card px-5 py-3"><span className="kicker">{c('accounts')}</span><span className="block text-[1.6rem]">{counts.users}</span></div>
-        <div className="card px-5 py-3"><span className="kicker">{c('sayReady')}</span><span className="block text-[1.6rem]">{counts.ready}</span></div>
-        <div className="card px-5 py-3"><span className="kicker">{c('sayFollowing')}</span><span className="block text-[1.6rem]">{counts.following}</span></div>
- <Link href="/facilitate/groups" className="card px-5 py-3 text-[var(--ink)] hover:border-[var(--accent)]">
-          <span className="kicker">{c('course')}</span><span className="block">{c('groups')}</span>
+    <div className="shell">
+      <PageHeader kicker={t('desk', lang)} title={c('conversations')} dek={c('intro')} />
+
+      <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <Stat label={c('waiting')} value={fresh} icon={<Inbox size={19} />} />
+        <Stat label={c('accounts')} value={counts.users} icon={<UsersRound size={19} />} />
+        <Stat label={c('sayReady')} value={counts.ready} icon={<Sunrise size={19} />} />
+        <Stat label={c('sayFollowing')} value={counts.following} icon={<Footprints size={19} />} />
+      </div>
+      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+        <Link href="/facilitate/groups" className="glass lift flex items-center gap-4 p-5 text-[var(--ink)]">
+          <IconTile><Users size={19} /></IconTile>
+          <span className="flex-1"><span className="kicker">{c('course')}</span><span className="block font-medium">{c('groups')}</span></span>
         </Link>
-        <Link href="/course/gospel-plainly" className="card px-5 py-3 text-[var(--ink)] hover:border-[var(--accent)]">
-          <span className="kicker">{c('guide')}</span><span className="block">{c('gospel')}</span>
+        <Link href="/course/gospel-plainly" className="glass lift flex items-center gap-4 p-5 text-[var(--ink)]">
+          <IconTile><BookHeart size={19} /></IconTile>
+          <span className="flex-1"><span className="kicker">{c('guide')}</span><span className="block font-medium">{c('gospel')}</span></span>
         </Link>
       </div>
 
-      <ul className="mt-10 list-none p-0">
-        {requests.length === 0 && <li className="text-[var(--ink-soft)]">{c('noMessages')}</li>}
+      <ul className="mt-10 list-none space-y-4 p-0">
+        {requests.length === 0 && (
+          <li className="glass flex flex-col items-center gap-3 p-12 text-center text-[var(--ink-soft)]">
+            <IconTile><Inbox size={19} /></IconTile>
+            {c('noMessages')}
+          </li>
+        )}
         {requests.map((r) => (
-          <li key={r.id} className={`card mb-4 p-5 ${r.status === 'new' ? 'border-[var(--accent)]' : 'opacity-75'}`}>
-            <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <p className="font-medium">
-                {r.name} <span className="mono text-[.8rem] text-[var(--ink-soft)]">{r.contact}</span>
-              </p>
-              <p className="kicker">{r.topic || c('general')} · {r.lang} · {fmt(r.created_at)} · {pick(STATUS[r.status as keyof typeof STATUS], lang) || r.status}</p>
+          <li key={r.id} className={`glass relative overflow-hidden p-5 sm:p-6 ${r.status === 'new' ? '' : 'opacity-80'}`}>
+            {r.status === 'new' && <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-[var(--accent)] to-[var(--gold)]" />}
+            <div className="flex flex-wrap items-start gap-4">
+              <span className="sans grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[var(--accent-soft)] text-[.78rem] font-semibold text-[var(--accent)]">{initials(r.name)}</span>
+              <div className="min-w-0 flex-1">
+                <p className="font-medium leading-snug">{r.name}</p>
+                <p className="mono text-[.76rem] text-[var(--ink-soft)]">{r.contact}</p>
+              </div>
+              <div className="sans flex flex-wrap items-center gap-1.5">
+                <span className={`pill ${r.status === 'new' ? 'pill-accent' : r.status === 'replied' ? 'pill-ok' : ''}`}>{pick(STATUS[r.status as keyof typeof STATUS], lang) || r.status}</span>
+                <span className="pill">{r.topic || c('general')}</span>
+                <span className="pill uppercase">{r.lang}</span>
+                <span className="text-[.76rem] text-[var(--faint)]">{fmt(r.created_at)}</span>
+              </div>
             </div>
-            <p className="mt-2 whitespace-pre-line text-[.98rem]">{r.message}</p>
-            <div className="mt-3 flex gap-2">
+            <p className="well mt-4 whitespace-pre-line p-4 text-[.98rem] leading-relaxed">{r.message}</p>
+            <div className="mt-4 flex flex-wrap gap-2">
               {(['replied', 'closed', 'new'] as const)
-                .filter((s) => s !== r.status)
-                .map((s) => (
-                  <form key={s} action={setRequestStatus.bind(null, r.id, s)}>
-                    <button className="btn btn-ghost !py-1.5 !text-[.66rem]">{pick(MARK[s], lang)}</button>
+                .filter((st) => st !== r.status)
+                .map((st) => (
+                  <form key={st} action={setRequestStatus.bind(null, r.id, st)}>
+                    <button className="btn btn-ghost btn-sm">{pick(MARK[st], lang)}</button>
                   </form>
                 ))}
             </div>
@@ -120,34 +141,41 @@ export default async function Facilitate() {
       </ul>
 
       {me.role === 'admin' && (
-        <section className="mt-14">
-          <h2 className="text-[1.6rem] font-medium">{c('people')}</h2>
-          <p className="mt-1 text-[.95rem] text-[var(--ink-soft)]">{c('rolesNote')}</p>
-          <table className="mt-4 w-full border-collapse text-[.95rem]">
-            <thead>
-              <tr className="kicker text-left"><th className="py-2">{c('name')}</th><th>{c('email')}</th><th>{c('role')}</th><th /></tr>
-            </thead>
-            <tbody>
-              {users.map((u) => (
-                <tr key={u.id} className="border-t border-[var(--rule)]">
-                  <td className="py-2">{u.name}</td>
-                  <td className="mono text-[.8rem]">{u.email}</td>
-                  <td>{pick(ROLE[u.role as keyof typeof ROLE], lang) || u.role}</td>
-                  <td className="text-right">
-                    {u.id !== me.id &&
-                      (['learner', 'facilitator', 'admin'] as const)
-                        .filter((r) => r !== u.role)
-                        .map((r) => (
-                          <form key={r} action={setRole.bind(null, u.id, r)} className="inline">
-                            <button className="kicker ml-3 cursor-pointer hover:text-[var(--accent)]">{pick(MAKE, lang)} {pick(ROLE[r], lang)}</button>
-                          </form>
-                        ))}
-                    {u.id !== me.id && <ResetLinkButton userId={u.id} lang={lang} />}
-                  </td>
+        <section className="glass mt-12 p-5 sm:p-7" aria-labelledby="people">
+          <h2 id="people" className="flex items-center gap-2.5 text-[1.4rem] font-medium"><ShieldCheck size={19} className="text-[var(--accent)]" /> {c('people')}</h2>
+          <p className="sans mt-1 text-[.88rem] text-[var(--ink-soft)]">{c('rolesNote')}</p>
+          <div className="mt-5 overflow-x-auto">
+            <table className="sans w-full border-collapse text-[.88rem]">
+              <thead>
+                <tr className="text-left text-[.76rem] text-[var(--faint)]">
+                  <th className="px-3 py-2 font-medium">{c('name')}</th>
+                  <th className="px-3 py-2 font-medium">{c('email')}</th>
+                  <th className="px-3 py-2 font-medium">{c('role')}</th>
+                  <th />
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {users.map((u) => (
+                  <tr key={u.id} className="border-t border-[var(--rule)] hover:bg-[var(--glass-inner-hover)]">
+                    <td className="px-3 py-2.5 font-medium">{u.name}</td>
+                    <td className="mono px-3 text-[.76rem] text-[var(--ink-soft)]">{u.email}</td>
+                    <td className="px-3"><span className={`pill ${u.role === 'admin' ? 'pill-accent' : u.role === 'facilitator' ? 'pill-ok' : ''}`}>{pick(ROLE[u.role as keyof typeof ROLE], lang) || u.role}</span></td>
+                    <td className="whitespace-nowrap px-3 text-right">
+                      {u.id !== me.id &&
+                        (['learner', 'facilitator', 'admin'] as const)
+                          .filter((r) => r !== u.role)
+                          .map((r) => (
+                            <form key={r} action={setRole.bind(null, u.id, r)} className="inline">
+                              <button className="ml-1 cursor-pointer rounded-full px-2.5 py-1 text-[.76rem] text-[var(--ink-soft)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent)]">{pick(MAKE, lang)} {pick(ROLE[r], lang)}</button>
+                            </form>
+                          ))}
+                      {u.id !== me.id && <ResetLinkButton userId={u.id} lang={lang} />}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </section>
       )}
     </div>

@@ -43,8 +43,13 @@ export function StagePicker({ initial, lang }: { initial: string | null; lang: L
       {OPTIONS.map((o) => (
         <label
           key={o.id}
-          className={`card cursor-pointer p-4 ${stage === o.id ? 'border-[var(--accent)] bg-[var(--accent-soft)]' : ''}`}
+          className={`well relative cursor-pointer p-4 pr-10 transition-all has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-[var(--accent)] ${
+            stage === o.id ? '!border-[var(--accent)] !bg-[var(--accent-soft)] shadow-[0_0_0_3px_var(--accent-soft)]' : 'hover:!bg-[var(--glass-inner-hover)]'
+          }`}
         >
+          <span aria-hidden="true" className={`absolute right-4 top-4 grid h-5 w-5 place-items-center rounded-full border-2 ${stage === o.id ? 'border-[var(--accent)] bg-[var(--accent)]' : 'border-[var(--rule-strong)]'}`}>
+            {stage === o.id && <span className="h-1.5 w-1.5 rounded-full bg-[var(--on-accent)]" />}
+          </span>
           <input
             type="radio"
             name="stage"
@@ -54,7 +59,7 @@ export function StagePicker({ initial, lang }: { initial: string | null; lang: L
             className="sr-only"
           />
           <span className="block font-medium">{pick(o.label, lang)}</span>
-          <span className="block text-[.9rem] text-[var(--ink-soft)]">{pick(o.hint, lang)}</span>
+          <span className="sans mt-1 block text-[.84rem] leading-snug text-[var(--ink-soft)]">{pick(o.hint, lang)}</span>
         </label>
       ))}
     </fieldset>

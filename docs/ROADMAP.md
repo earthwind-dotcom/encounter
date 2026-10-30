@@ -132,7 +132,14 @@ The platform's worth is its content.
 - **Search** across questions, sessions and library. *Done 2026-09-28 (`/search`).*
 - **Video and audio**: a short (5 to 8 minute) talk per session and per Hard Question, the thing
   Alpha and RightNow do well. Audio versions for commuters.
-- **Accessibility**: WCAG 2.2 AA audit; screen-reader pass.
+- **Accessibility**: WCAG 2.2 AA audit; screen-reader pass. *Partly done 2026-10-29: an automated
+  axe WCAG 2.1 AA scan is clean on 18 screens in light and dark. The manual 2.2 audit and the
+  screen-reader pass are still to do.*
+- **Interface.** *Done 2026-10-29 (branch `irwin/glass-ui`):* frosted glass over a slow "dawn"
+  backdrop on every screen, a floating header with ⌘K search, a phone menu, reading progress and
+  "On this page" contents on questions and sessions, colored confidence labels, and a dashboard-style
+  Your path and facilitator desk. Glass falls back to solid paper when blur isn't supported or the
+  reader asks for less transparency.
 
 ### Phase 4: Guided conversation (AI, carefully)
 

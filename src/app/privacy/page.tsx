@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getLang } from '@/lib/lang';
 import { pick, type Lang } from '@/lib/i18n';
+import { PageHeader } from '@/components/ui';
 
 type L = Record<Lang, string>;
 const TITLE: L = { en: 'Privacy', es: 'Privacidad', pt: 'Privacidade' };
@@ -70,31 +71,31 @@ export default async function Privacy() {
   const lang = await getLang();
   const c = (k: keyof typeof COPY) => pick(COPY[k], lang);
   return (
-    <div className="shell pt-14">
-      <div className="prose">
-        <p className="kicker kicker-accent">{pick(TITLE, lang)}</p>
-        <h1 className="text-[2.4rem] font-medium leading-tight">{c('heading')}</h1>
-        <p>{c('intro')}</p>
-        <h2>{c('reading')}</h2>
-        <p>{c('readingP')}</p>
-        <h2>{c('account')}</h2>
-        <ul>
-          <li><strong>{c('a1b')}</strong> {c('a1')}</li>
-          <li><strong>{c('a2b')}</strong>{c('a2')}</li>
-          <li><strong>{c('a3b')}</strong> {c('a3')}</li>
-          <li><strong>{c('a4b')}</strong>{c('a4')}</li>
-        </ul>
-        <h2>{c('group')}</h2>
-        <p>{c('groupP')}</p>
-        <h2>{c('message')}</h2>
-        <p>{c('messageP')}</p>
-        <h2>{c('cookies')}</h2>
-        <p>{c('cookiesP')}</p>
-        <h2>{c('deleting')}</h2>
-        <p>
-          {c('del1')} <Link href="/account">{c('yourPage')}</Link> {c('del2')}
-        </p>
-        <p className="text-[var(--faint)] italic">{c('review')}</p>
+    <div className="shell">
+      <PageHeader kicker={pick(TITLE, lang)} title={c('heading')} dek={c('intro')} />
+      <div className="glass rise rise-1 mt-10 rounded-[24px] p-6 sm:p-10">
+        <div className="prose">
+          <h2>{c('reading')}</h2>
+          <p>{c('readingP')}</p>
+          <h2>{c('account')}</h2>
+          <ul>
+            <li><strong>{c('a1b')}</strong> {c('a1')}</li>
+            <li><strong>{c('a2b')}</strong>{c('a2')}</li>
+            <li><strong>{c('a3b')}</strong> {c('a3')}</li>
+            <li><strong>{c('a4b')}</strong>{c('a4')}</li>
+          </ul>
+          <h2>{c('group')}</h2>
+          <p>{c('groupP')}</p>
+          <h2>{c('message')}</h2>
+          <p>{c('messageP')}</p>
+          <h2>{c('cookies')}</h2>
+          <p>{c('cookiesP')}</p>
+          <h2>{c('deleting')}</h2>
+          <p>
+            {c('del1')} <Link href="/account">{c('yourPage')}</Link> {c('del2')}
+          </p>
+          <p className="text-[var(--faint)] italic">{c('review')}</p>
+      </div>
       </div>
     </div>
   );

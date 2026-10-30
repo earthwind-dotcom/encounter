@@ -193,3 +193,11 @@ describe('library import', () => {
     }
   });
 });
+
+describe('confidence badge markup', () => {
+  it('tags each badge with its key so the interface can color it, keeping class="conf"', () => {
+    expect(withBadges('[consensus] x')).toContain('<span class="conf" data-conf="consensus">Consensus</span>');
+    expect(withBadges('[my read]', 'es')).toContain('data-conf="our read">Nuestra lectura<');
+    expect(withBadges('[strong majority: most agree]')).toContain('data-conf="strong majority"');
+  });
+});

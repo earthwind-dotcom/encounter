@@ -29,7 +29,7 @@ export function withBadges(md: string, lang: Lang = 'en'): string {
     const key = raw.toLowerCase() === 'my read' ? 'our read' : raw.toLowerCase();
     const label = isConfidence(key) ? CONFIDENCE[key][lang] : raw;
     const tail = rest.replace(/^[:;,]\s*/, '').trim();
-    return `<span class="conf">${label}</span>${tail ? `<span class="conf-note">${tail}</span>` : ''}`;
+    return `<span class="conf"${isConfidence(key) ? ` data-conf="${key}"` : ''}>${label}</span>${tail ? `<span class="conf-note">${tail}</span>` : ''}`;
   });
 }
 

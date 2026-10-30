@@ -21,6 +21,7 @@
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8",
     "gray-matter": "^4.0.3",
+    "lucide-react": "^0.545.0",
     "marked": "^18.0.14",
     "next": "^16.2.12",
     "postgres": "^3.4.9",

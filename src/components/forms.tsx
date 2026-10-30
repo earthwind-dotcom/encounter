@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { CheckCircle2, Send } from 'lucide-react';
 import { useActionState } from 'react';
 import { requestConversation, signIn, signUp, type FormState } from '@/app/actions';
 import type { Lang } from '@/lib/i18n';
@@ -53,16 +54,16 @@ export function SignInForm({ next, lang }: { next: string; lang: Lang }) {
   const c = (k: keyof typeof COPY) => COPY[k][lang];
   const [state, action, pending] = useActionState<FormState, FormData>(signIn, undefined);
   return (
-    <form action={action} className="mt-8">
+    <form action={action} className="mt-8 lg:mt-0">
       <input type="hidden" name="next" value={next} />
       <label className="field"><span>{c('email')}</span><input className="input" name="email" type="email" autoComplete="email" required /></label>
       <label className="field"><span>{c('password')}</span><input className="input" name="password" type="password" autoComplete="current-password" required /></label>
       {state?.error && <p className="error" role="alert">{state.error}</p>}
-      <button className="btn mt-2" disabled={pending}>{pending ? c('signingIn') : c('signIn')}</button>
-      <p className="mt-6 text-[.95rem] text-[var(--ink-soft)]">
+      <button className="btn mt-2 w-full" disabled={pending}>{pending ? c('signingIn') : c('signIn')}</button>
+      <p className="sans mt-6 text-[.88rem] text-[var(--ink-soft)]">
         {c('newHere')} <Link href={`/signup?next=${encodeURIComponent(next)}`}>{c('createOne')}</Link>. {c('noNeed')}
       </p>
-      <p className="mt-2 text-[.95rem] text-[var(--ink-soft)]">
+      <p className="sans mt-2 text-[.88rem] text-[var(--ink-soft)]">
         {c('forgot')} <Link href="/talk">{c('tellUs')}</Link> {c('forgotRest')}
       </p>
     </form>
@@ -73,20 +74,20 @@ export function SignUpForm({ next, lang }: { next: string; lang: Lang }) {
   const c = (k: keyof typeof COPY) => COPY[k][lang];
   const [state, action, pending] = useActionState<FormState, FormData>(signUp, undefined);
   return (
-    <form action={action} className="mt-8">
+    <form action={action} className="mt-8 lg:mt-0">
       <input type="hidden" name="next" value={next} />
       <label className="field"><span>{c('callYou')}</span><input className="input" name="name" autoComplete="given-name" required maxLength={80} /></label>
       <label className="field"><span>{c('email')}</span><input className="input" name="email" type="email" autoComplete="email" required /></label>
       <label className="field"><span>{c('pw10')}</span><input className="input" name="password" type="password" autoComplete="new-password" minLength={10} required /></label>
-      <label className="mb-4 flex gap-3 text-[.95rem] leading-snug text-[var(--ink-soft)]">
+      <label className="sans mb-5 flex gap-3 text-[.86rem] leading-snug text-[var(--ink-soft)]">
         <input type="checkbox" name="consent" required className="mt-1" />
         <span>
           {c('agreeData')} <Link href="/privacy">{c('privacyNotice')}</Link>. {c('notesPrivate')}
         </span>
       </label>
       {state?.error && <p className="error" role="alert">{state.error}</p>}
-      <button className="btn mt-2" disabled={pending}>{pending ? c('creating') : c('create')}</button>
-      <p className="mt-6 text-[.95rem] text-[var(--ink-soft)]">
+      <button className="btn mt-2 w-full" disabled={pending}>{pending ? c('creating') : c('create')}</button>
+      <p className="sans mt-6 text-[.88rem] text-[var(--ink-soft)]">
         {c('haveOne')} <Link href={`/signin?next=${encodeURIComponent(next)}`}>{c('signIn')}</Link>.
       </p>
     </form>
@@ -98,14 +99,15 @@ export function TalkForm({ defaultName = '', defaultContact = '', lang }: { defa
   const [state, action, pending] = useActionState<FormState, FormData>(requestConversation, undefined);
   if (state?.ok) {
     return (
-      <div className="card mt-8 p-6" role="status">
-        <p className="text-[1.15rem]">{c('thanks')}</p>
-        <p className="mt-2 text-[.95rem] text-[var(--ink-soft)]">{c('danger')}</p>
+      <div className="py-6 text-center" role="status">
+        <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-[var(--ok-soft)] text-[var(--ok)]"><CheckCircle2 size={28} /></span>
+        <p className="mt-5 text-[1.2rem] leading-snug">{c('thanks')}</p>
+        <p className="sans mx-auto mt-3 max-w-sm text-[.88rem] text-[var(--ink-soft)]">{c('danger')}</p>
       </div>
     );
   }
   return (
-    <form action={action} className="mt-8">
+    <form action={action}>
       <label className="field"><span>{c('yourName')}</span><input className="input" name="name" defaultValue={defaultName} required maxLength={80} /></label>
       <label className="field"><span>{c('contact')}</span><input className="input" name="contact" defaultValue={defaultContact} required maxLength={160} /></label>
       <label className="field">
@@ -118,12 +120,12 @@ export function TalkForm({ defaultName = '', defaultContact = '', lang }: { defa
       </label>
       <label className="field"><span>{c('message')}</span><textarea className="input" name="message" required maxLength={5000} /></label>
       <label className="hidden" aria-hidden="true">{c('leaveEmpty')}<input name="website" tabIndex={-1} autoComplete="off" /></label>
-      <label className="mb-4 flex gap-3 text-[.95rem] leading-snug text-[var(--ink-soft)]">
+      <label className="sans mb-5 flex gap-3 text-[.86rem] leading-snug text-[var(--ink-soft)]">
         <input type="checkbox" name="consent" required className="mt-1" />
         <span>{c('agreeMsg')} <Link href="/privacy">{c('privacyNotice')}</Link>.</span>
       </label>
       {state?.error && <p className="error" role="alert">{state.error}</p>}
-      <button className="btn" disabled={pending}>{pending ? c('sending') : c('send')}</button>
+      <button className="btn w-full sm:w-auto" disabled={pending}><Send size={15} /> {pending ? c('sending') : c('send')}</button>
     </form>
   );
 }

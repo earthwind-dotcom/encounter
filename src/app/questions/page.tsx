@@ -5,6 +5,9 @@ import { getQuestions } from '@/lib/content';
 import { getCurrentUser } from '@/lib/session';
 import { completedKeys } from '@/lib/learner';
 import { pick, t, type Lang } from '@/lib/i18n';
+import { ArrowRight, Check, CheckCircle2, MessageCircle } from 'lucide-react';
+import { ConfDots, IconTile, PageHeader } from '@/components/ui';
+import { FilterChips } from '@/components/filter-chips';
 
 export async function generateMetadata(): Promise<Metadata> {
   const lang = await getLang();
@@ -35,48 +38,67 @@ export default async function QuestionsPage() {
   const done = user ? await completedKeys(user.id) : new Set<string>();
   const themes = [...new Set(questions.map((q) => q.theme))];
 
+  const read = questions.filter((q) => done.has(`question:${q.slug}`)).length;
+
   return (
-    <div className="shell pt-12">
-      <p className="kicker kicker-accent">{t('navQuestions', lang)}</p>
-      <h1 className="mt-3 text-[clamp(2.1rem,1.4rem+2.6vw,3.2rem)] font-medium leading-tight">
-        {pick({ en: 'Ask the hard ones.', es: 'Pregunta lo difícil.', pt: 'Pergunte o difícil.' }, lang)}
-      </h1>
-      <p className="mt-4 max-w-[62ch] text-[1.1rem] text-[var(--ink-soft)]">{pick(intro, lang)}</p>
+    <div className="shell">
+      <PageHeader kicker={t('navQuestions', lang)} title={pick({ en: 'Ask the hard ones.', es: 'Pregunta lo difícil.', pt: 'Pergunte o difícil.' }, lang)} dek={pick(intro, lang)}>
+        {user && (
+          <p className="sans mt-5 inline-flex items-center gap-2 text-[.86rem] text-[var(--ink-soft)]">
+            <CheckCircle2 size={15} className="text-[var(--ok)]" /> {read} / {questions.length} {pick({ en: 'read', es: 'leídas', pt: 'lidas' }, lang)}
+          </p>
+        )}
+      </PageHeader>
 
-      {themes.map((theme) => (
-        <section key={theme} className="mt-12" aria-labelledby={`theme-${theme}`}>
-          <h2 id={`theme-${theme}`} className="kicker border-b border-[var(--rule)] pb-3">
-            {THEMES[theme]?.[lang] ?? theme}
-          </h2>
-          <ul className="grid gap-x-12 md:grid-cols-2">
-            {questions
-              .filter((q) => q.theme === theme)
-              .map((q) => (
-                <li key={q.slug} className="border-b border-[var(--rule)]">
-                  <Link href={`/questions/${q.slug}`} className="group block py-5 text-[var(--ink)]">
-                    <span className="flex items-start justify-between gap-4">
-                      <span className="text-[1.2rem] leading-snug group-hover:text-[var(--accent)]">{q.title}</span>
-                      {done.has(`question:${q.slug}`) && <span className="kicker text-[var(--ok)]" aria-label={t('done', lang)}>✓</span>}
-                    </span>
-                    <span className="mt-1 line-clamp-3 block text-[.95rem] text-[var(--ink-soft)]">{q.short}</span>
-                  </Link>
-                </li>
-              ))}
-          </ul>
-        </section>
-      ))}
+      <FilterChips
+        allLabel={pick({ en: 'All', es: 'Todas', pt: 'Todas' }, lang)}
+        options={themes.map((th) => ({ id: th, label: THEMES[th]?.[lang] ?? th, count: questions.filter((q) => q.theme === th).length }))}
+      >
+        {themes.map((theme) => (
+          <section key={theme} data-group={theme} className="mt-12" aria-labelledby={`theme-${theme}`}>
+            <h2 id={`theme-${theme}`} className="kicker kicker-accent mb-4 flex items-center gap-3">
+              {THEMES[theme]?.[lang] ?? theme}
+              <span className="h-px flex-1 bg-[var(--rule)]" />
+            </h2>
+            <ul className="m-0 grid list-none gap-4 p-0 md:grid-cols-2 lg:grid-cols-3">
+              {questions
+                .filter((q) => q.theme === theme)
+                .map((q) => {
+                  const isDone = done.has(`question:${q.slug}`);
+                  return (
+                    <li key={q.slug}>
+                      <Link href={`/questions/${q.slug}`} className="glass lift group flex h-full flex-col p-6 text-[var(--ink)]">
+                        <span className="flex items-center justify-between gap-3">
+                          <span className="mono text-[.72rem] text-[var(--accent)]">{String(q.order).padStart(2, '0')}</span>
+                          {isDone && <span className="pill pill-ok"><Check size={12} /> {t('done', lang)}</span>}
+                        </span>
+                        <span className="mt-2 block text-[1.18rem] font-medium leading-snug">{q.title}</span>
+                        <span className="mt-2 line-clamp-3 block flex-1 text-[.93rem] leading-normal text-[var(--ink-soft)]">{q.short}</span>
+                        <span className="mt-4 flex items-center justify-between">
+                          <ConfDots labels={q.standing.map((s) => s.label)} lang={lang} />
+                          <ArrowRight size={16} className="text-[var(--faint)] transition-all group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
+                        </span>
+                      </Link>
+                    </li>
+                  );
+                })}
+            </ul>
+          </section>
+        ))}
+      </FilterChips>
 
-      <p className="mt-12 max-w-[62ch] text-[.98rem] italic text-[var(--faint)]">
-        {pick(
-          {
-            en: 'Don’t see your question? Ask it. A real person reads every one.',
-            es: '¿No ves tu pregunta? Hazla. Una persona real lee cada una.',
-            pt: 'Não vê sua pergunta? Pergunte. Uma pessoa real lê cada uma.',
-          },
-          lang,
-        )}{' '}
-        <Link href="/talk">{t('navTalk', lang)} →</Link>
-      </p>
+      <Link href="/talk" className="glass lift mt-14 flex flex-wrap items-center gap-4 p-6 text-[var(--ink)]">
+        <IconTile><MessageCircle size={19} /></IconTile>
+        <span className="min-w-0 flex-1">
+          <span className="block text-[1.15rem] font-medium">
+            {pick({ en: 'Don’t see your question? Ask it.', es: '¿No ves tu pregunta? Hazla.', pt: 'Não vê sua pergunta? Pergunte.' }, lang)}
+          </span>
+          <span className="sans block text-[.88rem] text-[var(--ink-soft)]">
+            {pick({ en: 'A real person reads every one.', es: 'Una persona real lee cada una.', pt: 'Uma pessoa real lê cada uma.' }, lang)}
+          </span>
+        </span>
+        <span className="btn btn-sm">{t('navTalk', lang)} <ArrowRight size={14} /></span>
+      </Link>
     </div>
   );
 }

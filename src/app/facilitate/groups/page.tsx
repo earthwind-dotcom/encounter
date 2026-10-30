@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { requireFacilitator } from '@/lib/session';
 import { getDb } from '@/lib/db';
 import { cohortProgress, cohortsForFacilitator } from '@/lib/cohorts';
@@ -8,6 +7,8 @@ import { archiveCohortAction } from '@/app/actions';
 import { CreateCohortForm } from '@/components/cohort-forms';
 import { getLang } from '@/lib/lang';
 import { pick, t, type Lang } from '@/lib/i18n';
+import { Archive, ArchiveRestore, CalendarDays, Check, Users } from 'lucide-react';
+import { IconTile, PageHeader } from '@/components/ui';
 
 const COPY = {
   groups: { en: 'Groups', es: 'Grupos', pt: 'Grupos' },
@@ -42,58 +43,79 @@ export default async function Groups() {
   const sessions = getSessions(lang);
 
   return (
-    <div className="shell pt-12">
-      <p className="kicker"><Link href="/facilitate" className="kicker kicker-accent">{t('desk', lang)}</Link> · {tx('groups').toLowerCase()}</p>
-      <h1 className="mt-3 text-[2.4rem] font-medium leading-tight">{tx('groups')}</h1>
-      <p className="mt-2 max-w-2xl text-[var(--ink-soft)]">
-        {tx('intro')}
-      </p>
-      <div className="mt-6"><CreateCohortForm lang={lang} /></div>
+    <div className="shell">
+      <PageHeader crumb={{ href: '/facilitate', label: t('desk', lang) }} kicker={tx('groups')} title={tx('groups')} dek={tx('intro')} />
+      <div className="mt-8"><CreateCohortForm lang={lang} /></div>
 
-      {cohorts.length === 0 && <p className="mt-8 text-[var(--ink-soft)]">{tx('none')}</p>}
-      {cohorts.map((c, i) => (
-        <section key={c.id} className={`card mt-8 p-5 ${c.archived ? 'opacity-60' : ''}`} aria-labelledby={`g-${c.id}`}>
-          <div className="flex flex-wrap items-baseline justify-between gap-3">
-            <h2 id={`g-${c.id}`} className="text-[1.4rem] font-medium">{c.name}</h2>
-            <p className="kicker">
-              {tx('code')} <span className="mono ml-1 text-[1rem] tracking-[.25em] text-[var(--accent)]">{c.code}</span>
-              {c.starts_on && <> · {pick(COPY.starts, lang)} {c.starts_on}</>}
-              {me.role === 'admin' && c.facilitator_name && <> · {pick(COPY.ledBy, lang)} {c.facilitator_name}</>}
-            </p>
-          </div>
-          {progress[i].length === 0 ? (
-            <p className="mt-3 text-[.95rem] text-[var(--ink-soft)]">{pick(COPY.empty, lang)}</p>
-          ) : (
-            <div className="mt-4 overflow-x-auto">
-              <table className="w-full border-collapse text-[.9rem]">
-                <thead>
-                  <tr>
-                    <th className="kicker py-2 pr-4 text-left">{pick(COPY.person, lang)}</th>
-                    {sessions.map((s) => (
-                      <th key={s.n} className="kicker w-8 text-center" title={s.title}>{s.n}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {progress[i].map((m) => (
-                    <tr key={m.user_id} className="border-t border-[var(--rule)]">
-                      <td className="py-2 pr-4 whitespace-nowrap">{m.name}</td>
-                      {sessions.map((s) => (
-                        <td key={s.n} className="text-center">
-                          {m.done.includes(s.n) ? <span className="text-[var(--ok)]" aria-label={`${t('session', lang)} ${s.n}: ${pick(COPY.done, lang)}`}>●</span> : <span className="text-[var(--rule)]">·</span>}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+      {cohorts.length === 0 && (
+        <div className="glass mt-8 flex flex-col items-center gap-3 p-12 text-center text-[var(--ink-soft)]">
+          <IconTile><Users size={19} /></IconTile>
+          {tx('none')}
+        </div>
+      )}
+      {cohorts.map((c, i) => {
+        const members = progress[i];
+        const pct = members.length ? Math.round((members.reduce((n, m) => n + m.done.length, 0) / (members.length * sessions.length)) * 100) : 0;
+        return (
+          <section key={c.id} className={`glass mt-6 p-5 sm:p-7 ${c.archived ? 'opacity-60' : ''}`} aria-labelledby={`g-${c.id}`}>
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <h2 id={`g-${c.id}`} className="text-[1.4rem] font-medium leading-tight">{c.name}</h2>
+                <p className="sans mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[.82rem] text-[var(--ink-soft)]">
+                  <span>{members.length} {members.length === 1 ? pick({ en: 'person', es: 'persona', pt: 'pessoa' }, lang) : pick({ en: 'people', es: 'personas', pt: 'pessoas' }, lang)}</span>
+                  {c.starts_on && <span className="inline-flex items-center gap-1"><CalendarDays size={13} /> {pick(COPY.starts, lang)} {c.starts_on}</span>}
+                  {me.role === 'admin' && c.facilitator_name && <span>{pick(COPY.ledBy, lang)} {c.facilitator_name}</span>}
+                </p>
+              </div>
+              <div className="well flex items-center gap-3 px-4 py-2.5">
+                <span className="kicker">{tx('code')}</span>
+                <span className="mono text-[1.1rem] font-medium tracking-[.25em] text-[var(--accent)]">{c.code}</span>
+              </div>
             </div>
-          )}
-          <form action={archiveCohortAction.bind(null, c.id, !c.archived)} className="mt-4">
-            <button className="kicker cursor-pointer hover:text-[var(--accent)]">{c.archived ? pick(COPY.reopen, lang) : pick(COPY.archive, lang)}</button>
-          </form>
-        </section>
-      ))}
+            {members.length === 0 ? (
+              <p className="well mt-5 p-4 text-[.95rem] text-[var(--ink-soft)]">{pick(COPY.empty, lang)}</p>
+            ) : (
+              <>
+                <div className="mt-5 flex items-center gap-3">
+                  <div className="bar flex-1"><span style={{ width: `${pct}%` }} /></div>
+                  <span className="sans text-[.8rem] font-medium text-[var(--ink-soft)]">{pct}%</span>
+                </div>
+                <div className="well mt-4 overflow-x-auto p-2">
+                  <table className="sans w-full border-collapse text-[.86rem]">
+                    <thead>
+                      <tr>
+                        <th className="px-3 py-2 text-left text-[.74rem] font-medium text-[var(--faint)]">{pick(COPY.person, lang)}</th>
+                        {sessions.map((s) => (
+                          <th key={s.n} className="w-9 text-center text-[.72rem] font-medium text-[var(--faint)]" title={s.title}>{s.n}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {members.map((m) => (
+                        <tr key={m.user_id} className="border-t border-[var(--rule)]">
+                          <td className="whitespace-nowrap px-3 py-2.5 font-medium">{m.name}</td>
+                          {sessions.map((s) => (
+                            <td key={s.n} className="text-center">
+                              {m.done.includes(s.n) ? (
+                                <span role="img" className="mx-auto grid h-6 w-6 place-items-center rounded-md bg-[var(--ok)] text-[var(--paper)]" aria-label={`${t('session', lang)} ${s.n}: ${pick(COPY.done, lang)}`}><Check size={13} strokeWidth={3} /></span>
+                              ) : (
+                                <span className="mx-auto block h-6 w-6 rounded-md bg-[var(--glass-inner-2)] ring-1 ring-inset ring-[var(--rule)]" />
+                              )}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+            <form action={archiveCohortAction.bind(null, c.id, !c.archived)} className="mt-4">
+              <button className="btn btn-ghost btn-sm">{c.archived ? <ArchiveRestore size={14} /> : <Archive size={14} />} {c.archived ? pick(COPY.reopen, lang) : pick(COPY.archive, lang)}</button>
+            </form>
+          </section>
+        );
+      })}
     </div>
   );
 }

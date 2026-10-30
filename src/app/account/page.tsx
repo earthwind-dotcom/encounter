@@ -11,6 +11,8 @@ import { JoinCohortForm } from '@/components/cohort-forms';
 import { StagePicker } from '@/components/stage-picker';
 import { getLang } from '@/lib/lang';
 import { pick, t, type Lang } from '@/lib/i18n';
+import { ArrowRight, Compass, HelpCircle, LayoutDashboard, Lock, LogOut, NotebookPen, Play, ShieldCheck, Trash2, Users } from 'lucide-react';
+import { PageHeader, ProgressRing, Stat } from '@/components/ui';
 
 const COPY = {
   pickUp: { en: 'Pick up where you left off', es: 'Sigue donde te quedaste', pt: 'Continue de onde parou' },
@@ -96,77 +98,83 @@ export default async function Account() {
   const courseDone = sessions.filter((s) => done.has(`course:${s.n}`)).length;
   const questionsDone = getQuestions('en').filter((q) => done.has(`question:${q.slug}`)).length;
 
+  const card = 'glass p-6 sm:p-7';
   return (
-    <div className="shell pt-12">
-      <p className="kicker kicker-accent">{t('account', lang)}</p>
-      <h1 className="mt-3 text-[clamp(2rem,1.5rem+2vw,2.8rem)] font-medium leading-tight">
-        {pick({ en: `Good to see you, ${user.name}.`, es: `Qué bueno verte, ${user.name}.`, pt: `Que bom ver você, ${user.name}.` }, lang)}
-      </h1>
+    <div className="shell">
+      <PageHeader
+        kicker={t('account', lang)}
+        title={pick({ en: `Good to see you, ${user.name}.`, es: `Qué bueno verte, ${user.name}.`, pt: `Que bom ver você, ${user.name}.` }, lang)}
+      />
 
-      <div className="mt-10 grid gap-6 lg:grid-cols-3">
-        <Link href={nextSession ? `/course/${nextSession.n}` : '/course'} className="card block p-6 text-[var(--ink)] hover:border-[var(--accent)] lg:col-span-2">
-          <span className="kicker">{nextSession ? c('pickUp') : c('finished')}</span>
-          <span className="mt-2 block text-[1.5rem] leading-snug">
-            {nextSession ? `${t('session', lang)} ${nextSession.n}: ${nextSession.title}` : c('stage2')}
+      <div className="mt-10 grid gap-4 lg:grid-cols-4">
+        <Link href={nextSession ? `/course/${nextSession.n}` : '/course'} className="glass-strong lift rise rise-1 group flex flex-wrap items-center gap-6 rounded-[24px] p-6 text-[var(--ink)] sm:flex-nowrap lg:col-span-2">
+          <ProgressRing value={courseDone} total={sessions.length} size={104} label={`${courseDone} ${c('of')} ${sessions.length} ${c('sessions')}`} />
+          <span className="min-w-0">
+            <span className="kicker kicker-accent">{nextSession ? c('pickUp') : c('finished')}</span>
+            <span className="mt-2 block text-[1.4rem] font-medium leading-snug">
+              {nextSession ? `${t('session', lang)} ${nextSession.n}: ${nextSession.title}` : c('stage2')}
+            </span>
+            {nextSession && <span className="mt-1 block text-[.95rem] italic text-[var(--ink-soft)]">{nextSession.question}</span>}
+            <span className="sans mt-4 inline-flex items-center gap-1.5 text-[.88rem] font-medium text-[var(--accent)]">
+              <Play size={14} /> {pick({ en: 'Open session', es: 'Abrir sesión', pt: 'Abrir sessão' }, lang)}
+              <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+            </span>
           </span>
-          {nextSession && <span className="mt-1 block italic text-[var(--ink-soft)]">{nextSession.question}</span>}
-          <span className="mt-4 block h-1.5 rounded-full bg-[var(--rule)]">
-            <span className="block h-full rounded-full bg-[var(--accent)]" style={{ width: `${(courseDone / sessions.length) * 100}%` }} />
-          </span>
-          <span className="kicker mt-2 block">{courseDone} {c('of')} {sessions.length} {c('sessions')}</span>
         </Link>
-        <div className="card p-6">
-          <span className="kicker">{c('questionsRead')}</span>
-          <span className="mt-2 block text-[2.4rem] leading-none">{questionsDone}</span>
-          <Link href="/questions" className="mt-4 inline-block">{c('browse')}</Link>
-        </div>
+        <div className="rise rise-2 [&>div]:h-full"><Stat label={c('questionsRead')} value={questionsDone} hint={<Link href="/questions">{c('browse')}</Link>} icon={<HelpCircle size={19} />} /></div>
+        <div className="rise rise-3 [&>div]:h-full"><Stat label={t('yourNotes', lang)} value={notes.length} hint={pick({ en: 'Private to you', es: 'Solo para ti', pt: 'Só para você' }, lang)} icon={<NotebookPen size={19} />} /></div>
       </div>
 
-      <section className="mt-14 max-w-3xl" aria-labelledby="stage">
-        <h2 id="stage" className="text-[1.4rem] font-medium">{c('whereAreYou')}</h2>
-        <p className="mt-1 text-[.98rem] text-[var(--ink-soft)]">
-          {c('onlyYou')} <Link href="/course/pathway/offer">{c('readPlain')}</Link> {c('or')} <Link href="/talk">{c('talk')}</Link>.
-        </p>
-        <StagePicker initial={stageRows[0]?.stage ?? null} lang={lang} />
-      </section>
+      <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
+        <section className={card} aria-labelledby="stage">
+          <h2 id="stage" className="flex items-center gap-2.5 text-[1.35rem] font-medium"><Compass size={19} className="text-[var(--accent)]" /> {c('whereAreYou')}</h2>
+          <p className="sans mt-2 text-[.88rem] leading-relaxed text-[var(--ink-soft)]">
+            <Lock size={12} className="mr-1 inline -translate-y-px" /> {c('onlyYou')} <Link href="/course/pathway/offer">{c('readPlain')}</Link> {c('or')} <Link href="/talk">{c('talk')}</Link>.
+          </p>
+          <StagePicker initial={stageRows[0]?.stage ?? null} lang={lang} />
+        </section>
 
-      <section className="mt-14 max-w-3xl" aria-labelledby="groups">
-        <h2 id="groups" className="text-[1.4rem] font-medium">{c('yourGroup')}</h2>
-        {groups.length > 0 ? (
-          <ul className="mt-3 list-none p-0">
-            {groups.map((g) => (
-              <li key={g.id} className="flex flex-wrap items-baseline justify-between gap-3 border-t border-[var(--rule)] py-3">
-                <span>
-                  <span className="font-medium">{g.name}</span>
-                  {g.facilitator_name && <span className="text-[.95rem] text-[var(--ink-soft)]"> · {c('with')} {g.facilitator_name}</span>}
-                </span>
-                <form action={leaveCohortAction.bind(null, g.id)}>
-                  <button className="kicker cursor-pointer hover:text-[var(--accent)]">{c('leave')}</button>
-                </form>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="mt-1 text-[.98rem] text-[var(--ink-soft)]">{c('enterCode')}</p>
-        )}
-        <p className="mt-2 text-[.88rem] italic text-[var(--faint)]">
-          {c('facSees')}
-        </p>
-        <JoinCohortForm lang={lang} />
-      </section>
+        <section className={card} aria-labelledby="groups">
+          <h2 id="groups" className="flex items-center gap-2.5 text-[1.35rem] font-medium"><Users size={19} className="text-[var(--accent)]" /> {c('yourGroup')}</h2>
+          {groups.length > 0 ? (
+            <ul className="mt-4 list-none space-y-2 p-0">
+              {groups.map((g) => (
+                <li key={g.id} className="well flex flex-wrap items-center justify-between gap-3 px-4 py-3">
+                  <span>
+                    <span className="font-medium">{g.name}</span>
+                    {g.facilitator_name && <span className="sans block text-[.84rem] text-[var(--ink-soft)]">{c('with')} {g.facilitator_name}</span>}
+                  </span>
+                  <form action={leaveCohortAction.bind(null, g.id)}>
+                    <button className="btn btn-ghost btn-sm">{c('leave')}</button>
+                  </form>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-2 text-[.98rem] text-[var(--ink-soft)]">{c('enterCode')}</p>
+          )}
+          <JoinCohortForm lang={lang} />
+          <p className="sans mt-4 flex gap-2 text-[.8rem] leading-relaxed text-[var(--faint)]"><ShieldCheck size={14} className="mt-0.5 shrink-0" /> {c('facSees')}</p>
+        </section>
+      </div>
 
-      <section className="mt-14 max-w-3xl" aria-labelledby="notes">
-        <h2 id="notes" className="text-[1.4rem] font-medium">{t('yourNotes', lang)}</h2>
+      <section className={`${card} mt-6`} aria-labelledby="notes">
+        <h2 id="notes" className="flex items-center gap-2.5 text-[1.35rem] font-medium"><NotebookPen size={19} className="text-[var(--accent)]" /> {t('yourNotes', lang)}</h2>
         {notes.length === 0 ? (
           <p className="mt-2 text-[var(--ink-soft)]">{c('notesEmpty')}</p>
         ) : (
-          <ul className="mt-3 list-none p-0">
+          <ul className="mt-4 grid list-none gap-3 p-0 md:grid-cols-2">
             {notes.map((n) => {
               const d = describe(n.item_key, lang);
               return (
-                <li key={n.item_key} className="border-t border-[var(--rule)] py-4">
-                  <Link href={d.href} className="font-medium">{d.title}</Link>
-                  <p className="mt-1 line-clamp-3 whitespace-pre-line text-[.95rem] text-[var(--ink-soft)]">{n.body}</p>
+                <li key={n.item_key}>
+                  <Link href={d.href} className="well lift block h-full p-4 text-[var(--ink)] hover:!bg-[var(--glass-hover)]">
+                    <span className="block font-medium leading-snug">{d.title}</span>
+                    <span className="mt-1.5 line-clamp-3 block whitespace-pre-line text-[.93rem] text-[var(--ink-soft)]">{n.body}</span>
+                    <span className="sans mt-3 block text-[.74rem] text-[var(--faint)]">
+                      {new Date(n.updated_at).toLocaleDateString({ en: 'en-US', es: 'es-MX', pt: 'pt-BR' }[lang], { dateStyle: 'medium' })}
+                    </span>
+                  </Link>
                 </li>
               );
             })}
@@ -174,14 +182,14 @@ export default async function Account() {
         )}
       </section>
 
-      <section className="mt-14 flex flex-wrap items-center gap-4 border-t border-[var(--rule)] pt-6">
-        {canFacilitate(user) && <Link href="/facilitate" className="btn btn-ghost">{t('desk', lang)}</Link>}
-        <form action={signOut}><button className="btn btn-ghost">{t('signOut', lang)}</button></form>
-        <details className="text-[.95rem]">
-          <summary className="cursor-pointer text-[var(--faint)]">{c('deleteMine')}</summary>
-          <form action={deleteAccount} className="mt-3">
-            <p className="mb-3 max-w-md text-[var(--ink-soft)]">{c('deleteWarn')}</p>
-            <button className="btn">{c('deleteAll')}</button>
+      <section className="mt-6 flex flex-wrap items-center gap-3">
+        {canFacilitate(user) && <Link href="/facilitate" className="btn btn-ghost"><LayoutDashboard size={15} /> {t('desk', lang)}</Link>}
+        <form action={signOut}><button className="btn btn-ghost"><LogOut size={15} /> {t('signOut', lang)}</button></form>
+        <details className="sans ml-auto text-[.88rem]">
+          <summary className="cursor-pointer list-none rounded-full px-3 py-2 text-[var(--faint)] hover:text-[var(--danger)]">{c('deleteMine')}</summary>
+          <form action={deleteAccount} className="glass mt-3 max-w-sm p-5">
+            <p className="mb-4 text-[var(--ink-soft)]">{c('deleteWarn')}</p>
+            <button className="btn !bg-none !bg-[var(--danger)] !text-white"><Trash2 size={15} /> {c('deleteAll')}</button>
           </form>
         </details>
       </section>
