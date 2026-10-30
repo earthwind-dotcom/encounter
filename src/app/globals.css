@@ -327,7 +327,7 @@ input[type="checkbox"] { accent-color: var(--accent); width: 1.05rem; height: 1.
 
 /* ---------- confidence labels (five, and only five) ---------- */
 .conf {
-  --c: var(--accent);
+  --c: var(--c-ours);
   display: inline-flex; align-items: center; gap: .4em;
   font-family: var(--sans);
   font-size: .68rem;
