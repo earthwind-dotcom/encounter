@@ -61,9 +61,35 @@ export const LIBRARY_SECTIONS = {
 export type LibraryKey = keyof typeof LIBRARY_SECTIONS;
 export const isLibraryKey = (v: string): v is LibraryKey => v in LIBRARY_SECTIONS;
 
-export const getLibrary = cache(
-  (): Record<string, LibrarySection> => JSON.parse(readFileSync(path.join(CONTENT, 'library.json'), 'utf8')),
+/** Folds a label for matching: no accents (or their HTML entities), lower case. */
+const foldLabel = (s: string) =>
+  s
+    .replace(/&([a-z])(acute|grave|tilde|circ|uml|cedil);/gi, '$1')
+    .normalize('NFD')
+    .replace(/\p{M}/gu, '')
+    .toLowerCase()
+    .trim();
+const LABEL_KEYS = new Map(
+  Object.entries(CONFIDENCE).flatMap(([key, names]) => Object.values(names).map((n) => [foldLabel(n), key] as const)),
 );
+
+/**
+ * The imported Marginalia articles carry confidence badges as plain `class="conf"` spans in
+ * whichever language. This adds the same `data-conf` key the Markdown badges get, so they share
+ * the five colors.
+ */
+export function tagLegacyBadges(html: string): string {
+  return html.replace(/<span class="conf">([^<]*)<\/span>/g, (whole, label: string) => {
+    const key = LABEL_KEYS.get(foldLabel(label));
+    return key ? `<span class="conf" data-conf="${key}">${label}</span>` : whole;
+  });
+}
+
+export const getLibrary = cache((): Record<string, LibrarySection> => {
+  const lib: Record<string, LibrarySection> = JSON.parse(readFileSync(path.join(CONTENT, 'library.json'), 'utf8'));
+  for (const section of Object.values(lib)) for (const a of section.articles) a.html = tagLegacyBadges(a.html);
+  return lib;
+});
 
 export function getLibraryArticle(section: string, slug: string): LibraryArticle | null {
   return getLibrary()[section]?.articles.find((a) => a.slug === slug) ?? null;

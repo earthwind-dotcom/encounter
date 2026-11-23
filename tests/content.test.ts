@@ -2,7 +2,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import matter from 'gray-matter';
-import { getAboutMd, getAboutPages, getLibrary, getQuestions, getSessions, renderMarkdown, withBadges } from '@/lib/content';
+import { getAboutMd, getAboutPages, getLibrary, getQuestions, getSessions, renderMarkdown, tagLegacyBadges, withBadges } from '@/lib/content';
 import { CONFIDENCE } from '@/lib/i18n';
 
 /**
@@ -199,5 +199,20 @@ describe('confidence badge markup', () => {
     expect(withBadges('[consensus] x')).toContain('<span class="conf" data-conf="consensus">Consensus</span>');
     expect(withBadges('[my read]', 'es')).toContain('data-conf="our read">Nuestra lectura<');
     expect(withBadges('[strong majority: most agree]')).toContain('data-conf="strong majority"');
+  });
+});
+
+describe('library badges', () => {
+  it('tags the imported articles’ badges in every language, accents and entities included', () => {
+    expect(tagLegacyBadges('<span class="conf">Debated</span>')).toBe('<span class="conf" data-conf="debated">Debated</span>');
+    expect(tagLegacyBadges('<span class="conf">Mayor&iacute;a amplia</span>')).toContain('data-conf="strong majority"');
+    expect(tagLegacyBadges('<span class="conf">Nossa leitura</span>')).toContain('data-conf="our read"');
+    expect(tagLegacyBadges('<span class="conf">Something else</span>')).toBe('<span class="conf">Something else</span>');
+  });
+
+  it('leaves no library badge untagged', () => {
+    for (const section of Object.values(getLibrary())) {
+      for (const a of section.articles) expect(a.html, a.slug).not.toContain('<span class="conf">');
+    }
   });
 });
