@@ -507,6 +507,34 @@ kbd {
   padding: .12rem .38rem; border-radius: 6px; border: 1px solid var(--rule-strong); background: var(--glass-inner);
 }
 
+/* ---------- LMS: lesson player and course journey ---------- */
+.scrollbar-none { scrollbar-width: none; }
+.scrollbar-none::-webkit-scrollbar { display: none; }
+.lesson-numeral {
+  font-family: var(--serif); font-size: clamp(3.6rem, 2.6rem + 3vw, 5.4rem); line-height: .82; font-weight: 400;
+  letter-spacing: -.04em; padding-top: .12em;
+  background: linear-gradient(160deg, var(--accent), var(--gold)); -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.lesson-prose h2 { scroll-margin-top: 150px; }
+.lesson-prose h2::before {
+  content: ""; display: block; width: 28px; height: 3px; border-radius: 3px; margin-bottom: .9rem;
+  background: linear-gradient(90deg, var(--accent), var(--gold));
+}
+.lesson-prose > h2:first-child::before { margin-top: 0; }
+.practice-card::after {
+  content: ""; position: absolute; right: -40px; bottom: -40px; width: 160px; height: 160px; border-radius: 50%;
+  background: radial-gradient(closest-side, var(--ok-soft), transparent); pointer-events: none;
+}
+@keyframes lms-pulse { 0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); } 50% { box-shadow: 0 0 0 6px transparent; } }
+.lms-pulse { animation: lms-pulse 2.4s var(--ease) infinite; }
+@keyframes journey-glow { 0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow), 0 10px 24px -10px var(--accent-glow); } 50% { box-shadow: 0 0 0 9px transparent, 0 10px 24px -10px var(--accent-glow); } }
+.journey-next { animation: journey-glow 2.6s var(--ease) infinite; }
+.journey-node .journey-tip { z-index: 5; }
+@media print {
+  .lesson-prose h2::before { display: none; }
+  .lesson-numeral { color: #000; background: none; }
+}
+
 @media print {
   header, footer, nav, .no-print, .dawn { display: none !important; }
   body { background: #fff; color: #000; font-size: 11pt; }

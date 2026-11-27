@@ -108,16 +108,39 @@ export interface Session {
   nextStep: string;
   invitation?: string;
   status: 'outline' | 'draft' | 'reviewed' | 'published';
+  /** Optional talk for the lesson (video or audio), self-hosted, with captions. See src/components/lms/README.md. */
+  media?: LessonMedia;
+  /** Estimated minutes to read the participant guide (about 200 words a minute). */
+  minutes: number;
   participant: string;
   facilitator: string;
   /** False when the reader asked for another language and this is the English fallback. */
   translated: boolean;
 }
 
+export interface LessonMedia {
+  kind: 'video' | 'audio';
+  /** Path under /public (e.g. /media/session-01.mp4) or an absolute https URL. */
+  src: string;
+  poster?: string;
+  /** WebVTT captions; required for video so every talk is accessible. */
+  captions?: string;
+  /** Length in minutes, shown before play. */
+  minutes?: number;
+}
+
+export const readingMinutes = (md: string) => Math.max(1, Math.round(md.replace(/<[^>]+>|[#>*_`\[\]-]/g, ' ').split(/\s+/).filter(Boolean).length / 200));
+
 function readSession(file: string, translated: boolean): Session {
   const { data, content } = matter(readFileSync(file, 'utf8'));
   const [, participant = '', facilitator = ''] = content.split(/<!-- (?:participant|facilitator) -->/);
-  return { ...(data as Omit<Session, 'participant' | 'facilitator' | 'translated'>), participant: participant.trim(), facilitator: facilitator.trim(), translated };
+  return {
+    ...(data as Omit<Session, 'participant' | 'facilitator' | 'translated' | 'minutes'>),
+    participant: participant.trim(),
+    facilitator: facilitator.trim(),
+    minutes: readingMinutes(participant),
+    translated,
+  };
 }
 
 /** Sessions in the reader's language where a translation exists (session-NN.<lang>.md), English otherwise. */

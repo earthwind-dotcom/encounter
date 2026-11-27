@@ -5,19 +5,52 @@ import { getLang } from '@/lib/lang';
 import { getSession, getSessions, renderMarkdown, UNITS } from '@/lib/content';
 import { getCurrentUser } from '@/lib/session';
 import { canFacilitate } from '@/lib/auth';
-import { learnerState } from '@/lib/learner';
+import { completedKeys, learnerState } from '@/lib/learner';
+import { courseModules, sessionKey } from '@/lib/course-outline';
 import { pick, t } from '@/lib/i18n';
 import { LearnerTools } from '@/components/learner-tools';
 import { promoteLeadLabels, withToc } from '@/lib/toc';
-import { ArrowLeft, ArrowRight, BookOpen, ChevronDown, DoorOpen, HelpCircle, MessageCircle, PencilLine, Users } from 'lucide-react';
-import { IconTile, PageHeader } from '@/components/ui';
-import { ReadingProgress, Toc } from '@/components/reading';
+import { BookOpen, ChevronDown, Clock, DoorOpen, HelpCircle, MessageCircle, PencilLine, Sprout, Users } from 'lucide-react';
+import { ReadingProgress } from '@/components/reading';
+import { CourseOutline } from '@/components/lms/course-outline';
+import { LessonSteps } from '@/components/lms/lesson-steps';
+import { LessonMedia } from '@/components/lms/lesson-media';
+import { LessonComplete } from '@/components/lms/lesson-complete';
+import { PrintButton } from '@/components/lms/print-button';
 import { Marked } from 'marked';
 
 // Session passages are our own frontmatter; italics mark book titles (*Annals*).
 const inline = new Marked();
 const SESSION = { en: 'Session', es: 'Sesión', pt: 'Sessão' };
 const UNIT = { en: 'Unit', es: 'Unidad', pt: 'Unidade' };
+
+const L = {
+  outline: { en: 'The course', es: 'El curso', pt: 'O curso' },
+  done: { en: 'done', es: 'hechas', pt: 'feitas' },
+  of: { en: 'of', es: 'de', pt: 'de' },
+  min: { en: 'min', es: 'min', pt: 'min' },
+  minRead: { en: 'min read', es: 'min de lectura', pt: 'min de leitura' },
+  show: { en: 'Show', es: 'Ver', pt: 'Ver' },
+  hide: { en: 'Hide', es: 'Ocultar', pt: 'Ocultar' },
+  steps: { en: 'In this session', es: 'En esta sesión', pt: 'Nesta sessão' },
+  practice: { en: 'This week’s practice', es: 'La práctica de esta semana', pt: 'A prática desta semana' },
+  nextStep: { en: 'One next step', es: 'Un siguiente paso', pt: 'Um próximo passo' },
+  print: { en: 'Print handout', es: 'Imprimir', pt: 'Imprimir' },
+  complete: { en: 'Mark complete', es: 'Marcar como hecha', pt: 'Marcar como feita' },
+  completeContinue: { en: 'Complete and continue', es: 'Terminar y seguir', pt: 'Concluir e seguir' },
+  completed: { en: 'Completed', es: 'Hecha', pt: 'Feita' },
+  undo: { en: 'Completed', es: 'Hecha', pt: 'Feita' },
+  signIn: { en: 'Sign in to track', es: 'Entra para guardar tu avance', pt: 'Entre para salvar seu progresso' },
+  endOf: { en: 'End of session', es: 'Fin de la sesión', pt: 'Fim da sessão' },
+  finished: { en: 'You’ve finished the course.', es: 'Terminaste el curso.', pt: 'Você terminou o curso.' },
+  finishedHint: { en: 'The last session. Mark it complete to finish the course.', es: 'La última sesión. Márcala para terminar el curso.', pt: 'A última sessão. Marque para terminar o curso.' },
+  next: { en: 'Next', es: 'Siguiente', pt: 'Próxima' },
+  prev: { en: 'Previous', es: 'Anterior', pt: 'Anterior' },
+  speed: { en: 'Playback speed', es: 'Velocidad', pt: 'Velocidade' },
+  resumed: { en: 'Picked up where you stopped', es: 'Sigues donde te quedaste', pt: 'Continuando de onde parou' },
+  captions: { en: 'Captions', es: 'Subtítulos', pt: 'Legendas' },
+  listen: { en: 'Listen to this session', es: 'Escucha esta sesión', pt: 'Ouça esta sessão' },
+};
 
 export function generateStaticParams() {
   return getSessions().map((s) => ({ n: String(s.n) }));
@@ -41,41 +74,71 @@ export default async function SessionPage({ params }: { params: Promise<{ n: str
   const next = all.find((x) => x.n === n + 1);
   const user = await getCurrentUser();
   const facilitator = canFacilitate(user);
-  const tools = await learnerState(`course:${n}`, lang);
+  const key = sessionKey(n);
+  const [tools, done] = await Promise.all([learnerState(key, lang), user ? completedKeys(user.id) : Promise.resolve(new Set<string>())]);
+  const modules = courseModules(lang, done, all);
 
-  const { html, toc } = withToc(promoteLeadLabels(renderMarkdown(s.participant, textLang)));
-  const unitList = all.filter((x) => x.unit === s.unit);
+  // The question leads the page in its own card, so drop the guide's opening copy of it.
+  const body = promoteLeadLabels(renderMarkdown(s.participant, textLang)).replace(/^\s*<h2>([^<]*)<\/h2>\s*<p>[\s\S]*?<\/p>/, (whole, h: string) =>
+    /^(the question|la pregunta|a pergunta)$/i.test(h.trim()) ? '' : whole,
+  );
+  const { html, toc } = withToc(body);
+  const label = (x: typeof s) => `${pick(SESSION, lang)} ${x.n}`;
 
   return (
-    <article className="shell pt-8" lang={textLang}>
+    <article className="shell pb-28 pt-8 lg:pb-10" lang={textLang}>
       <ReadingProgress />
-      <PageHeader
-        crumb={{ href: '/course', label: t('navCourse', lang) }}
-        kicker={`${pick(UNIT, lang)} ${s.unit} · ${pick(SESSION, lang)} ${String(n).padStart(2, '0')}`}
-        title={s.title}
-        className="!pt-6 [&_h1]:max-w-[26ch]"
-      >
-        {!s.translated && <p className="article"><span className="xlate block">{t('notTranslated', lang)}</span></p>}
-      </PageHeader>
+      <div className="grid gap-8 lg:grid-cols-[290px_minmax(0,1fr)] lg:gap-10">
+        <aside className="no-print lg:sticky lg:top-24 lg:self-start">
+          <CourseOutline
+            key={key}
+            modules={modules}
+            currentId={key}
+            labels={{ outline: pick(L.outline, lang), done: pick(L.done, lang), of: pick(L.of, lang), minutes: pick(L.min, lang), show: pick(L.show, lang), hide: pick(L.hide, lang) }}
+          />
+        </aside>
 
-      <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,1fr)_290px]">
         <div className="min-w-0 space-y-6">
-          <div className="rise rise-1 grid gap-4 sm:grid-cols-2">
-            <div className="glass-strong flex gap-4 rounded-[22px] p-5">
-              <IconTile><HelpCircle size={19} /></IconTile>
-              <div>
-                <p className="kicker">{pick({ en: 'Question', es: 'Pregunta', pt: 'Pergunta' }, lang)}</p>
-                <p className="mt-1 text-[1.08rem] italic leading-snug">{s.question}</p>
+          <div className="rise pt-2">
+            <p className="kicker flex flex-wrap items-center gap-2">
+              <Link href="/course" className="kicker kicker-accent hover:text-[var(--ink)]">{t('navCourse', lang)}</Link>
+              <span aria-hidden="true" className="text-[var(--rule-strong)]">/</span>
+              <span>{pick(UNIT, lang)} {s.unit} · {pick(UNITS[s.unit], lang)}</span>
+            </p>
+            <div className="mt-5 flex items-start gap-5">
+              <span aria-hidden="true" className="lesson-numeral hidden sm:block">{String(n).padStart(2, '0')}</span>
+              <div className="min-w-0">
+                <h1 className="page-title max-w-[24ch]">{s.title}</h1>
+                <p className="sans mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-[.84rem] text-[var(--ink-soft)]">
+                  <span className="inline-flex items-center gap-1.5"><Clock size={14} /> {s.minutes} {pick(L.minRead, lang)}</span>
+                  <span className="inline-flex items-center gap-1.5"><BookOpen size={14} /> <span dangerouslySetInnerHTML={{ __html: inline.parseInline(s.passage.replace(/\.$/, '')) as string }} /></span>
+                  {done.has(key) && <span className="pill pill-ok">{pick(L.completed, lang)}</span>}
+                  {s.status !== 'published' && s.status !== 'reviewed' && <span className="pill">{s.status === 'outline' ? pick({ en: 'Outline', es: 'Esquema', pt: 'Esboço' }, lang) : pick({ en: 'Draft', es: 'Borrador', pt: 'Rascunho' }, lang)}</span>}
+                </p>
               </div>
             </div>
-            <div className="glass-strong flex gap-4 rounded-[22px] p-5">
-              <IconTile><BookOpen size={19} /></IconTile>
-              <div>
-                <p className="kicker">{pick({ en: 'Text', es: 'Texto', pt: 'Texto' }, lang)}</p>
-                <p className="mt-1 text-[1.08rem] leading-snug" dangerouslySetInnerHTML={{ __html: inline.parseInline(s.passage) as string }} />
-              </div>
-            </div>
+            {!s.translated && <p className="article mt-4"><span className="xlate block">{t('notTranslated', lang)}</span></p>}
           </div>
+
+          <div className="glass-strong rise rise-1 relative overflow-hidden !rounded-[24px] p-6 sm:p-8">
+            <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-24 h-56 w-56 rounded-full bg-[radial-gradient(closest-side,var(--dawn-2),transparent)] blur-xl" />
+            <p className="kicker kicker-accent relative flex items-center gap-2"><HelpCircle size={14} /> {pick({ en: 'The question', es: 'La pregunta', pt: 'A pergunta' }, lang)}</p>
+            <p className="relative mt-3 max-w-[30ch] text-[clamp(1.4rem,1.1rem+1.2vw,2rem)] italic leading-[1.2] tracking-[-.01em]">{s.question}</p>
+          </div>
+
+          {s.media && (
+            <LessonMedia
+              kind={s.media.kind}
+              src={s.media.src}
+              poster={s.media.poster}
+              captions={s.media.captions}
+              captionsLang={textLang}
+              title={`${label(s)}: ${s.title}`}
+              labels={{ speed: pick(L.speed, lang), resumed: pick(L.resumed, lang), captions: pick(L.captions, lang), listen: pick(L.listen, lang) }}
+            />
+          )}
+
+          <LessonSteps steps={toc} label={pick(L.steps, lang)} />
 
           {s.status !== 'published' && s.status !== 'reviewed' && (
             <p className="sans flex items-start gap-3 rounded-2xl border border-dashed border-[var(--rule-strong)] bg-[var(--glass-inner-2)] p-4 text-[.84rem] leading-relaxed text-[var(--ink-soft)]">
@@ -89,8 +152,25 @@ export default async function SessionPage({ params }: { params: Promise<{ n: str
           )}
 
           <div className="glass rise rise-2 rounded-[24px] p-6 sm:p-10">
-            <div className="prose" dangerouslySetInnerHTML={{ __html: html }} />
+            <div className="prose lesson-prose" dangerouslySetInnerHTML={{ __html: html }} />
           </div>
+
+          {(s.practice || s.nextStep) && (
+            <section className="grid gap-4 sm:grid-cols-2" aria-label={pick(L.practice, lang)}>
+              {s.practice && (
+                <div className="glass-strong practice-card relative overflow-hidden !rounded-[22px] p-6">
+                  <p className="kicker kicker-accent flex items-center gap-2"><Sprout size={14} /> {pick(L.practice, lang)}</p>
+                  <p className="mt-3 text-[1.08rem] leading-relaxed">{s.practice}</p>
+                </div>
+              )}
+              {s.nextStep && (
+                <div className="glass !rounded-[22px] p-6">
+                  <p className="kicker flex items-center gap-2"><DoorOpen size={14} /> {pick(L.nextStep, lang)}</p>
+                  <p className="mt-3 text-[1.02rem] leading-relaxed text-[var(--ink-soft)]">{s.nextStep}</p>
+                </div>
+              )}
+            </section>
+          )}
 
           {s.invitation && (
             <section className="glass-strong relative overflow-hidden rounded-[24px] p-6 sm:p-9" aria-labelledby="invite">
@@ -113,7 +193,7 @@ export default async function SessionPage({ params }: { params: Promise<{ n: str
             </section>
           )}
 
-          <LearnerTools {...tools} returnTo={`/course/${n}`} />
+          <LearnerTools {...tools} returnTo={`/course/${n}`} progress={false} />
 
           {facilitator && s.facilitator && (
             <details className="glass group p-5 sm:p-7">
@@ -125,41 +205,33 @@ export default async function SessionPage({ params }: { params: Promise<{ n: str
             </details>
           )}
 
-          <nav className="no-print grid gap-4 sm:grid-cols-2" aria-label={pick({ en: 'Sessions', es: 'Sesiones', pt: 'Sessões' }, lang)}>
-            {prev ? (
-              <Link href={`/course/${prev.n}`} className="glass lift group block p-5 text-[var(--ink)]">
-                <span className="kicker flex items-center gap-1.5"><ArrowLeft size={13} className="transition-transform group-hover:-translate-x-0.5" /> {pick(SESSION, lang)} {prev.n}</span>
-                <span className="mt-2 block text-[1rem] font-medium leading-snug">{prev.title}</span>
-              </Link>
-            ) : <span className="hidden sm:block" />}
-            {next && (
-              <Link href={`/course/${next.n}`} className="glass lift group block p-5 text-right text-[var(--ink)]">
-                <span className="kicker flex items-center justify-end gap-1.5">{pick(SESSION, lang)} {next.n} <ArrowRight size={13} className="transition-transform group-hover:translate-x-0.5" /></span>
-                <span className="mt-2 block text-[1rem] font-medium leading-snug">{next.title}</span>
-              </Link>
-            )}
-          </nav>
-        </div>
+          <LessonComplete
+            itemKey={key}
+            signedIn={!!user}
+            initialDone={done.has(key)}
+            prev={prev && { href: `/course/${prev.n}`, title: prev.title, label: label(prev) }}
+            next={next && { href: `/course/${next.n}`, title: next.title, label: label(next) }}
+            lessonLabel={label(s)}
+            finishHref="/account"
+            returnTo={`/course/${n}`}
+            labels={{
+              complete: pick(L.complete, lang),
+              completeContinue: pick(L.completeContinue, lang),
+              completed: pick(L.completed, lang),
+              undo: pick(L.undo, lang),
+              signInToTrack: pick(L.signIn, lang),
+              endOf: pick(L.endOf, lang),
+              finished: pick(L.finished, lang),
+              finishedHint: pick(L.finishedHint, lang),
+              next: pick(L.next, lang),
+              prev: pick(L.prev, lang),
+            }}
+          />
 
-        <aside className="no-print space-y-4 lg:sticky lg:top-24 lg:self-start">
-          <Toc items={toc} label={pick({ en: 'In this session', es: 'En esta sesión', pt: 'Nesta sessão' }, lang)} />
-          <nav className="glass p-5" aria-label={pick(UNITS[s.unit], lang)}>
-            <p className="kicker">{pick(UNIT, lang)} {s.unit} · {pick(UNITS[s.unit], lang)}</p>
-            <ol className="mt-3 list-none space-y-1 p-0">
-              {unitList.map((x) => (
-                <li key={x.n}>
-                  <Link
-                    href={`/course/${x.n}`}
-                    aria-current={x.n === n ? 'page' : undefined}
-                    className={`sans flex gap-2.5 rounded-xl px-2 py-1.5 text-[.85rem] leading-snug ${x.n === n ? 'bg-[var(--accent-soft)] font-medium text-[var(--accent)]' : 'text-[var(--ink-soft)] hover:bg-[var(--glass-inner-hover)] hover:text-[var(--ink)]'}`}
-                  >
-                    <span className="mono shrink-0 pt-px text-[.72rem]">{String(x.n).padStart(2, '0')}</span> {x.title}
-                  </Link>
-                </li>
-              ))}
-            </ol>
-          </nav>
-        </aside>
+          <p className="no-print text-center">
+            <PrintButton label={pick(L.print, lang)} />
+          </p>
+        </div>
       </div>
     </article>
   );

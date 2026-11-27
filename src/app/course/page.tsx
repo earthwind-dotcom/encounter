@@ -7,6 +7,8 @@ import { completedKeys } from '@/lib/learner';
 import { pick, t, type Lang } from '@/lib/i18n';
 import { Check, Play, Route } from 'lucide-react';
 import { IconTile, PageHeader, ProgressRing } from '@/components/ui';
+import { JourneyTrack } from '@/components/lms/journey-track';
+import { courseModules, sessionKey } from '@/lib/course-outline';
 
 const SESSION = { en: 'Session', es: 'Sesión', pt: 'Sessão' };
 
@@ -63,7 +65,27 @@ export default async function CoursePage() {
         )}
       </div>
 
-      <div className="mt-14 grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px]">
+      <section className="glass rise rise-3 mt-12 !rounded-[28px] p-6 sm:p-8" aria-labelledby="journey-h">
+        <div className="mb-7 flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <p className="kicker kicker-accent">{pick({ en: 'Your journey', es: 'Tu recorrido', pt: 'Sua jornada' }, lang)}</p>
+            <h2 id="journey-h" className="mt-1.5 text-[1.45rem] font-medium leading-tight">
+              {user
+                ? completed === sessions.length
+                  ? pick({ en: 'Every session done.', es: 'Todas las sesiones hechas.', pt: 'Todas as sessões feitas.' }, lang)
+                  : `${completed} ${pick({ en: 'of', es: 'de', pt: 'de' }, lang)} ${sessions.length} ${pick({ en: 'sessions done', es: 'sesiones hechas', pt: 'sessões feitas' }, lang)}`
+                : pick({ en: 'Thirteen sessions, four movements', es: 'Trece sesiones, cuatro movimientos', pt: 'Treze sessões, quatro movimentos' }, lang)}
+            </h2>
+          </div>
+          <p className="sans m-0 flex items-center gap-4 text-[.78rem] text-[var(--faint)]">
+            <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-[var(--ok)]" /> {pick({ en: 'Done', es: 'Hecha', pt: 'Feita' }, lang)}</span>
+            <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-[var(--accent)]" /> {pick({ en: 'Up next', es: 'Sigue', pt: 'A seguir' }, lang)}</span>
+          </p>
+        </div>
+        <JourneyTrack modules={courseModules(lang, done, sessions)} nextId={next ? sessionKey(next.n) : undefined} label={pick({ en: 'Course map', es: 'Mapa del curso', pt: 'Mapa do curso' }, lang)} />
+      </section>
+
+      <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px]">
         <div className="space-y-6">
           {(Object.keys(UNITS) as (keyof typeof UNITS)[]).map((u) => {
             const list = sessions.filter((s) => s.unit === u);
@@ -92,6 +114,7 @@ export default async function CoursePage() {
                           <span className="min-w-0">
                             <span className="block text-[1.1rem] font-medium leading-snug group-hover:text-[var(--accent)]">{s.title}</span>
                             <span className="mt-0.5 block text-[.92rem] italic leading-snug text-[var(--ink-soft)]">{s.question}</span>
+                            <span className="mono mt-1 block text-[.68rem] text-[var(--faint)]">{s.minutes} min</span>
                           </span>
                           <span className="pt-1">
                             {STATUS[s.status]?.[lang] && !isDone ? <span className="pill">{STATUS[s.status][lang]}</span> : null}
