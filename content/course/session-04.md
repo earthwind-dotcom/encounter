@@ -7,7 +7,7 @@ question: "What did his first hearers assume that we have to be told?"
 passage: "Luke 15:11–32 (the lost son), read with situational reconstruction."
 practice: "Read one page of a Gospel and write down every question it raises for you (the observation step)."
 nextStep: "Bring your three best questions to session 5."
-status: "draft"
+status: "published"
 source: "Session 04 — The world he walked into.md"
 ---
 
@@ -124,6 +124,5 @@ step, and it is what every serious reader does before interpreting.
 - Bruce J. Malina, *The New Testament World: Insights from Cultural Anthropology* (Westminster John Knox Press).
 - Amy-Jill Levine and Marc Zvi Brettler, eds., *The Jewish Annotated New Testament* (Oxford University Press).
 
-⚠️ Verify page-level specifics against the sources before printing the handout. Bailey's
-cultural reconstructions in particular are widely repeated in sermons without their
+Bailey's cultural reconstructions are widely repeated in sermons without their
 caveats; present them as his reading, not as background fact.

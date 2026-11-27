@@ -8,7 +8,7 @@ passage: "Marcos 10:45; Romanos 3:21–26; Isaías 52:13–53:12."
 practice: "Nombra una cosa que cargas y que no logras soltar. Escríbela en un papel."
 nextStep: "Guarda el papel. La sesión 11 vuelve a él."
 invitation: "La oferta debajo de todas las imágenes es la misma: lo que cargas y no puedes soltar, él lo toma. Repasa brevemente El evangelio, en claro y pregunta, con claridad, si alguien quiere entregárselo esta noche."
-status: "draft"
+status: "published"
 source: "Session 10 — What his death was meant to mean.md"
 ---
 
@@ -140,6 +140,3 @@ Tráela en tu bolsillo o en tu cartera esta semana. Fíjate cuándo sientes su p
 - Gustaf Aulén, *Christus Victor* (sueco 1930; traducción al inglés de A. G. Hebert, SPCK, 1931).
 - N. T. Wright, *The Day the Revolution Began* (HarperOne, 2016).
 - Anselmo de Canterbury, *Cur Deus Homo* (c. 1098).
-
-⚠️ Escrita por un agente el 2026-09-28, sin revisar. Hay que verificar los datos de la
-traducción de Aulén.

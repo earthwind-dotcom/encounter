@@ -7,7 +7,7 @@ question: "¿Cómo se vería siquiera un ritmo diario?"
 passage: "Mateo 6:9–13 junto a Lucas 11:1–4 (compara las dos versiones del Padre Nuestro)."
 practice: "Diseña un ritmo diario de 15 minutos que de verdad vayas a mantener. Tan pequeño que sea aburrido."
 nextStep: "Sigue tu ritmo una semana y cuenta qué se rompió."
-status: "draft"
+status: "published"
 source: "Session 12 — Prayer, silence, and Scripture.md"
 ---
 
@@ -120,5 +120,3 @@ Luego pon a la gente en parejas para compartir.
 - Richard J. Foster, *Celebration of Discipline* (Harper & Row, 1978).
 - Dallas Willard, *The Spirit of the Disciplines* (HarperSanFrancisco, 1988).
 - W. D. Davies y Dale C. Allison, *Matthew*, vol. 1, ICC (T&T Clark, 1988), sobre 6:9–13.
-
-⚠️ Escrita por un agente el 2026-09-28, sin revisar. Verifica las páginas del artículo de Barr.

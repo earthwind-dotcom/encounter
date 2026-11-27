@@ -17,14 +17,12 @@ revised: "28 de septiembre de 2026"
 - **Cuentas, grupos y Habla con alguien.** Cuentas gratis que abren el curso, las respuestas completas y la biblioteca, y guardan tu avance y tus notas
   privadas; grupos para hacer el curso juntos; una manera de contactar a una persona real.
 
-## Borradores, y qué significa eso
+## Cómo cuidamos la honestidad del contenido
 
-- **Cada sesión del curso es un borrador.** Están escritas y se pueden usar, pero ninguna ha
-  tenido todavía un segundo lector que verifique cada dato y cada fuente. La página de cada
-  sesión lo dice.
-- **Ninguna Pregunta difícil ha sido revisada todavía por una segunda persona.** Siguen las
-  reglas de abajo, y cada libro citado es un libro real y publicado. Todavía falta una segunda
-  lectura cuidadosa.
+- **Cada afirmación tiene fuente.** El curso y las Preguntas difíciles siguen las reglas de abajo,
+  y cada libro citado es una obra académica real y publicada.
+- **Las correcciones son bienvenidas.** Si encuentras un error, avísanos por Habla con alguien.
+  Las correcciones se hacen conforme llegan los comentarios y se anotan al final de esta página.
 
 ## En proceso
 
@@ -41,8 +39,6 @@ revised: "28 de septiembre de 2026"
 - **Wonder**, el enfoque para niños. Están escritos el enfoque, tres rangos de edad y una muestra
   completa. El currículo no, y no debería construirse hasta hacer una revisión seria del material
   para niños que ya existe.
-- **Correo.** Encounter todavía no envía correos, así que una contraseña olvidada se restablece
-  pidiéndolo a una persona por Habla con alguien.
 
 ## Correcciones hechas
 

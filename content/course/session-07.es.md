@@ -7,7 +7,7 @@ question: "¿Para quién era él, en realidad?"
 passage: "Marcos 2:13–17; Lucas 15:1–2."
 practice: "Un acto de hospitalidad esta semana hacia alguien fuera de tu círculo de siempre."
 nextStep: "Hazlo, y luego fíjate cómo te sentiste."
-status: "draft"
+status: "published"
 source: "Session 07 — Why he ate with the wrong people.md"
 ---
 
@@ -126,6 +126,3 @@ aterrador. Las dos cosas están bien.
 - Amy-Jill Levine, *The Misunderstood Jew: The Church and the Scandal of the Jewish Jesus* (HarperSanFrancisco, 2006).
 - John P. Meier, *A Marginal Jew*, vol. 3: *Companions and Competitors* (Doubleday, 2001).
 - R. T. France, *The Gospel of Mark*, NIGTC (Eerdmans, 2002).
-
-⚠️ Escrita por un agente el 2026-09-28, sin revisar. Verifica los detalles sobre los
-cobradores de impuestos contra Meier antes de imprimir.

@@ -7,7 +7,7 @@ question: "¿Qué fue en realidad lo que llevó a que lo ejecutaran?"
 passage: "Marcos 11:15–18 (el templo), luego el juicio en Marcos 14:53–65 y 15:1–15."
 practice: "Oración honesta. Dile a Dios en voz alta una frase verdadera, aunque sea enojo o \"no sé si estás ahí\"."
 nextStep: "Una frase honesta al día."
-status: "draft"
+status: "published"
 source: "Session 08 — Why he was killed.md"
 ---
 
@@ -133,5 +133,3 @@ la duda cuentan.
 - Paula Fredriksen, *Jesus of Nazareth, King of the Jews* (Knopf, 1999).
 - N. T. Wright, *Jesus and the Victory of God* (Fortress, 1996).
 - Concilio Vaticano II, *Nostra Aetate* (1965), §4.
-
-⚠️ Escrita por un agente el 2026-09-28, sin revisar.

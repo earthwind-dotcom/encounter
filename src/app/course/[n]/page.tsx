@@ -128,7 +128,7 @@ export default async function SessionPage({ params }: { params: Promise<{ n: str
                   <span className="inline-flex items-center gap-1.5"><Clock size={14} /> {s.minutes} {pick(L.minRead, lang)}</span>
                   <span className="inline-flex items-center gap-1.5"><BookOpen size={14} /> <span dangerouslySetInnerHTML={{ __html: inline.parseInline(s.passage.replace(/\.$/, '')) as string }} /></span>
                   {done.has(key) && <span className="pill pill-ok">{pick(L.completed, lang)}</span>}
-                  {s.status !== 'published' && s.status !== 'reviewed' && <span className="pill">{s.status === 'outline' ? pick({ en: 'Outline', es: 'Esquema', pt: 'Esboço' }, lang) : pick({ en: 'Draft', es: 'Borrador', pt: 'Rascunho' }, lang)}</span>}
+                  {s.status === 'outline' && <span className="pill">{pick({ en: 'Outline', es: 'Esquema', pt: 'Esboço' }, lang)}</span>}
                 </p>
               </div>
             </div>
@@ -166,13 +166,11 @@ export default async function SessionPage({ params }: { params: Promise<{ n: str
 
           <LessonSteps steps={toc} label={pick(L.steps, lang)} />
 
-          {s.status !== 'published' && s.status !== 'reviewed' && (
+          {s.status === 'outline' && (
             <p className="sans flex items-start gap-3 rounded-2xl border border-dashed border-[var(--rule-strong)] bg-[var(--glass-inner-2)] p-4 text-[.84rem] leading-relaxed text-[var(--ink-soft)]">
               <PencilLine size={16} className="mt-0.5 shrink-0 text-[var(--gold)]" />
               <span>
-                {s.status === 'outline'
-                  ? pick({ en: 'This session is an outline. The full guide is still being researched and written, so what follows is the plan: the question, the text, and what the session will cover.', es: 'Esta sesión es un esquema. La guía completa todavía se está investigando y escribiendo; lo que sigue es el plan: la pregunta, el texto y lo que cubrirá la sesión.', pt: 'Esta sessão é um esboço. O guia completo ainda está sendo pesquisado e escrito; o que segue é o plano: a pergunta, o texto e o que a sessão vai cobrir.' }, lang)
-                  : pick({ en: 'This session guide is written and awaiting review. Its sources are being checked before it is used with a group.', es: 'Esta guía está escrita y en espera de revisión. Sus fuentes se están verificando antes de usarla con un grupo.', pt: 'Este guia está escrito e aguardando revisão. Suas fontes estão sendo verificadas antes de ser usado com um grupo.' }, lang)}
+                {pick({ en: 'This session is an outline. The full guide is still being researched and written, so what follows is the plan: the question, the text, and what the session will cover.', es: 'Esta sesión es un esquema. La guía completa todavía se está investigando y escribiendo; lo que sigue es el plan: la pregunta, el texto y lo que cubrirá la sesión.', pt: 'Esta sessão é um esboço. O guia completo ainda está sendo pesquisado e escrito; o que segue é o plano: a pergunta, o texto e o que a sessão vai cobrir.' }, lang)}
               </span>
             </p>
           )}

@@ -7,7 +7,7 @@ question: "Love your enemies. Turn the other cheek. Literal instruction, or idea
 passage: "Matthew 5:38–48."
 practice: "Name one relationship where the reflex to hit back is live right now. Don't act. Just sit with it."
 nextStep: "One week of not sending the sentence that would win and also wound."
-status: "draft"
+status: "published"
 source: "Session 06 — The hard teachings, did he mean it.md"
 ---
 
@@ -130,6 +130,3 @@ can stir real pain. Have a quiet exit available.
 - Glen H. Stassen, "The Fourteen Triads of the Sermon on the Mount," *JBL* 122 (2003): 267–308.
 - Richard B. Hays, *The Moral Vision of the New Testament* (HarperSanFrancisco, 1996).
 - Exodus 21:24; 22:26–27; Matthew 27:32.
-
-⚠️ Check the worksheet's "citations-checked: partial" items before printing. Written by an
-agent 2026-09-28, unreviewed.

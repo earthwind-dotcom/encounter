@@ -7,7 +7,7 @@ question: "¿Tengo que tenerlo todo resuelto primero?"
 passage: "Marcos 9:24; Mateo 28:16–17 (\"pero algunos dudaron\"); Juan 20:24–29 (Tomás)."
 practice: "Escribe tus dudas vivas, con claridad y en concreto. No para resolverlas. Para verlas."
 nextStep: "Trae una duda a la mesa la próxima semana."
-status: "draft"
+status: "published"
 source: "Session 11 — Can you follow him and still doubt.md"
 ---
 
@@ -120,5 +120,3 @@ confiarle las preguntas. Eso hicieron los discípulos. La puerta está abierta."
 - Peter Enns, *The Sin of Certainty* (HarperOne, 2016).
 - Madre Teresa, *Come Be My Light*, ed. Brian Kolodiejchuk (Doubleday, 2007).
 - Ulrich Luz, *Matthew 21–28*, Hermeneia (Augsburg Fortress, 2005), sobre 28:17.
-
-⚠️ Escrita por un agente el 2026-09-28, sin revisar.

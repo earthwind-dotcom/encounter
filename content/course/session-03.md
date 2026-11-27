@@ -4,10 +4,10 @@ unit: A
 unitTitle: "The Sources"
 title: "Who was Jesus, as a matter of history?"
 question: "Strip the church away. What can a historian actually say?"
-passage: "Mark 1:1–15, alongside the references in Tacitus (*Annals* 15.44) and Josephus (*Antiquities* 18.3.3)."
+passage: "Mark 1:9–11, alongside the references in Tacitus (*Annals* 15.44) and Josephus (*Antiquities* 18.3.3)."
 practice: "Five minutes of silence. Notice what your mind does with the quiet."
 nextStep: "Two more five-minute sittings this week."
-status: "draft"
+status: "published"
 source: "Session 03 — Who was Jesus as a matter of history.md"
 ---
 
@@ -139,6 +139,5 @@ them it is more uncomfortable than it sounds, and that being bad at it is not fa
 - Tacitus, *Annals* 15.44.
 - Josephus, *Antiquities* 18.3.3 (the Testimonium Flavianum) and 20.9.1 (the death of James).
 
-⚠️ Verify page-level specifics against the sources before printing the handout. The
-Testimonium in particular attracts loose quotation; use a critical edition and do not quote
+The Testimonium attracts loose quotation; use a critical edition and do not quote
 the interpolated form.

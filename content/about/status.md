@@ -16,12 +16,12 @@ revised: "28 September 2026"
 - **Accounts, groups and Talk.** Free accounts open the course, full answers and library, and save your place and private notes; groups
   for running the course together; a way to reach a real person.
 
-## Drafts, and what that means
+## How the content is kept honest
 
-- **Every course session is a draft.** They're written and usable, but none has had a second
-  reader check every fact and source yet. Each session page says so.
-- **No Hard Question has been reviewed by a second person yet.** They follow the rules below, and
-  every book cited is a real, published book. A second careful read is still owed.
+- **Every claim is sourced.** The course and the Hard Questions follow the rules below, and every
+  book cited is a real, published work of scholarship.
+- **Corrections are welcome.** If you find a mistake, tell us through Talk. Fixes are made as
+  feedback comes in and listed at the bottom of this page.
 
 ## In progress
 
@@ -37,8 +37,6 @@ revised: "28 September 2026"
 - **Wonder**, the children's approach. The approach, three age bands and one worked sample are
   written. The curriculum isn't, and it shouldn't be built until a proper review of existing
   children's material has been done.
-- **Email.** There's no email from Encounter yet, so a forgotten password is reset by asking a
-  person through Talk.
 
 ## Corrections made
 

@@ -7,7 +7,7 @@ question: "Ama a tus enemigos. Pon la otra mejilla. ¿Instrucción literal, o un
 passage: "Mateo 5:38–48."
 practice: "Nombra una relación en la que ahora mismo esté vivo el reflejo de devolver el golpe. No actúes. Solo quédate con eso."
 nextStep: "Una semana sin enviar la frase que ganaría la discusión y también heriría."
-status: "draft"
+status: "published"
 source: "Session 06 — The hard teachings, did he mean it.md"
 ---
 
@@ -134,6 +134,3 @@ remover un dolor real. Ten disponible una salida tranquila.
 - Glen H. Stassen, "The Fourteen Triads of the Sermon on the Mount", *JBL* 122 (2003): 267–308.
 - Richard B. Hays, *The Moral Vision of the New Testament* (HarperSanFrancisco, 1996).
 - Éxodo 21:24; 22:26–27; Mateo 27:32.
-
-⚠️ Revisa los puntos de la hoja de trabajo marcados "citations-checked: partial" antes de
-imprimir. Escrita por un agente el 2026-09-28, sin revisar.

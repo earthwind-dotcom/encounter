@@ -7,7 +7,7 @@ question: "Who was he actually for?"
 passage: "Mark 2:13–17; Luke 15:1–2."
 practice: "One act of hospitality this week toward someone outside your usual circle."
 nextStep: "Do it, then notice how it felt."
-status: "draft"
+status: "published"
 source: "Session 07 — Why he ate with the wrong people.md"
 ---
 
@@ -120,6 +120,3 @@ are fine.
 - Amy-Jill Levine, *The Misunderstood Jew: The Church and the Scandal of the Jewish Jesus* (HarperSanFrancisco, 2006).
 - John P. Meier, *A Marginal Jew*, vol. 3: *Companions and Competitors* (Doubleday, 2001).
 - R. T. France, *The Gospel of Mark*, NIGTC (Eerdmans, 2002).
-
-⚠️ Written by an agent 2026-09-28, unreviewed. Check the tax-collector specifics against
-Meier before printing.

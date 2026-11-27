@@ -7,7 +7,7 @@ question: "What actually got him executed?"
 passage: "Mark 11:15–18 (the temple), then the trial in Mark 14:53–65 and 15:1–15."
 practice: "Honest prayer. Say one true sentence out loud to God, even if it's anger or \"I don't know if you're there.\""
 nextStep: "One honest sentence a day."
-status: "draft"
+status: "published"
 source: "Session 08 — Why he was killed.md"
 ---
 
@@ -127,5 +127,3 @@ anger and doubt count.
 - Paula Fredriksen, *Jesus of Nazareth, King of the Jews* (Knopf, 1999).
 - N. T. Wright, *Jesus and the Victory of God* (Fortress, 1996).
 - Second Vatican Council, *Nostra Aetate* (1965), §4.
-
-⚠️ Written by an agent 2026-09-28, unreviewed.

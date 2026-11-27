@@ -7,7 +7,7 @@ question: "Los cristianos llaman a la Biblia palabra de Dios. ¿Qué quieren dec
 passage: "Juan 1:1–14; 2 Timoteo 3:16; Lucas 24:27."
 practice: "Toma un pasaje (el Salmo 23) y léelo de tres maneras: como información, como poesía, en voz alta y despacio. Fíjate qué te da cada lectura y qué se pierde."
 nextStep: "Cuando leas esta semana, pregunta primero \"¿qué tipo de escrito es este?\" antes de \"¿qué me dice que haga?\""
-status: "draft"
+status: "published"
 source: "Session 02 — In what sense is this Gods word.md"
 ---
 
@@ -140,5 +140,3 @@ date cuenta de cuándo estás eligiendo una forma de leer."
 - Marcus J. Borg, *Reading the Bible Again for the First Time: Taking the Bible Seriously but Not Literally* (HarperSanFrancisco, 2001).
 - John H. Walton, *The Lost World of Genesis One: Ancient Cosmology and the Origins Debate* (IVP Academic, 2009).
 - "The Chicago Statement on Biblical Inerrancy" (1978), para la postura de la inerrancia en sus propias palabras.
-
-⚠️ Verifica los detalles a nivel de página contra las fuentes antes de imprimir el material.

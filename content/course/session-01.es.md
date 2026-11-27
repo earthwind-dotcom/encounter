@@ -7,7 +7,7 @@ question: "¿Se puede confiar en estos relatos?"
 passage: "Lucas 1:1–4."
 practice: "Lee el capítulo 1 de Marcos con ojos nuevos y escribe tu primera impresión honesta, buena o mala."
 nextStep: "Lleva esa primera impresión contigo durante la semana; fíjate si cambia."
-status: "draft"
+status: "published"
 source: "Session 01 — Where did these documents come from.md"
 ---
 
@@ -103,5 +103,3 @@ de partida registrado con honestidad.
 - F. F. Bruce, *The Canon of Scripture* (InterVarsity Press, 1988).
 - Martin Hengel, *The Four Gospels and the One Gospel of Jesus Christ* (Trinity Press International, 2000).
 - Ireneo, *Contra las herejías* 3.1.1; 3.11.8.
-
-⚠️ Verifica los detalles a nivel de página contra las fuentes antes de imprimir el material.

@@ -7,7 +7,7 @@ question: "¿Qué daban por hecho sus primeros oyentes que a nosotros nos tienen
 passage: "Lucas 15:11–32 (el hijo perdido), leído reconstruyendo la situación."
 practice: "Lee una página de un evangelio y anota cada pregunta que te despierte (el paso de observar)."
 nextStep: "Trae tus tres mejores preguntas a la sesión 5."
-status: "draft"
+status: "published"
 source: "Session 04 — The world he walked into.md"
 ---
 
@@ -123,6 +123,5 @@ hace todo lector serio antes de interpretar.
 - Bruce J. Malina, *The New Testament World: Insights from Cultural Anthropology* (Westminster John Knox Press).
 - Amy-Jill Levine y Marc Zvi Brettler, eds., *The Jewish Annotated New Testament* (Oxford University Press).
 
-⚠️ Verifica los detalles a nivel de página contra las fuentes antes de imprimir el material.
-Las reconstrucciones culturales de Bailey en particular se repiten mucho en sermones sin sus
+Las reconstrucciones culturales de Bailey se repiten mucho en sermones sin sus
 advertencias; preséntalas como su lectura, no como un hecho de fondo.

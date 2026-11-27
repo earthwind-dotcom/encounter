@@ -34,10 +34,16 @@ export function LessonSteps({ steps, label }: { steps: LessonStep[]; label: stri
     };
   }, [steps]);
 
-  // Keep the lit step in view when the row scrolls sideways on a phone.
+  // Keep the lit step in view when the row scrolls sideways on a phone. Scroll only the row:
+  // scrollIntoView would also nudge the page vertically, which moves the reading line, which
+  // changes the lit step, and the page jitters back and forth.
   useEffect(() => {
-    const el = rail.current?.children[active] as HTMLElement | undefined;
-    el?.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+    const row = rail.current;
+    const el = row?.children[active] as HTMLElement | undefined;
+    if (!row || !el) return;
+    const left = el.offsetLeft - (row.clientWidth - el.offsetWidth) / 2;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    row.scrollTo({ left: Math.max(0, left), behavior: reduce ? 'auto' : 'smooth' });
   }, [active]);
 
   if (steps.length < 2) return null;
