@@ -190,3 +190,21 @@ describe('email', () => {
     expect(html).toContain('a=1&amp;b=2');
   });
 });
+
+describe('gmail sender', () => {
+  it('builds a UTF-8 multipart message and a verifiable delegation JWT', async () => {
+    const { buildMime, serviceAccountAssertion } = await import('@/lib/email');
+    const { generateKeyPairSync, createVerify } = await import('node:crypto');
+    const mime = buildMime({ to: 'a@example.com', subject: 'Elige una contraseña nueva', text: 'Hola', action: { label: 'Go', href: 'https://e.test/r/x' } }, 'Encounter <team@example.com>');
+    expect(mime).toContain('Subject: =?UTF-8?B?');
+    expect(mime).toContain('multipart/alternative');
+    expect(Buffer.from(mime.split('\r\n\r\n')[2].split('\r\n--')[0].replace(/\r\n/g, ''), 'base64').toString()).toContain('https://e.test/r/x');
+
+    const { privateKey, publicKey } = generateKeyPairSync('rsa', { modulusLength: 2048 });
+    const jwt = serviceAccountAssertion({ client_email: 'svc@p.iam.gserviceaccount.com', private_key: privateKey.export({ type: 'pkcs8', format: 'pem' }).toString() }, 'team@example.com', 1000);
+    const [h, c, sig] = jwt.split('.');
+    const claims = JSON.parse(Buffer.from(c, 'base64url').toString());
+    expect(claims).toMatchObject({ iss: 'svc@p.iam.gserviceaccount.com', sub: 'team@example.com', scope: 'https://www.googleapis.com/auth/gmail.send', exp: 4600 });
+    expect(createVerify('RSA-SHA256').update(`${h}.${c}`).verify(publicKey, Buffer.from(sig, 'base64url'))).toBe(true);
+  });
+});
