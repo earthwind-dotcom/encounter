@@ -8,6 +8,8 @@ import { pick, t, type Lang } from '@/lib/i18n';
 import { ArrowRight, Check, CheckCircle2, MessageCircle } from 'lucide-react';
 import { ConfDots, IconTile, PageHeader } from '@/components/ui';
 import { FilterChips } from '@/components/filter-chips';
+import { PhotoFrame } from '@/components/photo';
+import { PHOTOS } from '@/lib/photos';
 
 export async function generateMetadata(): Promise<Metadata> {
   const lang = await getLang();
@@ -49,6 +51,12 @@ export default async function QuestionsPage() {
           </p>
         )}
       </PageHeader>
+
+      <PhotoFrame photo={PHOTOS.questionsPage} className="rise rise-2 mt-10 mb-2 h-[180px] !rounded-[28px] sm:h-[240px]" sizes="(min-width: 1280px) 1200px, 100vw">
+        <p className="absolute bottom-5 left-6 z-[2] m-0 max-w-[34ch] text-[clamp(1.1rem,.9rem+.8vw,1.5rem)] italic leading-snug text-white [text-shadow:0_2px_14px_rgb(0_0_0/.5)] sm:left-8">
+          {pick({ en: 'Doubt was never a disqualifier. Bring all of it.', es: 'La duda nunca descalificó a nadie. Trae todo.', pt: 'A dúvida nunca desqualificou ninguém. Traga tudo.' }, lang)}
+        </p>
+      </PhotoFrame>
 
       <FilterChips
         allLabel={pick({ en: 'All', es: 'Todas', pt: 'Todas' }, lang)}

@@ -9,6 +9,8 @@ import { Check, Play, Route } from 'lucide-react';
 import { IconTile, PageHeader, ProgressRing } from '@/components/ui';
 import { JourneyTrack } from '@/components/lms/journey-track';
 import { courseModules, sessionKey } from '@/lib/course-outline';
+import { PhotoFrame } from '@/components/photo';
+import { PHOTOS } from '@/lib/photos';
 
 const SESSION = { en: 'Session', es: 'Sesión', pt: 'Sessão' };
 
@@ -65,7 +67,8 @@ export default async function CoursePage() {
         )}
       </div>
 
-      <section className="glass rise rise-3 mt-12 !rounded-[28px] p-6 sm:p-8" aria-labelledby="journey-h">
+      <PhotoFrame photo={PHOTOS.course} position="50% 62%" className="rise rise-3 mt-12 h-[220px] !rounded-[32px] sm:h-[300px]" sizes="(min-width: 1280px) 1200px, 100vw" />
+      <section className="glass-strong rise rise-3 relative z-[3] mx-2 -mt-24 !rounded-[28px] p-6 sm:mx-8 sm:-mt-28 sm:p-8" aria-labelledby="journey-h">
         <div className="mb-7 flex flex-wrap items-end justify-between gap-3">
           <div>
             <p className="kicker kicker-accent">{pick({ en: 'Your journey', es: 'Tu recorrido', pt: 'Sua jornada' }, lang)}</p>

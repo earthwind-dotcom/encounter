@@ -108,9 +108,9 @@ export default async function Home() {
         </div>
 
         {featured && (
-          <div className="rise rise-2 relative">
-            <div aria-hidden="true" className="absolute inset-0 -z-10 rounded-[40px] lg:-inset-6 bg-[radial-gradient(closest-side,var(--accent-glow),transparent)] opacity-70 blur-2xl" />
-            <Link href={`/questions/${featured.slug}`} className="glass-strong lift group block rounded-[28px] p-6 text-[var(--ink)] sm:p-8">
+          <div className="rise rise-2 relative pt-44 sm:pt-56 lg:pt-48">
+            <PhotoFrame photo={PHOTOS.hero} priority position="24% 50%" className="hero-photo !absolute inset-x-0 top-0 h-[300px] sm:h-[380px] lg:-right-8 lg:left-10 lg:h-[420px]" sizes="(min-width: 1024px) 620px, 100vw" />
+            <Link href={`/questions/${featured.slug}`} className="glass-strong lift group relative z-[3] block rounded-[28px] p-6 text-[var(--ink)] sm:p-8 lg:mr-14">
               <div className="flex items-center justify-between gap-3">
                 <span className="kicker kicker-accent">{c('preview')}</span>
                 <IconTile className="!h-9 !w-9 !rounded-xl"><HelpCircle size={17} /></IconTile>
@@ -164,7 +164,7 @@ export default async function Home() {
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
           {lead && (
             <Link href={`/questions/${lead.slug}`} className="group relative block min-h-[340px] overflow-hidden rounded-[28px] text-white">
-              <PhotoFrame photo={PHOTOS.questions} className="!absolute inset-0 !rounded-[28px]" sizes="(min-width: 1024px) 560px, 100vw" />
+              <PhotoFrame photo={PHOTOS.questions} inLink position="50% 60%" className="!absolute inset-0 !rounded-[28px]" sizes="(min-width: 1024px) 560px, 100vw" />
               <span className="relative z-[2] flex h-full min-h-[340px] flex-col justify-end p-7 sm:p-9">
                 <span className="mono text-[.74rem] text-white/80">{String(lead.order).padStart(2, '0')}</span>
                 <span className="mt-2 block max-w-[20ch] text-[clamp(1.6rem,1.2rem+1.2vw,2.1rem)] font-medium leading-[1.12] tracking-[-.012em] [text-shadow:0_2px_18px_rgb(0_0_0/.35)]">{lead.title}</span>
