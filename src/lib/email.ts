@@ -5,11 +5,12 @@ import { createSign } from 'node:crypto';
  * Outgoing email, sent over HTTPS (Railway blocks SMTP ports on the Hobby plan). Two providers,
  * picked by which Railway variables are set:
  *
- *   Gmail (preferred: the Google Workspace you already have, no new account)
- *     GOOGLE_SERVICE_ACCOUNT   the service account's JSON key, base64-encoded
- *     GMAIL_SENDER             the Workspace address it sends as, e.g. team@understaffed.tech
- *     EMAIL_FROM (optional)    display form, e.g. "Encounter <team@understaffed.tech>"
- *   The service account needs domain-wide delegation for the gmail.send scope (docs/EMAIL.md).
+ *   Gmail (preferred: the Google Workspace you already have, no new account), either
+ *     a) a one-time sign-in as the sender (recommended; no keys, works under Google's
+ *        "Secure by Default" org policy):
+ *        GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET, GMAIL_REFRESH_TOKEN  (scripts/gmail-auth.mts)
+ *     b) a service account key with domain-wide delegation: GOOGLE_SERVICE_ACCOUNT (base64 JSON)
+ *   plus GMAIL_SENDER (e.g. team@understaffed.tech) and optionally EMAIL_FROM. See docs/EMAIL.md.
  *
  *   Resend
  *     RESEND_API_KEY + EMAIL_FROM
@@ -18,8 +19,9 @@ import { createSign } from 'node:crypto';
  * callers fall back to the no-email path (see `emailEnabled`).
  */
 type Provider = 'gmail' | 'resend' | null;
+const gmailOAuth = () => !!(process.env.GMAIL_CLIENT_ID && process.env.GMAIL_CLIENT_SECRET && process.env.GMAIL_REFRESH_TOKEN);
 const provider = (): Provider =>
-  process.env.GOOGLE_SERVICE_ACCOUNT && process.env.GMAIL_SENDER ? 'gmail' : process.env.RESEND_API_KEY && process.env.EMAIL_FROM ? 'resend' : null;
+  process.env.GMAIL_SENDER && (gmailOAuth() || process.env.GOOGLE_SERVICE_ACCOUNT) ? 'gmail' : process.env.RESEND_API_KEY && process.env.EMAIL_FROM ? 'resend' : null;
 
 export const emailEnabled = () => provider() !== null;
 
@@ -101,12 +103,23 @@ export function serviceAccountAssertion(sa: ServiceAccount, sender: string, now 
 }
 
 let token: { value: string; until: number } | null = null;
-async function gmailToken(sa: ServiceAccount, sender: string): Promise<string> {
+async function gmailToken(sender: string): Promise<string> {
   if (token && token.until > Date.now()) return token.value;
+  const body = gmailOAuth()
+    ? new URLSearchParams({
+        grant_type: 'refresh_token',
+        client_id: process.env.GMAIL_CLIENT_ID!,
+        client_secret: process.env.GMAIL_CLIENT_SECRET!,
+        refresh_token: process.env.GMAIL_REFRESH_TOKEN!,
+      })
+    : new URLSearchParams({
+        grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+        assertion: serviceAccountAssertion(JSON.parse(Buffer.from(process.env.GOOGLE_SERVICE_ACCOUNT!, 'base64').toString('utf8')) as ServiceAccount, sender),
+      });
   const res = await fetch('https://oauth2.googleapis.com/token', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams({ grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer', assertion: serviceAccountAssertion(sa, sender) }),
+    body,
     signal: AbortSignal.timeout(10_000),
   });
   if (!res.ok) throw new Error(`google token ${res.status}`);
@@ -116,12 +129,11 @@ async function gmailToken(sa: ServiceAccount, sender: string): Promise<string> {
 }
 
 async function sendGmail(email: Email): Promise<boolean> {
-  const sa = JSON.parse(Buffer.from(process.env.GOOGLE_SERVICE_ACCOUNT!, 'base64').toString('utf8')) as ServiceAccount;
   const sender = process.env.GMAIL_SENDER!;
   const from = process.env.EMAIL_FROM || `Encounter <${sender}>`;
   const res = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
     method: 'POST',
-    headers: { Authorization: `Bearer ${await gmailToken(sa, sender)}`, 'Content-Type': 'application/json' },
+    headers: { Authorization: `Bearer ${await gmailToken(sender)}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({ raw: b64url(buildMime(email, from)) }),
     signal: AbortSignal.timeout(10_000),
   });

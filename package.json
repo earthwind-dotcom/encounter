@@ -12,6 +12,7 @@
     "test": "vitest run",
     "check:content": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-content.mts",
     "import:legacy": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/import-legacy.mts",
+    "gmail:auth": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/gmail-auth.mts",
     "migrate": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/migrate.mts",
     "import:vault": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/import-vault.mts"
   },
