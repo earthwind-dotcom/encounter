@@ -507,6 +507,19 @@ kbd {
   padding: .12rem .38rem; border-radius: 6px; border: 1px solid var(--rule-strong); background: var(--glass-inner);
 }
 
+/* ---------- photographs ---------- */
+.photo-frame { border-radius: 28px; box-shadow: var(--shadow-glass); isolation: isolate; }
+.photo-img { transform: scale(1.04); transition: transform 1.6s var(--ease); }
+.photo-frame:hover .photo-img { transform: scale(1.07); }
+.photo-fallback {
+  background:
+    radial-gradient(60% 70% at 20% 85%, var(--dawn-1), transparent 70%),
+    radial-gradient(50% 60% at 75% 70%, var(--dawn-2), transparent 70%),
+    radial-gradient(70% 60% at 60% 10%, var(--dawn-4), transparent 70%),
+    linear-gradient(180deg, color-mix(in srgb, var(--dawn-4) 60%, var(--paper)), var(--paper-2));
+}
+.photo-scrim { background: linear-gradient(180deg, transparent 45%, rgb(20 10 4 / .38)); z-index: 1; pointer-events: none; }
+
 /* ---------- LMS: lesson player and course journey ---------- */
 .scrollbar-none { scrollbar-width: none; }
 .scrollbar-none::-webkit-scrollbar { display: none; }
