@@ -1,3 +1,4 @@
+import { requireMember } from '@/lib/session';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getLang } from '@/lib/lang';
@@ -15,6 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function LibraryPage() {
+  await requireMember('/library');
   const lang = await getLang();
   const lib = getLibrary();
   const icons: Record<LibraryKey, React.ReactNode> = { reflections: <Feather size={20} />, roots: <Sprout size={20} />, provenance: <ScrollText size={20} /> };

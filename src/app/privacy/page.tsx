@@ -21,9 +21,9 @@ const COPY = {
   },
   reading: { en: 'Reading', es: 'Leer', pt: 'Ler' },
   readingP: {
-    en: 'Everything on Encounter can be read without an account. We don’t run advertising trackers.',
-    es: 'Todo en Encounter se puede leer sin cuenta. No usamos rastreadores de publicidad.',
-    pt: 'Tudo no Encounter pode ser lido sem conta. Não usamos rastreadores de publicidade.',
+    en: 'The home and About pages, the course overview and the short answers can be read without an account; the course itself, the full answers and the library need a free one. We don’t run advertising trackers.',
+    es: 'El inicio, las páginas Acerca de, el resumen del curso y las respuestas cortas se pueden leer sin cuenta; el curso en sí, las respuestas completas y la biblioteca necesitan una cuenta gratis. No usamos rastreadores de publicidad.',
+    pt: 'O início, as páginas Sobre, o resumo do curso e as respostas curtas podem ser lidos sem conta; o curso em si, as respostas completas e a biblioteca precisam de uma conta grátis. Não usamos rastreadores de publicidade.',
   },
   account: { en: 'If you create an account', es: 'Si creas una cuenta', pt: 'Se você criar uma conta' },
   a1b: { en: 'Your name, email and a scrambled form of your password.', es: 'Tu nombre, tu correo y una forma cifrada de tu contraseña.', pt: 'Seu nome, seu e-mail e uma forma cifrada da sua senha.' },

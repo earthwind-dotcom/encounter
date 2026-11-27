@@ -22,7 +22,7 @@ original single-file site is kept in [`legacy/`](legacy/).
 | Accounts, progress, notes | `/account` | Postgres |
 | Talk to someone | `/talk` → `/facilitate` | Postgres |
 
-Everything is readable without an account. An account adds progress, private notes, and a
+The public site (home, About, the course overview and the short answers) leads in; the course, full answers and library need a free account. An account adds progress, private notes, and a
 private answer to "where are you with following Jesus?". In production, accounts whose email
 is listed in the `ADMIN_EMAILS` variable become **admin**; admins make others facilitators from
 `/facilitate`. Locally, with no list set, the first account is admin.

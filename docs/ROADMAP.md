@@ -190,4 +190,6 @@ We count people, not scalps. Track what shows real engagement, and never inflate
   technical; git gives review and history. Revisit when non-technical writers join.
 - **No auth vendor.** scrypt passwords, hashed session tokens, rate-limited sign-in. Revisit if
   social login or passwordless email is wanted.
-- **Readable without an account, always.** Accounts add memory, never access.
+- **A public front door, a free account to enter.** *Changed 2026-11-27 (Irwin):* the home, About,
+  course overview and short answers are public; the sessions, full answers, library and search need
+  a free account (`requireMember`). Sign-up is instant; email verification can follow once email is on.

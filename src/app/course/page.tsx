@@ -8,6 +8,7 @@ import { pick, t, type Lang } from '@/lib/i18n';
 import { Check, Play, Route } from 'lucide-react';
 import { IconTile, PageHeader, ProgressRing } from '@/components/ui';
 import { JourneyTrack } from '@/components/lms/journey-track';
+import { JoinPanel, LockMark } from '@/components/member-gate';
 import { courseModules, sessionKey } from '@/lib/course-outline';
 import { PhotoFrame } from '@/components/photo';
 import { PHOTOS } from '@/lib/photos';
@@ -88,6 +89,16 @@ export default async function CoursePage() {
         <JourneyTrack modules={courseModules(lang, done, sessions)} nextId={next ? sessionKey(next.n) : undefined} label={pick({ en: 'Course map', es: 'Mapa del curso', pt: 'Mapa do curso' }, lang)} />
       </section>
 
+      {!user && (
+        <JoinPanel
+          lang={lang}
+          next="/course/1"
+          className="mt-8"
+          title={pick({ en: 'The course is free. You just need an account.', es: 'El curso es gratis. Solo necesitas una cuenta.', pt: 'O curso é grátis. Você só precisa de uma conta.' }, lang)}
+          body={pick({ en: 'It opens all thirteen sessions, the full answers and the library, and keeps your place and private notes. No mailing list.', es: 'Abre las trece sesiones, las respuestas completas y la biblioteca, y guarda dónde vas y tus notas privadas. Sin listas de correo.', pt: 'Abre as treze sessões, as respostas completas e a biblioteca, e guarda onde você está e suas notas privadas. Sem lista de e-mails.' }, lang)}
+        />
+      )}
+
       <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px]">
         <div className="space-y-6">
           {(Object.keys(UNITS) as (keyof typeof UNITS)[]).map((u) => {
@@ -119,8 +130,9 @@ export default async function CoursePage() {
                             <span className="mt-0.5 block text-[.92rem] italic leading-snug text-[var(--ink-soft)]">{s.question}</span>
                             <span className="mono mt-1 block text-[.68rem] text-[var(--faint)]">{s.minutes} min</span>
                           </span>
-                          <span className="pt-1">
+                          <span className="flex items-center gap-2 pt-1">
                             {STATUS[s.status]?.[lang] && !isDone ? <span className="pill">{STATUS[s.status][lang]}</span> : null}
+                            {!user && <LockMark label={pick({ en: 'Free account needed', es: 'Requiere cuenta gratis', pt: 'Requer conta grátis' }, lang)} />}
                           </span>
                         </Link>
                       </li>

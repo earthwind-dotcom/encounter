@@ -13,7 +13,7 @@ const COPY = {
   signingIn: { en: 'Signing in…', es: 'Entrando…', pt: 'Entrando…' },
   newHere: { en: 'New here?', es: '¿Eres nuevo?', pt: 'É novo aqui?' },
   createOne: { en: 'Create an account', es: 'Crea una cuenta', pt: 'Crie uma conta' },
-  noNeed: { en: 'You don’t need one to read anything.', es: 'No necesitas una para leer nada.', pt: 'Você não precisa de uma para ler nada.' },
+  noNeed: { en: 'It’s free.', es: 'Es gratis.', pt: 'É grátis.' },
   forgot: { en: 'Forgot your password?', es: '¿Olvidaste tu contraseña?', pt: 'Esqueceu a senha?' },
   tellUs: { en: 'Tell us', es: 'Avísanos', pt: 'Avise-nos' },
   resetIt: { en: 'Reset it by email', es: 'Restablécela por correo', pt: 'Redefina por e-mail' },

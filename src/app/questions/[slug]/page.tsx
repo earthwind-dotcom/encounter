@@ -1,3 +1,4 @@
+import { requireMember } from '@/lib/session';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -24,6 +25,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 export default async function QuestionPage({ params }: { params: Promise<{ slug: string }> }) {
+  await requireMember(`/questions/${(await params).slug}`);
   const { slug } = await params;
   const lang = await getLang();
   const q = getQuestion(slug, lang);
