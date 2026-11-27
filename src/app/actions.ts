@@ -320,7 +320,9 @@ export async function requestPasswordReset(_: FormState, form: FormData): Promis
   if (user) {
     const { createPasswordReset, EMAILED_RESET_HOURS } = await import('@/lib/auth');
     const { sendEmail, siteUrl } = await import('@/lib/email');
-    const lang = isLang(user.lang) ? user.lang : await getLang();
+    // The language of the page they asked from: they are reading it right now. The account's saved
+    // language can be stale (e.g. set while browsing in another language).
+    const lang = await getLang();
     const token = await createPasswordReset(db, user.id, null, EMAILED_RESET_HOURS);
     await sendEmail({
       to: user.email,
