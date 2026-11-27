@@ -18,6 +18,8 @@ import { LessonMedia } from '@/components/lms/lesson-media';
 import { LessonComplete } from '@/components/lms/lesson-complete';
 import { PrintButton } from '@/components/lms/print-button';
 import { PracticeCheckin } from '@/components/lms/practice';
+import { PassageReader } from '@/components/lms/passage-reader';
+import { getPassage, parseRefs } from '@/lib/bible';
 import { practiceDays } from '@/lib/practice';
 import { Marked } from 'marked';
 
@@ -93,6 +95,8 @@ export default async function SessionPage({ params }: { params: Promise<{ n: str
     /^(the question|la pregunta|a pergunta)$/i.test(h.trim()) ? '' : whole,
   );
   const { html, toc } = withToc(body);
+  // The primary text, read in place. Refs come from the English frontmatter (book names).
+  const passages = parseRefs(getSession(n, 'en')?.passage ?? s.passage).map((r) => ({ label: r.label, verses: getPassage(r) })).filter((p) => p.verses.length);
   const label = (x: typeof s) => `${pick(SESSION, lang)} ${x.n}`;
 
   return (
@@ -147,6 +151,17 @@ export default async function SessionPage({ params }: { params: Promise<{ n: str
               labels={{ speed: pick(L.speed, lang), resumed: pick(L.resumed, lang), captions: pick(L.captions, lang), listen: pick(L.listen, lang) }}
             />
           )}
+
+          <PassageReader
+            passages={passages}
+            labels={{
+              title: pick({ en: 'Read the text', es: 'Lee el texto', pt: 'Leia o texto' }, lang),
+              translation: 'World English Bible',
+              readAll: pick({ en: 'Read all', es: 'Leer todo', pt: 'Ler tudo' }, lang),
+              fold: pick({ en: 'Fold', es: 'Plegar', pt: 'Recolher' }, lang),
+              note: lang === 'en' ? undefined : pick({ en: '', es: 'Texto en inglés (World English Bible, dominio público). La guía cita el pasaje en español.', pt: 'Texto em inglês (World English Bible, domínio público). O guia cita a passagem em português.' }, lang),
+            }}
+          />
 
           <LessonSteps steps={toc} label={pick(L.steps, lang)} />
 
