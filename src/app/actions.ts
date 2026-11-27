@@ -154,6 +154,29 @@ export async function toggleProgress(itemKey: string, done: boolean): Promise<bo
   return done;
 }
 
+/**
+ * "I did the practice today." The day is the reader's own calendar day, sent from their device,
+ * and must be within a day of the server's so nobody back-fills a streak.
+ */
+export async function logPractice(itemKey: string, day: string, on: boolean): Promise<boolean> {
+  const user = await getCurrentUser();
+  if (!user || !ITEM_KEY.test(itemKey) || !/^\d{4}-\d{2}-\d{2}$/.test(day)) return !on;
+  const drift = Math.abs(Date.parse(`${day}T12:00:00Z`) - Date.now());
+  if (!(drift < 36 * 3_600_000)) return !on;
+  const db = await getDb();
+  if (on) {
+    await db.query(
+      `INSERT INTO practice_log (user_id, day, item_key) VALUES ($1, $2, $3)
+       ON CONFLICT (user_id, day) DO UPDATE SET item_key = EXCLUDED.item_key`,
+      [user.id, day, itemKey],
+    );
+  } else {
+    await db.query('DELETE FROM practice_log WHERE user_id = $1 AND day = $2', [user.id, day]);
+  }
+  revalidatePath('/account');
+  return on;
+}
+
 export async function saveNote(itemKey: string, body: string): Promise<boolean> {
   const user = await getCurrentUser();
   if (!user || !ITEM_KEY.test(itemKey)) return false;

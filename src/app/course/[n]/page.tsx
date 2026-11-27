@@ -17,6 +17,8 @@ import { LessonSteps } from '@/components/lms/lesson-steps';
 import { LessonMedia } from '@/components/lms/lesson-media';
 import { LessonComplete } from '@/components/lms/lesson-complete';
 import { PrintButton } from '@/components/lms/print-button';
+import { PracticeCheckin } from '@/components/lms/practice';
+import { practiceDays } from '@/lib/practice';
 import { Marked } from 'marked';
 
 // Session passages are our own frontmatter; italics mark book titles (*Annals*).
@@ -35,6 +37,10 @@ const L = {
   steps: { en: 'In this session', es: 'En esta sesión', pt: 'Nesta sessão' },
   practice: { en: 'This week’s practice', es: 'La práctica de esta semana', pt: 'A prática desta semana' },
   nextStep: { en: 'One next step', es: 'Un siguiente paso', pt: 'Um próximo passo' },
+  did: { en: 'I did it today', es: 'Lo hice hoy', pt: 'Fiz hoje' },
+  didToday: { en: 'Done today', es: 'Hecho hoy', pt: 'Feito hoje' },
+  streakDays: { en: 'days running', es: 'días seguidos', pt: 'dias seguidos' },
+  thisWeek: { en: 'Last seven days', es: 'Últimos siete días', pt: 'Últimos sete dias' },
   print: { en: 'Print handout', es: 'Imprimir', pt: 'Imprimir' },
   complete: { en: 'Mark complete', es: 'Marcar como hecha', pt: 'Marcar como feita' },
   completeContinue: { en: 'Complete and continue', es: 'Terminar y seguir', pt: 'Concluir e seguir' },
@@ -75,7 +81,11 @@ export default async function SessionPage({ params }: { params: Promise<{ n: str
   const user = await getCurrentUser();
   const facilitator = canFacilitate(user);
   const key = sessionKey(n);
-  const [tools, done] = await Promise.all([learnerState(key, lang), user ? completedKeys(user.id) : Promise.resolve(new Set<string>())]);
+  const [tools, done, pdays] = await Promise.all([
+    learnerState(key, lang),
+    user ? completedKeys(user.id) : Promise.resolve(new Set<string>()),
+    user ? practiceDays(user.id) : Promise.resolve([] as string[]),
+  ]);
   const modules = courseModules(lang, done, all);
 
   // The question leads the page in its own card, so drop the guide's opening copy of it.
@@ -156,11 +166,18 @@ export default async function SessionPage({ params }: { params: Promise<{ n: str
           </div>
 
           {(s.practice || s.nextStep) && (
-            <section className="grid gap-4 sm:grid-cols-2" aria-label={pick(L.practice, lang)}>
+            <section id="practice" className="grid scroll-mt-36 gap-4 sm:grid-cols-2" aria-label={pick(L.practice, lang)}>
               {s.practice && (
                 <div className="glass-strong practice-card relative overflow-hidden !rounded-[22px] p-6">
                   <p className="kicker kicker-accent flex items-center gap-2"><Sprout size={14} /> {pick(L.practice, lang)}</p>
                   <p className="mt-3 text-[1.08rem] leading-relaxed">{s.practice}</p>
+                  {user && (
+                    <PracticeCheckin
+                      itemKey={key}
+                      days={pdays}
+                      labels={{ did: pick(L.did, lang), didToday: pick(L.didToday, lang), streak: pick(L.streakDays, lang), week: pick(L.thisWeek, lang) }}
+                    />
+                  )}
                 </div>
               )}
               {s.nextStep && (
