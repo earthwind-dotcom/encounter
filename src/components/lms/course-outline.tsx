@@ -114,7 +114,7 @@ export function CourseOutline({
                               {l.title}
                             </span>
                             {(l.minutes || l.media) && (
-                              <span className="mono mt-0.5 flex items-center gap-1.5 text-[.66rem] text-[var(--faint)]">
+                              <span className={`mono mt-0.5 flex items-center gap-1.5 text-[.66rem] ${current ? 'text-[var(--ink-soft)]' : 'text-[var(--faint)]'}`}>
                                 {l.media === 'video' && <PlayCircle size={11} />}
                                 {l.media === 'audio' && <Headphones size={11} />}
                                 {l.minutes ? `${l.minutes} ${labels.minutes}` : null}

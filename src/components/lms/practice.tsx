@@ -79,15 +79,14 @@ export function PracticeCalendar({ days, labels }: { days: string[]; labels: { t
         <p className="m-0 text-[2rem] font-medium leading-none">{streak} <span className="sans text-[.84rem] font-normal text-[var(--ink-soft)]">{labels.streak[streak === 1 ? 0 : 1]}</span></p>
         <p className="sans m-0 text-[.84rem] text-[var(--ink-soft)]">{in28} {labels.total[in28 === 1 ? 0 : 1]}</p>
       </div>
-      <div className="mt-4 grid max-w-[260px] grid-cols-7 gap-1.5" role="grid" aria-label={labels.title}>
+      <div className="mt-4 grid max-w-[260px] grid-cols-7 gap-1.5" role="img" aria-label={`${labels.title}: ${in28}`}>
         {labels.weekdays.map((w, i) => (
-          <span key={i} className="sans text-center text-[.66rem] font-medium uppercase text-[var(--faint)]">{w}</span>
+          <span key={i} aria-hidden="true" className="sans text-center text-[.66rem] font-medium uppercase text-[var(--faint)]">{w}</span>
         ))}
         {cells.map((d) => (
           <span
             key={d}
-            role="gridcell"
-            aria-label={`${d}${set.has(d) ? ' ✓' : ''}`}
+            aria-hidden="true"
             className={`aspect-square rounded-lg ${d > today ? 'border border-dashed border-[var(--rule)]' : set.has(d) ? 'bg-[var(--ok)]' : 'bg-[var(--glass-inner-2)]'} ${d === today ? 'outline outline-2 outline-offset-1 outline-[var(--accent)]' : ''}`}
           />
         ))}
