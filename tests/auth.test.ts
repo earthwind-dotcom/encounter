@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
+import { MIGRATIONS } from '@/lib/migrations';
 import { createTestDb, migrate, type Db } from '@/lib/db';
 import {
   authenticate,
@@ -106,7 +107,7 @@ describe('migrations', () => {
   it('are safe to run twice', async () => {
     await migrate(db);
     const rows = await db.query<{ id: number }>('SELECT id FROM schema_migrations ORDER BY id');
-    expect(rows.map((r) => r.id)).toEqual([1, 2, 3, 4, 5]);
+    expect(rows.map((r) => r.id)).toEqual(MIGRATIONS.map((m) => m.id));
   });
 });
 
