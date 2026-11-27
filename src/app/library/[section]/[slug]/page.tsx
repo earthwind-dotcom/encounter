@@ -1,3 +1,4 @@
+import { requireMember } from '@/lib/session';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getLang } from '@/lib/lang';
@@ -20,6 +21,8 @@ export async function generateMetadata({ params }: { params: Promise<{ section: 
 }
 
 export default async function LibraryArticlePage({ params }: { params: Promise<{ section: string; slug: string }> }) {
+  const gate = await params;
+  await requireMember(`/library/${gate.section}/${gate.slug}`);
   const { section, slug } = await params;
   if (!(SECTIONS as readonly string[]).includes(section)) notFound();
   const lang = await getLang();

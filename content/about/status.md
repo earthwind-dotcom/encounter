@@ -13,7 +13,7 @@ revised: "28 September 2026"
 - **The Library.** Fifteen sermons (Reflections), five word studies (Roots) and ten studies of
   where texts came from (Provenance), carried over from Marginalia.
 - **The Course.** All thirteen sessions have a participant guide and a facilitator guide.
-- **Accounts, groups and Talk.** Optional accounts that save your place and private notes; groups
+- **Accounts, groups and Talk.** Free accounts open the course, full answers and library, and save your place and private notes; groups
   for running the course together; a way to reach a real person.
 
 ## Drafts, and what that means

@@ -47,5 +47,5 @@ home; only `src` changes.
 1. Copy the app, keep `src/components/lms`, `src/lib/{auth,db,migrations,session,email,practice}.ts`.
 2. Replace `content/` and write an adapter like `course-outline.ts`.
 3. Redefine the color tokens and fonts for the new brand.
-4. Keep the rules that make it trustworthy: readable without an account, accounts add memory not
-   access, no third-party scripts.
+4. Keep the rules that make it trustworthy: a public front door that shows what's inside, a free
+   account to enter (`requireMember` in `src/lib/session.ts`), no third-party scripts.

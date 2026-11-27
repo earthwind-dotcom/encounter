@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { requireFacilitator } from '@/lib/session';
+import { requireFacilitator, requireMember } from '@/lib/session';
 import { getFacilitatorDoc } from '@/lib/content';
 import { getLang } from '@/lib/lang';
 import { pick, t } from '@/lib/i18n';
@@ -13,6 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 /** The facilitators' presentation. The reader-facing version is /course/pathway/offer. */
 export default async function GospelPlainly() {
+  await requireMember('/course/gospel-plainly');
   await requireFacilitator();
   const lang = await getLang();
   const doc = getFacilitatorDoc('gospel-plainly', lang);

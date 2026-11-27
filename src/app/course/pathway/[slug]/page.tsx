@@ -1,3 +1,4 @@
+import { requireMember } from '@/lib/session';
 import type { Metadata } from 'next';
 import { getLang } from '@/lib/lang';
 import { getLibrary, getLibraryArticle } from '@/lib/content';
@@ -14,6 +15,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 export default async function PathwayPage({ params }: { params: Promise<{ slug: string }> }) {
+  await requireMember(`/course/pathway/${(await params).slug}`);
   const lang = await getLang();
   return (
     <LegacyArticle

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getLang } from '@/lib/lang';
 import { getSession, getSessions, renderMarkdown, UNITS } from '@/lib/content';
-import { getCurrentUser } from '@/lib/session';
+import { getCurrentUser, requireMember } from '@/lib/session';
 import { canFacilitate } from '@/lib/auth';
 import { completedKeys, learnerState } from '@/lib/learner';
 import { courseModules, sessionKey } from '@/lib/course-outline';
@@ -72,6 +72,7 @@ export async function generateMetadata({ params }: { params: Promise<{ n: string
 
 export default async function SessionPage({ params }: { params: Promise<{ n: string }> }) {
   const n = Number((await params).n);
+  await requireMember(`/course/${n}`);
   const lang = await getLang();
   const s = getSession(n, lang);
   if (!s) notFound();

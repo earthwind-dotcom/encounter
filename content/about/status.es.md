@@ -14,7 +14,7 @@ revised: "28 de septiembre de 2026"
   estudios de dónde vienen los textos (Provenance), traídos de Marginalia.
 - **El curso.** Las trece sesiones tienen una guía para participantes y una guía para
   facilitadores, en inglés y en español.
-- **Cuentas, grupos y Habla con alguien.** Cuentas opcionales que guardan tu avance y tus notas
+- **Cuentas, grupos y Habla con alguien.** Cuentas gratis que abren el curso, las respuestas completas y la biblioteca, y guardan tu avance y tus notas
   privadas; grupos para hacer el curso juntos; una manera de contactar a una persona real.
 
 ## Borradores, y qué significa eso

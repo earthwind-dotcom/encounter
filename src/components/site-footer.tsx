@@ -54,7 +54,7 @@ export function SiteFooter({ lang }: { lang: Lang }) {
         ))}
       </div>
       <p className="sans mt-5 px-2 text-center text-[.76rem] text-[var(--faint)]">
-        {pick({ en: 'Readable without an account, always.', es: 'Siempre se puede leer sin cuenta.', pt: 'Sempre dá para ler sem conta.' }, lang)}
+        {pick({ en: 'Free, always. No ads, no trackers.', es: 'Gratis, siempre. Sin anuncios ni rastreadores.', pt: 'Grátis, sempre. Sem anúncios nem rastreadores.' }, lang)}
       </p>
     </footer>
   );

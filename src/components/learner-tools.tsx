@@ -17,7 +17,7 @@ interface Labels {
 
 /**
  * Progress and private notes for one piece of content. Signed-out readers see a quiet
- * invitation to sign in; the content itself never sits behind an account.
+ * invitation to sign in.
  */
 export function LearnerTools({
   itemKey,

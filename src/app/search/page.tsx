@@ -1,3 +1,4 @@
+import { requireMember } from '@/lib/session';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getLang } from '@/lib/lang';
@@ -26,6 +27,7 @@ function Highlight({ text, term }: { text: string; term: string }) {
 }
 
 export default async function SearchPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
+  await requireMember('/search');
   const q = ((await searchParams).q ?? '').slice(0, 120);
   const lang = await getLang();
   const hits = q ? search(q, lang) : [];

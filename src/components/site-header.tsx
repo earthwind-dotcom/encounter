@@ -59,7 +59,7 @@ export function SiteHeader({ lang, user }: { lang: Lang; user: { name: string; r
           </nav>
 
           <div className="ml-auto flex items-center gap-1.5">
-            <CommandPalette lang={lang} links={paletteLinks} />
+            {user && <CommandPalette lang={lang} links={paletteLinks} />}
             <div className="hidden items-center lg:flex">
               <LangMenu lang={lang} />
               <ThemeToggle label={t('theme', lang)} />
@@ -69,9 +69,14 @@ export function SiteHeader({ lang, user }: { lang: Lang; user: { name: string; r
                 <Initials name={user.name} />
               </Link>
             ) : (
-              <Link href="/signin" className="sans hidden whitespace-nowrap rounded-full px-3 py-1.5 text-[.88rem] font-medium text-[var(--ink-soft)] hover:text-[var(--ink)] lg:block">
-                {t('signIn', lang)}
-              </Link>
+              <>
+                <Link href="/signin" className="sans hidden whitespace-nowrap rounded-full px-3 py-1.5 text-[.88rem] font-medium text-[var(--ink-soft)] hover:text-[var(--ink)] lg:block">
+                  {t('signIn', lang)}
+                </Link>
+                <Link href="/signup?next=/course" className="btn btn-ghost btn-sm hidden whitespace-nowrap lg:inline-flex">
+                  {pick({ en: 'Join free', es: 'Únete gratis', pt: 'Entre grátis' }, lang)}
+                </Link>
+              </>
             )}
             <Link href="/talk" className="btn btn-sm ml-1 hidden xl:inline-flex">
               <MessageCircle size={15} /> {t('navTalk', lang)}

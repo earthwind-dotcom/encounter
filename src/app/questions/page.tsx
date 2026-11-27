@@ -8,6 +8,7 @@ import { pick, t, type Lang } from '@/lib/i18n';
 import { ArrowRight, Check, CheckCircle2, MessageCircle } from 'lucide-react';
 import { ConfDots, IconTile, PageHeader } from '@/components/ui';
 import { FilterChips } from '@/components/filter-chips';
+import { JoinPanel, LockMark } from '@/components/member-gate';
 import { PhotoFrame } from '@/components/photo';
 import { PHOTOS } from '@/lib/photos';
 
@@ -58,6 +59,16 @@ export default async function QuestionsPage() {
         </p>
       </PhotoFrame>
 
+      {!user && (
+        <JoinPanel
+          lang={lang}
+          next="/questions"
+          className="mb-4 mt-6"
+          title={pick({ en: 'Read the short answers here. The full ones are free with an account.', es: 'Lee aquí las respuestas cortas. Las completas son gratis con una cuenta.', pt: 'Leia aqui as respostas curtas. As completas são grátis com uma conta.' }, lang)}
+          body={pick({ en: 'Each full answer shows the evidence, labels how sure scholars are, and names the real debates.', es: 'Cada respuesta completa muestra la evidencia, indica qué tan seguros están los especialistas y nombra los debates reales.', pt: 'Cada resposta completa mostra a evidência, indica o quanto os especialistas estão seguros e nomeia os debates reais.' }, lang)}
+        />
+      )}
+
       <FilterChips
         allLabel={pick({ en: 'All', es: 'Todas', pt: 'Todas' }, lang)}
         options={themes.map((th) => ({ id: th, label: THEMES[th]?.[lang] ?? th, count: questions.filter((q) => q.theme === th).length }))}
@@ -84,13 +95,16 @@ export default async function QuestionsPage() {
                             <span className="text-[1.22rem] font-medium leading-snug group-hover:text-[var(--accent)]">{q.title}</span>
                             {isDone && <span className="pill pill-ok"><Check size={12} /> {t('done', lang)}</span>}
                           </span>
-                          <span className="mt-1.5 line-clamp-2 max-w-[68ch] text-[.95rem] leading-normal text-[var(--ink-soft)]">{q.short}</span>
+                          <span className="mt-1.5 max-w-[68ch] text-[.95rem] leading-normal text-[var(--ink-soft)]">{q.short}</span>
                           <span className="mt-3 flex items-center gap-2.5">
                             <ConfDots labels={q.standing.map((s) => s.label)} lang={lang} />
                             <span className="sans text-[.7rem] text-[var(--faint)]">{q.standing.length} {pick({ en: 'labelled claims', es: 'afirmaciones con etiqueta', pt: 'afirmações com rótulo' }, lang)}</span>
                           </span>
                         </span>
-                        <ArrowRight size={18} className="mt-1.5 text-[var(--faint)] transition-all group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
+                        <span className="mt-1.5 flex items-center gap-2">
+                          {!user && <LockMark label={pick({ en: 'Full answer with a free account', es: 'Respuesta completa con cuenta gratis', pt: 'Resposta completa com conta grátis' }, lang)} />}
+                          <ArrowRight size={18} className="text-[var(--faint)] transition-all group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
+                        </span>
                       </Link>
                     </li>
                   );

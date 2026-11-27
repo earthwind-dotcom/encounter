@@ -15,21 +15,22 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function SignUp({ searchParams }: { searchParams: Promise<{ next?: string }> }) {
   const next = (await searchParams).next ?? '/account';
-  if (await getCurrentUser()) redirect('/account');
+  if (await getCurrentUser()) redirect(next.startsWith('/') && !next.startsWith('//') ? next : '/account');
   const lang = await getLang();
   return (
     <AuthShell
-      title={pick({ en: 'Keep your place.', es: 'Guarda tu lugar.', pt: 'Guarde seu lugar.' }, lang)}
+      title={pick({ en: 'Come on in.', es: 'Adelante.', pt: 'Pode entrar.' }, lang)}
       intro={pick(
         {
-          en: 'An account saves where you are in the course and keeps private notes on anything you read. Everything on Encounter is readable without one.',
-          es: 'Una cuenta guarda dónde vas en el curso y tus notas privadas sobre lo que lees. Todo en Encounter se puede leer sin cuenta.',
-          pt: 'Uma conta guarda onde você está no curso e suas notas privadas sobre o que lê. Tudo no Encounter pode ser lido sem conta.',
+          en: 'A free account opens the whole course, every full answer and the research library, and keeps your place and private notes as you go. It takes a minute.',
+          es: 'Una cuenta gratis abre todo el curso, cada respuesta completa y la biblioteca de investigación, y guarda dónde vas y tus notas privadas. Toma un minuto.',
+          pt: 'Uma conta grátis abre todo o curso, cada resposta completa e a biblioteca de pesquisa, e guarda onde você está e suas notas privadas. Leva um minuto.',
         },
         lang,
       )}
       points={[
-        pick({ en: 'Your progress through all thirteen sessions', es: 'Tu avance en las trece sesiones', pt: 'Seu progresso nas treze sessões' }, lang),
+        pick({ en: 'All thirteen sessions, with your progress saved', es: 'Las trece sesiones, con tu avance guardado', pt: 'As treze sessões, com seu progresso salvo' }, lang),
+        pick({ en: 'Every hard question, answered in full, and the library', es: 'Cada pregunta difícil, respondida completa, y la biblioteca', pt: 'Cada pergunta difícil, respondida por inteiro, e a biblioteca' }, lang),
         pick({ en: 'Private notes nobody else can read', es: 'Notas privadas que nadie más puede leer', pt: 'Notas privadas que ninguém mais pode ler' }, lang),
         pick({ en: 'Join a group with a code from your facilitator', es: 'Únete a un grupo con el código de tu facilitador', pt: 'Entre em um grupo com o código do seu facilitador' }, lang),
         pick({ en: 'No mailing list. Delete everything any time.', es: 'Sin listas de correo. Borra todo cuando quieras.', pt: 'Sem lista de e-mails. Apague tudo quando quiser.' }, lang),
