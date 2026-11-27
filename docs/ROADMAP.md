@@ -166,7 +166,8 @@ A "pastor AI" was raised in the vault. The honest version:
 - **A real domain** (the single biggest gap from Marginalia) and a contact address that isn't a
   personal Gmail. Set `SITE_URL` in Railway.
 - **Email** (Postmark or Resend): password reset, cohort invites, reminders. *Password reset done
-  2026-11-27 (`/forgot`, Resend): switch on with `RESEND_API_KEY` and `EMAIL_FROM` in Railway.*
+  2026-11-27 (`/forgot`). Sends through our Google Workspace's Gmail API (no new vendor); setup in
+  `docs/EMAIL.md`. Resend remains an alternative.*
 - **Instagram account** (the vault's front door, Stage 0) linking to specific Hard Questions.
 - **Privacy review** for the jurisdiction it operates in; analytics that are cookie-free
   (Plausible) if any.
