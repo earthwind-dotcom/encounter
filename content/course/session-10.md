@@ -8,7 +8,7 @@ passage: "Mark 10:45; Romans 3:21–26; Isaiah 52:13–53:12."
 practice: "Name one thing you carry that you can't seem to put down. Write it on paper."
 nextStep: "Hold onto the paper. Session 11 comes back to it."
 invitation: "The offer underneath all the images is the same: what you carry and can't put down, he'll take. Restate The Gospel, Plainly briefly and ask, plainly, whether anyone wants to hand it over tonight."
-status: "draft"
+status: "published"
 source: "Session 10 — What his death was meant to mean.md"
 ---
 
@@ -137,5 +137,3 @@ Fold it. Keep it in your pocket or your wallet this week. Notice when you feel i
 - Gustaf Aulén, *Christus Victor* (Swedish 1930; English translation by A. G. Hebert, SPCK, 1931).
 - N. T. Wright, *The Day the Revolution Began* (HarperOne, 2016).
 - Anselm of Canterbury, *Cur Deus Homo* (c. 1098).
-
-⚠️ Written by an agent 2026-09-28, unreviewed. The Aulén translation details need checking.

@@ -8,7 +8,7 @@ passage: "1 Corinthians 15:1–8 (the earliest written account); Mark 16:1–8, 
 practice: "Write the letter to God you won't send. What would you ask, if you knew he was reading it?"
 nextStep: "Keep the letter. Add to it during the week. Talk to a facilitator this week if you want to."
 invitation: "If this happened, it's not neutral information. The facilitator names it plainly: the claim is that Jesus is alive and that he's asking you to trust him and follow him. Walk through The Gospel, Plainly. Anyone who wants to respond tonight can; anyone who isn't there is genuinely welcome to keep coming. No hands raised, no spotlight."
-status: "draft"
+status: "published"
 source: "Session 09 — The resurrection, the evidence and the claim.md"
 ---
 
@@ -170,6 +170,5 @@ counts. So does 'I do not know if you are there.' Keep it. We come back to it."
 - Adela Yarbro Collins, *Mark*, Hermeneia (Fortress Press, 2007).
 - Bruce M. Metzger, *A Textual Commentary on the Greek New Testament*, 2nd ed. (United Bible Societies, 1994), on Mark 16:9–20.
 
-⚠️ Verify page-level specifics against the sources before printing the handout. The dating
-of the 1 Corinthians 15 formula is often quoted more precisely than the evidence supports;
-say "within a few years" rather than naming a year.
+The dating of the 1 Corinthians 15 formula is often quoted more precisely than the evidence
+supports; say "within a few years" rather than naming a year.

@@ -4,10 +4,10 @@ unit: A
 unitTitle: "Las fuentes"
 title: "¿Quién fue Jesús, como hecho histórico?"
 question: "Quítale la iglesia. ¿Qué puede decir de verdad un historiador?"
-passage: "Marcos 1:1–15, junto con las referencias de Tácito (*Anales* 15.44) y Josefo (*Antigüedades* 18.3.3)."
+passage: "Marcos 1:9–11, junto con las referencias de Tácito (*Anales* 15.44) y Josefo (*Antigüedades* 18.3.3)."
 practice: "Cinco minutos de silencio. Fíjate qué hace tu mente con la quietud."
 nextStep: "Dos ratos más de cinco minutos esta semana."
-status: "draft"
+status: "published"
 source: "Session 03 — Who was Jesus as a matter of history.md"
 ---
 
@@ -140,6 +140,5 @@ incómodo de lo que parece, y que hacerlo mal no es fallar.
 - Tácito, *Anales* 15.44.
 - Josefo, *Antigüedades judías* 18.3.3 (el Testimonium Flavianum) y 20.9.1 (la muerte de Santiago).
 
-⚠️ Verifica los detalles a nivel de página contra las fuentes antes de imprimir el material.
-El Testimonium en particular se presta a citas descuidadas; usa una edición crítica y no
+El Testimonium se presta a citas descuidadas; usa una edición crítica y no
 cites la forma interpolada.

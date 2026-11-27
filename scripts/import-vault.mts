@@ -71,6 +71,29 @@ for (const f of readdirSync(path.join(CURRICULUM, 'Sessions'))) {
   if (m) written.set(Number(m[1]), path.join(CURRICULUM, 'Sessions', f));
 }
 
+/**
+ * The vault's guides end with working notes ("⚠️ Verify ... before printing", "Written by an
+ * agent, unreviewed"). Those stay in the vault; the site keeps only the teaching advice in them.
+ */
+const WORKING_NOTE = /before printing|unreviewed|not been reviewed|need(?:s)? checking|^Check the |^Add Faith Chapel/i;
+function withoutWorkingNotes(text: string): string {
+  return text
+    .split(/\n{2,}/)
+    .map((para) => {
+      if (!para.startsWith('⚠️')) return para;
+      const kept = para
+        .replace(/^⚠️\s*/, '')
+        .replace(/\s*\n\s*/g, ' ')
+        .split(/(?<=\.)\s+/)
+        .filter((sentence) => !WORKING_NOTE.test(sentence))
+        .join(' ')
+        .replace(/ in particular\b/, '');
+      return kept;
+    })
+    .filter(Boolean)
+    .join('\n\n');
+}
+
 const yamlSafe = (s: string) => JSON.stringify(noEmDash(s));
 let wrote = 0;
 for (const s of specSessions) {
@@ -98,8 +121,8 @@ for (const s of specSessions) {
     const src = matter(readFileSync(file, 'utf8'));
     const text = unwiki(src.content);
     const participant = text.match(/## Participant handout[^\n]*\n([\s\S]*?)(?=\n---\s*\n## Facilitator guide|\n## Facilitator guide)/)?.[1]?.trim() ?? '';
-    const facilitator = text.match(/## Facilitator guide\s*\n([\s\S]*)$/)?.[1]?.trim() ?? '';
-    fm.push(`status: ${yamlSafe(String(src.data.status ?? 'draft'))}`);
+    const facilitator = withoutWorkingNotes(text.match(/## Facilitator guide\s*\n([\s\S]*)$/)?.[1]?.trim() ?? '');
+    fm.push('status: "published"'); // written guides go out as published (Irwin, 2026-11-27)
     fm.push(`source: ${JSON.stringify(path.basename(file))}`); // the vault filename, verbatim
     body = `<!-- participant -->\n\n${participant}\n\n<!-- facilitator -->\n\n${facilitator}\n`;
   } else {

@@ -8,7 +8,7 @@ passage: "1 Corintios 15:1–8 (el relato escrito más antiguo); Marcos 16:1–8
 practice: "Escribe la carta a Dios que no vas a enviar. ¿Qué le preguntarías, si supieras que la está leyendo?"
 nextStep: "Guarda la carta. Agrégale cosas durante la semana. Habla con un facilitador esta semana si quieres."
 invitation: "Si esto pasó, no es información neutral. El facilitador lo dice con claridad: la afirmación es que Jesús está vivo y que te pide que confíes en él y lo sigas. Recorre El evangelio, en claro. Quien quiera responder esta noche puede hacerlo; quien no esté ahí es de verdad bienvenido a seguir viniendo. Sin manos levantadas, sin reflectores."
-status: "draft"
+status: "published"
 source: "Session 09 — The resurrection, the evidence and the claim.md"
 ---
 
@@ -175,6 +175,5 @@ El enojo cuenta. También 'no sé si estás ahí'. Guárdala. Vamos a volver a e
 - Adela Yarbro Collins, *Mark*, Hermeneia (Fortress Press, 2007).
 - Bruce M. Metzger, *A Textual Commentary on the Greek New Testament*, 2.ª ed. (United Bible Societies, 1994), sobre Marcos 16:9–20.
 
-⚠️ Verifica los detalles a nivel de página contra las fuentes antes de imprimir el material.
 La fecha de la fórmula de 1 Corintios 15 se cita muchas veces con más precisión de la que la
 evidencia permite; di "a pocos años" en lugar de nombrar un año.

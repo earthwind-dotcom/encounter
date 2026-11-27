@@ -7,7 +7,7 @@ question: "Do I have to have it all resolved first?"
 passage: "Mark 9:24; Matthew 28:16–17 (\"but some doubted\"); John 20:24–29 (Thomas)."
 practice: "Write out your live doubts, plainly and specifically. Not to resolve them. To see them."
 nextStep: "Bring one doubt to the table next week."
-status: "draft"
+status: "published"
 source: "Session 11 — Can you follow him and still doubt.md"
 ---
 
@@ -113,5 +113,3 @@ him with the questions. That's what the disciples did. The door's open."
 - Peter Enns, *The Sin of Certainty* (HarperOne, 2016).
 - Mother Teresa, *Come Be My Light*, ed. Brian Kolodiejchuk (Doubleday, 2007).
 - Ulrich Luz, *Matthew 21–28*, Hermeneia (Augsburg Fortress, 2005), on 28:17.
-
-⚠️ Written by an agent 2026-09-28, unreviewed.

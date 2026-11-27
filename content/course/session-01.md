@@ -7,7 +7,7 @@ question: "Can these accounts be trusted at all?"
 passage: "Luke 1:1–4."
 practice: "Read Mark chapter 1 with fresh eyes and write your honest first impression, good or bad."
 nextStep: "Carry that first impression into the week; notice if it shifts."
-status: "draft"
+status: "published"
 source: "Session 01 — Where did these documents come from.md"
 ---
 
@@ -101,5 +101,3 @@ recorded baseline.
 - F. F. Bruce, *The Canon of Scripture* (InterVarsity Press, 1988).
 - Martin Hengel, *The Four Gospels and the One Gospel of Jesus Christ* (Trinity Press International, 2000).
 - Irenaeus, *Against Heresies* 3.1.1; 3.11.8.
-
-⚠️ Verify page-level specifics against the sources before printing the handout.

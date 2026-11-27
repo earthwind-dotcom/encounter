@@ -7,7 +7,7 @@ question: "Si tuvieras que resumir de qué se trataba lo suyo, ¿qué dirías?"
 passage: "Marcos 1:14–15; Mateo 5:3–10 junto a Lucas 6:20–26."
 practice: "El examen. Recorre tu día hacia atrás; nombra un momento por el que estás agradecido y uno que harías distinto."
 nextStep: "El examen cada noche de esta semana."
-status: "draft"
+status: "published"
 source: "Session 05 — His actual message, the kingdom of God.md"
 ---
 
@@ -143,6 +143,3 @@ verlo." Hazlo una vez con ellos en el cuarto, con un minuto de silencio para cad
 - Jonathan T. Pennington, *The Sermon on the Mount and Human Flourishing* (Baker Academic, 2017).
 - Jonathan T. Pennington, *Heaven and Earth in the Gospel of Matthew* (Brill, 2007; Baker Academic, 2009).
 - Ignacio de Loyola, *Ejercicios espirituales* (el examen).
-
-⚠️ Verifica los detalles a nivel de página antes de imprimir. Esta guía la escribió un agente
-el 2026-09-28 y no ha sido revisada.

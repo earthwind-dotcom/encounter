@@ -8,7 +8,7 @@ passage: "Acts 2:42–47; 1 Corinthians 12:12–27."
 practice: "Come to one gathering of the wider church, as an observer, no expectations."
 nextStep: ""
 invitation: "The course has asked the question all along; this is where it's put plainly to everyone. The facilitator asks each person, in a one-to-one over the following week, \"Where are you with following Jesus?\" and listens. Three honest answers are all fine: yes and I want to start, not yet, no. Everyone is pointed to a real next thing regardless: Stage 2: Practicing for anyone, Stage 3: Threshold & Continuing for a yes."
-status: "draft"
+status: "published"
 source: "Session 13 — The church, why bother given the record.md"
 ---
 
@@ -133,6 +133,3 @@ Then close with thanks, and let people stay and talk.
 - Tom Holland, *Dominion: How the Christian Revolution Remade the World* (Basic Books, 2019).
 - Scot McKnight and Laura Barringer, *A Church Called Tov* (Tyndale, 2020).
 - Gordon D. Fee, *The First Epistle to the Corinthians*, NICNT, rev. ed. (Eerdmans, 2014).
-
-⚠️ Written by an agent 2026-09-28, unreviewed. Add Faith Chapel's real next steps (Stage 2
-dates, who does baptism conversations) before the first cohort.

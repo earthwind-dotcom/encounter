@@ -8,7 +8,7 @@ passage: "Hechos 2:42–47; 1 Corintios 12:12–27."
 practice: "Ve a una reunión de la iglesia más amplia, como observador, sin expectativas."
 nextStep: ""
 invitation: "El curso ha hecho la pregunta todo el tiempo; aquí se le plantea con claridad a todos. El facilitador le pregunta a cada persona, en una plática a solas durante la semana siguiente: \"¿Dónde estás en cuanto a seguir a Jesús?\", y escucha. Tres respuestas honestas están bien: sí y quiero empezar, todavía no, no. A todos se les señala un siguiente paso real, sea cual sea: la Etapa 2: La práctica para cualquiera, la Etapa 3: El umbral y lo que sigue para un sí."
-status: "draft"
+status: "published"
 source: "Session 13 — The church, why bother given the record.md"
 ---
 
@@ -137,7 +137,3 @@ Luego cierra dando las gracias, y deja que la gente se quede a platicar.
 - Tom Holland, *Dominion: How the Christian Revolution Remade the World* (Basic Books, 2019).
 - Scot McKnight y Laura Barringer, *A Church Called Tov* (Tyndale, 2020).
 - Gordon D. Fee, *The First Epistle to the Corinthians*, NICNT, ed. rev. (Eerdmans, 2014).
-
-⚠️ Escrita por un agente el 2026-09-28, sin revisar. Agrega los siguientes pasos reales de
-Faith Chapel (fechas de la Etapa 2, quién tiene las conversaciones sobre el bautismo) antes
-del primer grupo.

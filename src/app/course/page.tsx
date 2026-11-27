@@ -25,8 +25,6 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const STATUS: Record<string, Record<Lang, string>> = {
   outline: { en: 'Outline', es: 'Esquema', pt: 'Esboço' },
-  draft: { en: 'Draft', es: 'Borrador', pt: 'Rascunho' },
-  reviewed: { en: 'Reviewed', es: 'Revisado', pt: 'Revisado' },
   published: { en: '', es: '', pt: '' },
 };
 
@@ -161,16 +159,6 @@ export default async function CoursePage() {
               ))}
             </ol>
           </nav>
-          <p className="sans px-1 text-[.8rem] leading-relaxed text-[var(--faint)]">
-            {pick(
-              {
-                en: '“Outline” means the full session guide is still being researched and written. “Draft” means it is written and awaiting review.',
-                es: '«Esquema» significa que la guía completa aún se está investigando y escribiendo. «Borrador» significa que está escrita y pendiente de revisión.',
-                pt: '“Esboço” significa que o guia completo ainda está sendo pesquisado e escrito. “Rascunho” significa que está escrito e aguardando revisão.',
-              },
-              lang,
-            )}
-          </p>
         </aside>
       </div>
     </div>

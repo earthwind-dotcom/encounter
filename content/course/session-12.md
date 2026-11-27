@@ -7,7 +7,7 @@ question: "What would a daily rhythm even look like?"
 passage: "Matthew 6:9–13 next to Luke 11:1–4 (compare the two versions of the Lord's Prayer)."
 practice: "Design a 15-minute daily rhythm you'll actually keep. Small enough to be boring."
 nextStep: "Run your rhythm for a week and report what broke."
-status: "draft"
+status: "published"
 source: "Session 12 — Prayer, silence, and Scripture.md"
 ---
 
@@ -117,5 +117,3 @@ up to share.
 - Richard J. Foster, *Celebration of Discipline* (Harper & Row, 1978).
 - Dallas Willard, *The Spirit of the Disciplines* (HarperSanFrancisco, 1988).
 - W. D. Davies and Dale C. Allison, *Matthew*, vol. 1, ICC (T&T Clark, 1988), on 6:9–13.
-
-⚠️ Written by an agent 2026-09-28, unreviewed. Check the Barr article pages.

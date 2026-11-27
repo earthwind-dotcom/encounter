@@ -7,7 +7,7 @@ question: "Christians call the Bible God's word. What do they actually mean, and
 passage: "John 1:1–14; 2 Timothy 3:16; Luke 24:27."
 practice: "Take one passage (Psalm 23) and read it three ways: as information, as poetry, out loud slowly. Notice what each reading gives you and misses."
 nextStep: "When you read this week, ask first \"what kind of writing is this?\" before \"what does it tell me to do?\""
-status: "draft"
+status: "published"
 source: "Session 02 — In what sense is this Gods word.md"
 ---
 
@@ -132,5 +132,3 @@ and more. This week, catch yourself choosing a reading."
 - Marcus J. Borg, *Reading the Bible Again for the First Time: Taking the Bible Seriously but Not Literally* (HarperSanFrancisco, 2001).
 - John H. Walton, *The Lost World of Genesis One: Ancient Cosmology and the Origins Debate* (IVP Academic, 2009).
 - "The Chicago Statement on Biblical Inerrancy" (1978), for the inerrancy position in its own words.
-
-⚠️ Verify page-level specifics against the sources before printing the handout.

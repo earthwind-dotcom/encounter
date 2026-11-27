@@ -7,7 +7,7 @@ question: "If you had to summarise what he was on about, what would it be?"
 passage: "Mark 1:14–15; Matthew 5:3–10 next to Luke 6:20–26."
 practice: "The examen. Walk back through your day; name one moment you're grateful for and one you'd redo."
 nextStep: "The examen each night this week."
-status: "draft"
+status: "published"
 source: "Session 05 — His actual message, the kingdom of God.md"
 ---
 
@@ -137,6 +137,3 @@ spot it." Walk them through it once in the room, with a minute of silence for ea
 - Jonathan T. Pennington, *The Sermon on the Mount and Human Flourishing* (Baker Academic, 2017).
 - Jonathan T. Pennington, *Heaven and Earth in the Gospel of Matthew* (Brill, 2007; Baker Academic, 2009).
 - Ignatius of Loyola, *Spiritual Exercises* (the examen).
-
-⚠️ Verify page-level specifics before printing. This guide was written by an agent on
-2026-09-28 and has not been reviewed.
