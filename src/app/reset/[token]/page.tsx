@@ -22,9 +22,8 @@ export default async function Reset({ params }: { params: Promise<{ token: strin
     return (
       <AuthShell title={pick({ en: 'This link has run out.', es: 'Este enlace ya venció.', pt: 'Este link expirou.' }, lang)}>
         <p className="mt-6 text-[var(--ink-soft)] lg:mt-0">
-          {pick({ en: 'Reset links work once and last a day.', es: 'Los enlaces funcionan una vez y duran un día.', pt: 'Os links funcionam uma vez e duram um dia.' }, lang)}{' '}
-          <Link href="/talk">{pick({ en: 'Ask us', es: 'Pídenos', pt: 'Peça' }, lang)}</Link>{' '}
-          {pick({ en: 'for a new one.', es: 'uno nuevo.', pt: 'um novo.' }, lang)}
+          {pick({ en: 'Reset links work once and only for a while.', es: 'Los enlaces funcionan una vez y solo por un tiempo.', pt: 'Os links funcionam uma vez e só por um tempo.' }, lang)}{' '}
+          <Link href="/forgot">{pick({ en: 'Get a new one', es: 'Pide uno nuevo', pt: 'Peça um novo' }, lang)}</Link>.
         </p>
       </AuthShell>
     );

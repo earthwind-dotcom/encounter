@@ -270,6 +270,45 @@ export async function archiveCohortAction(cohortId: number, archived: boolean) {
   revalidatePath('/facilitate/groups');
 }
 
+// ---------- password reset ----------
+
+const RESET_MAIL = {
+  subject: { en: 'Choose a new password', es: 'Elige una contraseña nueva', pt: 'Escolha uma nova senha' },
+  body: {
+    en: 'Hi {name},\n\nSomeone (hopefully you) asked to reset the password for your Encounter account. The link below works once, for the next hour.\n\nIf it wasn’t you, ignore this email and nothing changes.',
+    es: 'Hola, {name}:\n\nAlguien (ojalá tú) pidió restablecer la contraseña de tu cuenta de Encounter. El enlace de abajo funciona una sola vez, durante la próxima hora.\n\nSi no fuiste tú, ignora este correo y nada cambia.',
+    pt: 'Olá, {name}:\n\nAlguém (esperamos que você) pediu para redefinir a senha da sua conta no Encounter. O link abaixo funciona uma vez, durante a próxima hora.\n\nSe não foi você, ignore este e-mail e nada muda.',
+  },
+  button: { en: 'Choose a new password', es: 'Elegir contraseña nueva', pt: 'Escolher nova senha' },
+};
+
+/**
+ * "Forgot your password?": always answers the same way, whether or not the address has an
+ * account, so the form can't be used to find out who uses Encounter.
+ */
+export async function requestPasswordReset(_: FormState, form: FormData): Promise<FormState> {
+  const email = normalizeEmail(String(form.get('email') ?? ''));
+  if (!z.email().safeParse(email).success) return fail('That email address does not look right.');
+  const ip = await clientIp();
+  if (throttle.isBlocked(ip, 'forgot')) return fail('Too many attempts. Please wait a few minutes.');
+  throttle.fail(ip, 'forgot'); // every request counts toward the limit, found or not
+  const db = await getDb();
+  const user = await findUserByEmail(db, email);
+  if (user) {
+    const { createPasswordReset, EMAILED_RESET_HOURS } = await import('@/lib/auth');
+    const { sendEmail, siteUrl } = await import('@/lib/email');
+    const lang = isLang(user.lang) ? user.lang : await getLang();
+    const token = await createPasswordReset(db, user.id, null, EMAILED_RESET_HOURS);
+    await sendEmail({
+      to: user.email,
+      subject: RESET_MAIL.subject[lang],
+      text: RESET_MAIL.body[lang].replace('{name}', user.name),
+      action: { label: RESET_MAIL.button[lang], href: `${siteUrl()}/reset/${token}` },
+    });
+  }
+  return { ok: true };
+}
+
 // ---------- password reset (admin-issued link) ----------
 
 export async function issueResetLink(userId: number): Promise<string | null> {

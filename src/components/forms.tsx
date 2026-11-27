@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { CheckCircle2, Send } from 'lucide-react';
 import { useActionState } from 'react';
-import { requestConversation, signIn, signUp, type FormState } from '@/app/actions';
+import { requestConversation, requestPasswordReset, signIn, signUp, type FormState } from '@/app/actions';
 import type { Lang } from '@/lib/i18n';
 
 const COPY = {
@@ -16,6 +16,15 @@ const COPY = {
   noNeed: { en: 'You don’t need one to read anything.', es: 'No necesitas una para leer nada.', pt: 'Você não precisa de uma para ler nada.' },
   forgot: { en: 'Forgot your password?', es: '¿Olvidaste tu contraseña?', pt: 'Esqueceu a senha?' },
   tellUs: { en: 'Tell us', es: 'Avísanos', pt: 'Avise-nos' },
+  resetIt: { en: 'Reset it by email', es: 'Restablécela por correo', pt: 'Redefina por e-mail' },
+  sendLink: { en: 'Email me a link', es: 'Envíame un enlace', pt: 'Envie-me um link' },
+  checkInbox: { en: 'Check your inbox.', es: 'Revisa tu correo.', pt: 'Confira seu e-mail.' },
+  checkInboxBody: {
+    en: 'If that address has an Encounter account, a link to choose a new password is on its way. It works once, for an hour. Nothing there after a few minutes? Check spam, or try again.',
+    es: 'Si ese correo tiene una cuenta en Encounter, va en camino un enlace para elegir una contraseña nueva. Funciona una vez, durante una hora. ¿No llega en unos minutos? Revisa el spam o inténtalo de nuevo.',
+    pt: 'Se esse e-mail tem uma conta no Encounter, um link para escolher uma nova senha está a caminho. Funciona uma vez, por uma hora. Não chegou em alguns minutos? Confira o spam ou tente de novo.',
+  },
+  backToSignIn: { en: 'Back to sign in', es: 'Volver a entrar', pt: 'Voltar para entrar' },
   forgotRest: { en: 'and we’ll send you a link to choose a new one.', es: 'y te enviaremos un enlace para elegir una nueva.', pt: 'e enviaremos um link para escolher uma nova.' },
   callYou: { en: 'What should we call you?', es: '¿Cómo te llamamos?', pt: 'Como devemos chamar você?' },
   pw10: { en: 'Password (10+ characters)', es: 'Contraseña (10 caracteres o más)', pt: 'Senha (10 caracteres ou mais)' },
@@ -64,8 +73,31 @@ export function SignInForm({ next, lang }: { next: string; lang: Lang }) {
         {c('newHere')} <Link href={`/signup?next=${encodeURIComponent(next)}`}>{c('createOne')}</Link>. {c('noNeed')}
       </p>
       <p className="sans mt-2 text-[.88rem] text-[var(--ink-soft)]">
-        {c('forgot')} <Link href="/talk">{c('tellUs')}</Link> {c('forgotRest')}
+        {c('forgot')} <Link href="/forgot">{c('resetIt')}</Link>.
       </p>
+    </form>
+  );
+}
+
+export function ForgotForm({ lang }: { lang: Lang }) {
+  const c = (k: keyof typeof COPY) => COPY[k][lang];
+  const [state, action, pending] = useActionState<FormState, FormData>(requestPasswordReset, undefined);
+  if (state?.ok) {
+    return (
+      <div className="mt-8 lg:mt-0" role="status">
+        <span className="grid h-14 w-14 place-items-center rounded-full bg-[var(--ok-soft)] text-[var(--ok)]"><Send size={24} /></span>
+        <p className="mt-5 text-[1.3rem] leading-snug">{c('checkInbox')}</p>
+        <p className="sans mt-3 text-[.9rem] leading-relaxed text-[var(--ink-soft)]">{c('checkInboxBody')}</p>
+        <p className="sans mt-6 text-[.88rem]"><Link href="/signin">{c('backToSignIn')}</Link></p>
+      </div>
+    );
+  }
+  return (
+    <form action={action} className="mt-8 lg:mt-0">
+      <label className="field"><span>{c('email')}</span><input className="input" name="email" type="email" autoComplete="email" required /></label>
+      {state?.error && <p className="error" role="alert">{state.error}</p>}
+      <button className="btn mt-2 w-full" disabled={pending}>{pending ? c('sending') : c('sendLink')}</button>
+      <p className="sans mt-6 text-[.88rem] text-[var(--ink-soft)]"><Link href="/signin">{c('backToSignIn')}</Link></p>
     </form>
   );
 }
