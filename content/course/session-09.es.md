@@ -111,11 +111,13 @@ manuscritos más antiguos no lo tienen. Señala que eso está impreso en su Bibl
      Lüdemann defiende una versión de esto; Bart Ehrman sostiene que, pase lo que haya pasado,
      un historiador no puede ir detrás de las experiencias hasta llegar a un milagro. *[una de
      las posturas principales]*
-   - Algunos están de verdad en medio. Dale Allison ha dedicado décadas a esto y sigue
-     abiertamente sin resolverlo. Toma en serio la evidencia, encuentra flojas las
-     explicaciones naturalistas ordenaditas, y también encuentra exagerado el caso
-     apologético. Vale la pena nombrarlo en voz alta, porque muestra que una persona puede
-     mirarlo todo con cuidado y no aterrizar. *[una postura real, no una evasiva]*
+   - Algunos creen, y son francos sobre lo que la historia no puede hacer. Dale Allison ha
+     dedicado décadas a esto. Cree que los discípulos de verdad vieron a Jesús y piensa que
+     la tumba probablemente estaba vacía, pero dice con claridad que la historia sola no puede
+     probar una resurrección, y encuentra demasiado ordenadas tanto las explicaciones
+     escépticas como el caso apologético confiado. Vale la pena nombrarlo en voz alta, porque
+     muestra que una persona puede mirarlo todo con cuidado, creer, y seguir siendo honesta
+     sobre los límites de la evidencia. *[una postura real, no una evasiva]*
    - E. P. Sanders lo dijo con toda la honestidad posible: que los seguidores tuvieron esas
      experiencias es un hecho; cuál era la realidad detrás de ellas, él no pretendió saberlo.
      *[una de las posturas principales]*

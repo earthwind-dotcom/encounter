@@ -46,7 +46,7 @@ Guarda el papel. La sesión 11 vuelve a él.
 
 <!-- facilitator -->
 
-**Pregunta central.** La sesión pasada estableció que a Jesús lo ejecutaron, y la sesión 9
+**Pregunta central.** La sesión 8 estableció que a Jesús lo ejecutaron, y la sesión 9
 que sus seguidores dijeron que resucitó. Ahora viene la pregunta que todo el que está afuera
 termina haciendo: ¿y qué? ¿Por qué se supone que su muerte me importa a mí? Aquí mucha gente
 ha oído una sola versión (muchas veces una dura: un Dios enojado que necesita castigar a
@@ -137,7 +137,7 @@ Tráela en tu bolsillo o en tu cartera esta semana. Fíjate cuándo sientes su p
 - Joel B. Green y Mark D. Baker, *Recovering the Scandal of the Cross*, 2.ª ed. (IVP Academic, 2011).
 - Fleming Rutledge, *The Crucifixion: Understanding the Death of Jesus Christ* (Eerdmans, 2015).
 - Scot McKnight, *A Community Called Atonement* (Abingdon, 2007).
-- Gustaf Aulén, *Christus Victor* (1931; traducción al inglés SPCK, 1931).
+- Gustaf Aulén, *Christus Victor* (sueco 1930; traducción al inglés de A. G. Hebert, SPCK, 1931).
 - N. T. Wright, *The Day the Revolution Began* (HarperOne, 2016).
 - Anselmo de Canterbury, *Cur Deus Homo* (c. 1098).
 

@@ -47,7 +47,7 @@ Hold on to the paper. Session 11 comes back to it.
 
 <!-- facilitator -->
 
-**Driving question.** Last session established that Jesus was executed, and session 9 that his
+**Driving question.** Session 8 established that Jesus was executed, and session 9 that his
 followers said he rose. Now the question every outsider eventually asks: so what? Why is his
 death supposed to matter for me? This is where many people have heard only one version (often
 a harsh one: an angry God who needs punishing someone) and rejected it. The honest answer is
@@ -134,7 +134,7 @@ Fold it. Keep it in your pocket or your wallet this week. Notice when you feel i
 - Joel B. Green and Mark D. Baker, *Recovering the Scandal of the Cross*, 2nd ed. (IVP Academic, 2011).
 - Fleming Rutledge, *The Crucifixion: Understanding the Death of Jesus Christ* (Eerdmans, 2015).
 - Scot McKnight, *A Community Called Atonement* (Abingdon, 2007).
-- Gustaf Aulén, *Christus Victor* (1931; English translation SPCK, 1931).
+- Gustaf Aulén, *Christus Victor* (Swedish 1930; English translation by A. G. Hebert, SPCK, 1931).
 - N. T. Wright, *The Day the Revolution Began* (HarperOne, 2016).
 - Anselm of Canterbury, *Cur Deus Homo* (c. 1098).
 
