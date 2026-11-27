@@ -60,11 +60,6 @@ const COPY = {
     es: 'cuando quieras. Eso elimina de una vez tu cuenta, tu avance, tus notas y tu etapa. Los mensajes que enviaste se conservan para poder cerrar bien la conversación, pero ya no quedan ligados a ninguna cuenta; pídelo y también los borramos.',
     pt: 'quando quiser. Isso remove de uma vez sua conta, seu progresso, suas notas e sua etapa. As mensagens que você enviou ficam guardadas para encerrar bem a conversa, mas deixam de estar ligadas a uma conta; peça e também as apagamos.',
   },
-  review: {
-    en: 'This notice will be reviewed before Encounter is promoted publicly, including for the data-protection law where it is operated.',
-    es: 'Este aviso se revisará antes de promover Encounter públicamente, incluida la ley de protección de datos del lugar donde opere.',
-    pt: 'Este aviso será revisado antes de o Encounter ser divulgado publicamente, incluindo a lei de proteção de dados do lugar onde operar.',
-  },
 } satisfies Record<string, L>;
 
 export default async function Privacy() {
@@ -94,7 +89,6 @@ export default async function Privacy() {
           <p>
             {c('del1')} <Link href="/account">{c('yourPage')}</Link> {c('del2')}
           </p>
-          <p className="text-[var(--faint)] italic">{c('review')}</p>
       </div>
       </div>
     </div>

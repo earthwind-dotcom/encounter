@@ -30,7 +30,6 @@ revised: "28 September 2026"
   Most of the Library is English only, and each page says so when you switch language rather than
   quietly showing you the wrong thing. Bible passages in the Spanish course are working
   translations, labelled as such, until a licensed Spanish text is chosen.
-- **Portuguese** hasn't been read by a native speaker. Treat it as a working draft.
 
 ## Not started
 

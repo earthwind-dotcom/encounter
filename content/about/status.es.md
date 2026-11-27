@@ -32,7 +32,6 @@ revised: "28 de septiembre de 2026"
   de idioma en lugar de mostrarte en silencio lo que no es. Los pasajes bíblicos del curso en
   español son traducciones de trabajo, marcadas como tales, hasta que se elija un texto en
   español con licencia.
-- **El portugués** no lo ha leído todavía un hablante nativo. Tómalo como un borrador de trabajo.
 
 ## Sin empezar
 
