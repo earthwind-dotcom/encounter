@@ -106,10 +106,12 @@ manuscripts lack it. Point out that this is printed in their Bible, not hidden f
      people do sometimes have, and that the movement grew from there. Gerd Lüdemann argues
      a version of this; Bart Ehrman argues that whatever happened, a historian cannot get
      behind the experiences to a miracle. *[one major view]*
-   - Some sit genuinely in the middle. Dale Allison has spent decades on this and remains
-     openly unresolved. He takes the evidence seriously, finds the tidy naturalistic
-     explanations thin, and also finds the apologetic case overstated. He is worth naming
-     out loud, because he shows a person can look at all of it carefully and not land.
+   - Some believe, and are blunt about what history can't do. Dale Allison has spent
+     decades on this. He believes the disciples really saw Jesus and thinks the tomb was
+     probably empty, but he says plainly that history alone can't prove a resurrection, and
+     he finds both the tidy skeptical explanations and the confident apologetic case too
+     neat. He is worth naming out loud, because he shows a person can look at all of it
+     carefully, believe, and still be honest about the limits of the evidence.
      *[a real position, not a fudge]*
    - E. P. Sanders put it about as honestly as it can be put: that the followers had these
      experiences is a fact; what the reality was behind them, he did not claim to know.

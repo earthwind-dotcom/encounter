@@ -11,8 +11,10 @@ import { JoinCohortForm } from '@/components/cohort-forms';
 import { StagePicker } from '@/components/stage-picker';
 import { getLang } from '@/lib/lang';
 import { pick, t, type Lang } from '@/lib/i18n';
-import { ArrowRight, Compass, HelpCircle, LayoutDashboard, Lock, LogOut, NotebookPen, Play, ShieldCheck, Trash2, Users } from 'lucide-react';
+import { ArrowRight, Compass, HelpCircle, Sprout, LayoutDashboard, Lock, LogOut, NotebookPen, Play, ShieldCheck, Trash2, Users } from 'lucide-react';
 import { PageHeader, ProgressRing, Stat } from '@/components/ui';
+import { PracticeCalendar } from '@/components/lms/practice';
+import { practiceDays } from '@/lib/practice';
 
 const COPY = {
   pickUp: { en: 'Pick up where you left off', es: 'Sigue donde te quedaste', pt: 'Continue de onde parou' },
@@ -84,7 +86,7 @@ export default async function Account() {
   const lang = await getLang();
   const c = (k: keyof typeof COPY) => pick(COPY[k], lang);
   const db = await getDb();
-  const [done, stageRows, notes, groups] = await Promise.all([
+  const [done, stageRows, notes, groups, pdays] = await Promise.all([
     completedKeys(user.id),
     db.query<{ stage: string }>('SELECT stage FROM journey_stage WHERE user_id = $1', [user.id]),
     db.query<{ item_key: string; body: string; updated_at: Date }>(
@@ -92,6 +94,7 @@ export default async function Account() {
       [user.id],
     ),
     cohortsForMember(db, user.id),
+    practiceDays(user.id),
   ]);
   const sessions = getSessions(lang);
   const nextSession = sessions.find((s) => !done.has(`course:${s.n}`));
@@ -126,6 +129,33 @@ export default async function Account() {
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
+        <section className={`${card} lg:col-span-2 grid gap-6 md:grid-cols-[minmax(0,1fr)_280px] md:items-center`} aria-labelledby="practice">
+          <div>
+            <h2 id="practice" className="flex items-center gap-2.5 text-[1.35rem] font-medium"><Sprout size={19} className="text-[var(--ok)]" /> {pick({ en: 'Your practice', es: 'Tu práctica', pt: 'Sua prática' }, lang)}</h2>
+            <p className="mt-2 max-w-[48ch] text-[.98rem] leading-relaxed text-[var(--ink-soft)]">
+              {pick({
+                en: 'Every session ends with something small to try that week: silence, a slow reading, an honest prayer. Check in on the days you do it. It’s for you, not a score.',
+                es: 'Cada sesión termina con algo pequeño para probar esa semana: silencio, una lectura lenta, una oración honesta. Márcalo los días que lo hagas. Es para ti, no es una calificación.',
+                pt: 'Cada sessão termina com algo pequeno para experimentar naquela semana: silêncio, uma leitura lenta, uma oração honesta. Marque os dias em que fizer. É para você, não é uma nota.',
+              }, lang)}
+            </p>
+            {nextSession && (
+              <Link href={`/course/${Math.max(1, nextSession.n - 1)}#practice`} className="sans mt-4 inline-flex items-center gap-1.5 text-[.88rem] font-medium">
+                {pick({ en: 'This week’s practice', es: 'La práctica de esta semana', pt: 'A prática desta semana' }, lang)} <ArrowRight size={14} />
+              </Link>
+            )}
+          </div>
+          <PracticeCalendar
+            days={pdays}
+            labels={{
+              title: pick({ en: 'The last four weeks', es: 'Las últimas cuatro semanas', pt: 'As últimas quatro semanas' }, lang),
+              streak: { en: ['day running', 'days running'], es: ['día seguido', 'días seguidos'], pt: ['dia seguido', 'dias seguidos'] }[lang] as [string, string],
+              total: { en: ['day in four weeks', 'days in four weeks'], es: ['día en cuatro semanas', 'días en cuatro semanas'], pt: ['dia em quatro semanas', 'dias em quatro semanas'] }[lang] as [string, string],
+              empty: pick({ en: 'Nothing yet. Open a session and press “I did it today.”', es: 'Nada todavía. Abre una sesión y toca «Lo hice hoy».', pt: 'Nada ainda. Abra uma sessão e toque em “Fiz hoje”.' }, lang),
+              weekdays: { en: ['M', 'T', 'W', 'T', 'F', 'S', 'S'], es: ['L', 'M', 'M', 'J', 'V', 'S', 'D'], pt: ['S', 'T', 'Q', 'Q', 'S', 'S', 'D'] }[lang],
+            }}
+          />
+        </section>
         <section className={card} aria-labelledby="stage">
           <h2 id="stage" className="flex items-center gap-2.5 text-[1.35rem] font-medium"><Compass size={19} className="text-[var(--accent)]" /> {c('whereAreYou')}</h2>
           <p className="sans mt-2 text-[.88rem] leading-relaxed text-[var(--ink-soft)]">

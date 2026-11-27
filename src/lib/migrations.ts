@@ -108,4 +108,17 @@ export const MIGRATIONS: { id: number; name: string; sql: string }[] = [
       );
     `,
   },
+  {
+    id: 6,
+    name: 'practice check-ins: one a day, against the lesson whose practice it was',
+    sql: `
+      CREATE TABLE IF NOT EXISTS practice_log (
+        user_id    integer NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        day        date NOT NULL,
+        item_key   text NOT NULL,
+        created_at timestamptz NOT NULL DEFAULT now(),
+        PRIMARY KEY (user_id, day)
+      );
+    `,
+  },
 ];

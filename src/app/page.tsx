@@ -1,9 +1,15 @@
 import Link from 'next/link';
 import { ArrowRight, Compass, HelpCircle, Library, MessageCircle, Sparkles } from 'lucide-react';
 import { getLang } from '@/lib/lang';
-import { getLibrary, getQuestions, getSessions, LIBRARY_SECTIONS, UNITS, withBadges, type LibraryKey } from '@/lib/content';
+import { getLibrary, getQuestions, getSessions, LIBRARY_SECTIONS, withBadges, type LibraryKey } from '@/lib/content';
 import { pick, t, type Lang } from '@/lib/i18n';
 import { ConfidenceLegend, IconTile, SectionHead } from '@/components/ui';
+import { JourneyTrack } from '@/components/lms/journey-track';
+import { PhotoFrame } from '@/components/photo';
+import { PHOTOS } from '@/lib/photos';
+import { courseModules, sessionKey } from '@/lib/course-outline';
+import { getCurrentUser } from '@/lib/session';
+import { completedKeys } from '@/lib/learner';
 
 const copy = {
   heroTitle: {
@@ -67,6 +73,10 @@ export default async function Home() {
   const articles = (Object.keys(LIBRARY_SECTIONS) as LibraryKey[]).reduce((n, k) => n + lib[k].articles.length, 0);
   // The hero shows a real Hard Question with its labelled claims: the method, not a promise of it.
   const featured = all.find((q) => q.standing.length >= 2) ?? all[0];
+  const user = await getCurrentUser();
+  const done = user ? await completedKeys(user.id) : new Set<string>();
+  const nextSession = sessions.find((s) => !done.has(sessionKey(s.n))) ?? sessions[0];
+  const [lead, ...rest] = questions.filter((q) => q.slug !== featured?.slug).slice(0, 6);
 
   return (
     <>
@@ -98,9 +108,9 @@ export default async function Home() {
         </div>
 
         {featured && (
-          <div className="rise rise-2 relative">
-            <div aria-hidden="true" className="absolute inset-0 -z-10 rounded-[40px] lg:-inset-6 bg-[radial-gradient(closest-side,var(--accent-glow),transparent)] opacity-70 blur-2xl" />
-            <Link href={`/questions/${featured.slug}`} className="glass-strong lift group block rounded-[28px] p-6 text-[var(--ink)] sm:p-8">
+          <div className="rise rise-2 relative pt-44 sm:pt-56 lg:pt-48">
+            <PhotoFrame photo={PHOTOS.hero} priority position="24% 50%" className="hero-photo !absolute inset-x-0 top-0 h-[300px] sm:h-[380px] lg:-right-8 lg:left-10 lg:h-[420px]" sizes="(min-width: 1024px) 620px, 100vw" />
+            <Link href={`/questions/${featured.slug}`} className="glass-strong lift group relative z-[3] block rounded-[28px] p-6 text-[var(--ink)] sm:p-8 lg:mr-14">
               <div className="flex items-center justify-between gap-3">
                 <span className="kicker kicker-accent">{c('preview')}</span>
                 <IconTile className="!h-9 !w-9 !rounded-xl"><HelpCircle size={17} /></IconTile>
@@ -126,7 +136,7 @@ export default async function Home() {
       </section>
 
       <section className="shell" aria-label={c('ways')}>
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="glass grid overflow-hidden !rounded-[28px] md:grid-cols-3 md:divide-x md:divide-[var(--rule)] max-md:divide-y max-md:divide-[var(--rule)]">
           {(
             [
               ['/questions', 'doorQ', 'doorQ2', <HelpCircle key="q" size={20} />],
@@ -134,9 +144,12 @@ export default async function Home() {
               ['/library', 'doorL', 'doorL2', <Library key="l" size={20} />],
             ] as const
           ).map(([href, h, b, icon], i) => (
-            <Link key={href} href={href} className={`glass lift rise rise-${i + 1} group flex flex-col p-6 text-[var(--ink)]`}>
-              <IconTile>{icon}</IconTile>
-              <span className="mt-5 block text-[1.32rem] font-medium leading-tight">{c(h)}</span>
+            <Link key={href} href={href} className={`rise rise-${i + 1} group relative flex flex-col p-6 text-[var(--ink)] transition-colors hover:bg-[var(--glass-inner-hover)] sm:p-8`}>
+              <span className="flex items-center justify-between">
+                <IconTile>{icon}</IconTile>
+                <span className="mono text-[.72rem] text-[var(--faint)]">0{i + 1}</span>
+              </span>
+              <span className="mt-5 block text-[1.32rem] font-medium leading-tight group-hover:text-[var(--accent)]">{c(h)}</span>
               <span className="mt-2 block flex-1 text-[.96rem] leading-normal text-[var(--ink-soft)]">{c(b)}</span>
               <span className="sans mt-5 inline-flex items-center gap-1.5 text-[.86rem] font-medium text-[var(--accent)]">
                 {c('explore')} <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
@@ -148,46 +161,56 @@ export default async function Home() {
 
       <section className="shell mt-24" aria-labelledby="home-q">
         <SectionHead id="home-q" kicker={t('navQuestions', lang)} title={c('qTitle')} href="/questions" linkLabel={c('allQuestions')} />
-        <ul className="m-0 grid list-none gap-4 p-0 md:grid-cols-2 lg:grid-cols-3">
-          {questions.map((q) => (
-            <li key={q.slug}>
-              <Link href={`/questions/${q.slug}`} className="glass lift group flex h-full flex-col p-6 text-[var(--ink)]">
-                <span className="mono text-[.72rem] text-[var(--accent)]">{String(q.order).padStart(2, '0')}</span>
-                <span className="mt-2 block text-[1.18rem] font-medium leading-snug">{q.title}</span>
-                <span className="mt-2 line-clamp-3 block flex-1 text-[.93rem] leading-normal text-[var(--ink-soft)]">{q.short}</span>
-                <ArrowRight size={16} className="mt-4 text-[var(--faint)] transition-all group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
+          {lead && (
+            <Link href={`/questions/${lead.slug}`} className="group relative block min-h-[340px] overflow-hidden rounded-[28px] text-white">
+              <PhotoFrame photo={PHOTOS.questions} inLink position="50% 60%" className="!absolute inset-0 !rounded-[28px]" sizes="(min-width: 1024px) 560px, 100vw" />
+              <span className="relative z-[2] flex h-full min-h-[340px] flex-col justify-end p-7 sm:p-9">
+                <span className="mono text-[.74rem] text-white/80">{String(lead.order).padStart(2, '0')}</span>
+                <span className="mt-2 block max-w-[20ch] text-[clamp(1.6rem,1.2rem+1.2vw,2.1rem)] font-medium leading-[1.12] tracking-[-.012em] [text-shadow:0_2px_18px_rgb(0_0_0/.35)]">{lead.title}</span>
+                <span className="glass-strong mt-5 block max-w-[46ch] !rounded-2xl p-4 text-[.95rem] leading-relaxed text-[var(--ink)]">
+                  <span className="line-clamp-3">{lead.short}</span>
+                  <span className="sans mt-2 inline-flex items-center gap-1.5 text-[.84rem] font-medium text-[var(--accent)]">{c('readFull')} <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" /></span>
+                </span>
+              </span>
+            </Link>
+          )}
+          <ul className="glass m-0 list-none divide-y divide-[var(--rule)] overflow-hidden !rounded-[28px] p-0">
+            {rest.map((q) => (
+              <li key={q.slug}>
+                <Link href={`/questions/${q.slug}`} className="group grid grid-cols-[2.2rem_minmax(0,1fr)_auto] items-start gap-3 px-6 py-5 text-[var(--ink)] transition-colors hover:bg-[var(--glass-inner-hover)]">
+                  <span className="mono pt-1 text-[.72rem] text-[var(--accent)]">{String(q.order).padStart(2, '0')}</span>
+                  <span className="min-w-0">
+                    <span className="block text-[1.1rem] font-medium leading-snug group-hover:text-[var(--accent)]">{q.title}</span>
+                    <span className="mt-1 line-clamp-1 text-[.9rem] text-[var(--ink-soft)]">{q.short}</span>
+                  </span>
+                  <ArrowRight size={16} className="mt-1 text-[var(--faint)] transition-all group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
 
       <section className="shell mt-24" aria-labelledby="home-course">
-        <div className="glass grid gap-10 p-7 sm:p-10 lg:grid-cols-[.8fr_1.2fr]">
+        <div className="glass grid gap-10 !rounded-[28px] p-7 sm:p-10 lg:grid-cols-[.75fr_1.25fr]">
           <div>
             <p className="kicker kicker-accent">{c('courseTitle')}</p>
             <h2 id="home-course" className="mt-3 text-[clamp(1.6rem,1.2rem+1.4vw,2.2rem)] font-medium leading-tight tracking-[-.012em]">{c('courseBody')}</h2>
             <p className="mt-4 text-[1rem] text-[var(--ink-soft)]">{c('doorC2')}</p>
             <Link href="/course" className="btn mt-7">{c('startHere')} <ArrowRight size={16} /></Link>
           </div>
-          <ol className="relative m-0 grid list-none gap-3 p-0 sm:grid-cols-2">
-            {(Object.keys(UNITS) as (keyof typeof UNITS)[]).map((u) => {
-              const list = sessions.filter((s) => s.unit === u);
-              const first = list[0];
-              return (
-                <li key={u}>
-                  <Link href={first ? `/course/${first.n}` : '/course'} className="well lift group flex h-full gap-4 p-5 text-[var(--ink)] hover:!bg-[var(--glass-hover)]">
-                    <span className="sans grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[var(--accent)] to-[var(--gold)] text-[.95rem] font-semibold text-[var(--on-accent)]">{u}</span>
-                    <span>
-                      <span className="sans block text-[.74rem] font-medium text-[var(--faint)]">{c('unit')} {u} · {list.length} {c('statS')}</span>
-                      <span className="mt-1 block text-[1.14rem] font-medium leading-snug">{pick(UNITS[u], lang)}</span>
-                      <span className="mt-1 block text-[.9rem] italic leading-snug text-[var(--ink-soft)]">{pick(UNITS[u].q, lang)}</span>
-                    </span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ol>
+          <div className="min-w-0 self-center">
+            <JourneyTrack modules={courseModules(lang, done, sessions)} nextId={user ? sessionKey(nextSession.n) : undefined} label={c('courseTitle')} />
+            <Link href={`/course/${nextSession.n}`} className="well lift group mt-7 flex items-center gap-4 p-4 text-[var(--ink)] hover:!bg-[var(--glass-hover)]">
+              <span className="lesson-numeral !text-[2.4rem]">{String(nextSession.n).padStart(2, '0')}</span>
+              <span className="min-w-0 flex-1">
+                <span className="kicker">{user && done.size ? pick({ en: 'Up next for you', es: 'Lo que sigue para ti', pt: 'O próximo para você' }, lang) : pick({ en: 'Session one', es: 'Sesión uno', pt: 'Sessão um' }, lang)}</span>
+                <span className="mt-1 block text-[1.08rem] font-medium leading-snug">{nextSession.title}</span>
+              </span>
+              <ArrowRight size={18} className="text-[var(--accent)] transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -208,15 +231,16 @@ export default async function Home() {
       </section>
 
       <section className="shell mt-24" aria-labelledby="home-invite">
-        <div className="glass-strong relative overflow-hidden rounded-[32px] px-7 py-14 text-center sm:px-12 sm:py-20">
-          <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-0 h-72 w-[42rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,var(--accent-glow),transparent)] blur-2xl" />
-          <p className="kicker kicker-accent relative">{c('inviteTitle')}</p>
-          <p id="home-invite" className="relative mx-auto mt-5 max-w-[46ch] text-[clamp(1.25rem,1rem+.9vw,1.6rem)] leading-relaxed text-balance">{c('inviteBody')}</p>
-          <div className="relative mt-9 flex flex-wrap justify-center gap-3">
-            <Link href="/course/pathway/offer" className="btn">{c('inviteCta')}</Link>
-            <Link href="/talk" className="btn btn-ghost"><MessageCircle size={16} /> {c('talkCta')}</Link>
+        <PhotoFrame photo={PHOTOS.invite} className="!rounded-[32px] px-4 py-16 sm:px-10 sm:py-24" sizes="(min-width: 1280px) 1200px, 100vw">
+          <div className="glass-strong relative z-[2] mx-auto max-w-[760px] !rounded-[28px] px-7 py-12 text-center sm:px-12 sm:py-14">
+            <p className="kicker kicker-accent relative">{c('inviteTitle')}</p>
+            <p id="home-invite" className="relative mx-auto mt-5 max-w-[46ch] text-[clamp(1.25rem,1rem+.9vw,1.6rem)] leading-relaxed text-balance">{c('inviteBody')}</p>
+            <div className="relative mt-9 flex flex-wrap justify-center gap-3">
+              <Link href="/course/pathway/offer" className="btn">{c('inviteCta')}</Link>
+              <Link href="/talk" className="btn btn-ghost"><MessageCircle size={16} /> {c('talkCta')}</Link>
+            </div>
           </div>
-        </div>
+        </PhotoFrame>
       </section>
     </>
   );

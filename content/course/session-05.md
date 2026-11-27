@@ -72,8 +72,10 @@ and "hunger and thirst for righteousness."
 
 2. *It's about God's rule, not a destination.* The phrase is dynamic: God reigning, acting,
    setting things right. The Lord's Prayer asks for it to come "on earth as in heaven."
-   Matthew's "kingdom of heaven" is the same thing in a more reverent Jewish idiom that avoids
-   saying God's name directly; it's not a different place. *[consensus]*
+   Matthew's "kingdom of heaven" is the same thing, not a different place. Why Matthew says
+   "heaven" is argued: many read it as a reverent way of not saying "God," while Jonathan
+   Pennington argues it deliberately contrasts God's rule with earthly kingdoms.
+   *[debated]*
 
 3. *It was political, and hopeful.* Galilee was ruled by Herod Antipas under Rome, with taxes,
    debt and soldiers. The Hebrew prophets had promised a day when God would reign and put
@@ -133,6 +135,7 @@ spot it." Walk them through it once in the room, with a minute of silence for ea
 - Dale C. Allison Jr., *Constructing Jesus: Memory, Imagination, and History* (Baker Academic, 2010).
 - W. D. Davies and Dale C. Allison, *Matthew*, vol. 1, ICC (T&T Clark, 1988).
 - Jonathan T. Pennington, *The Sermon on the Mount and Human Flourishing* (Baker Academic, 2017).
+- Jonathan T. Pennington, *Heaven and Earth in the Gospel of Matthew* (Brill, 2007; Baker Academic, 2009).
 - Ignatius of Loyola, *Spiritual Exercises* (the examen).
 
 ⚠️ Verify page-level specifics before printing. This guide was written by an agent on

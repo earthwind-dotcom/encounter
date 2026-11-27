@@ -74,8 +74,10 @@ corresponden a las bendiciones; Mateo tiene "en espíritu" y "hambre y sed de ju
 
 2. *Se trata del reinado de Dios, no de un destino.* La frase es dinámica: Dios que reina,
    actúa, pone las cosas en orden. El Padre Nuestro pide que venga "en la tierra como en el
-   cielo". El "reino de los cielos" de Mateo es lo mismo en una expresión judía más reverente
-   que evita decir directamente el nombre de Dios; no es otro lugar. *[consensus]*
+   cielo". El "reino de los cielos" de Mateo es lo mismo, no otro lugar. Por qué Mateo dice
+   "cielos" se discute: muchos lo leen como una forma reverente de no decir "Dios", mientras
+   que Jonathan Pennington sostiene que contrasta a propósito el reino de Dios con los reinos
+   de la tierra. *[debated]*
 
 3. *Era político, y lleno de esperanza.* Galilea la gobernaba Herodes Antipas bajo Roma, con
    impuestos, deudas y soldados. Los profetas hebreos habían prometido un día en que Dios
@@ -139,6 +141,7 @@ verlo." Hazlo una vez con ellos en el cuarto, con un minuto de silencio para cad
 - Dale C. Allison Jr., *Constructing Jesus: Memory, Imagination, and History* (Baker Academic, 2010).
 - W. D. Davies y Dale C. Allison, *Matthew*, vol. 1, ICC (T&T Clark, 1988).
 - Jonathan T. Pennington, *The Sermon on the Mount and Human Flourishing* (Baker Academic, 2017).
+- Jonathan T. Pennington, *Heaven and Earth in the Gospel of Matthew* (Brill, 2007; Baker Academic, 2009).
 - Ignacio de Loyola, *Ejercicios espirituales* (el examen).
 
 ⚠️ Verifica los detalles a nivel de página antes de imprimir. Esta guía la escribió un agente

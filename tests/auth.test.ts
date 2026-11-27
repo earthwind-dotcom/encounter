@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
+import { MIGRATIONS } from '@/lib/migrations';
 import { createTestDb, migrate, type Db } from '@/lib/db';
 import {
   authenticate,
@@ -106,7 +107,7 @@ describe('migrations', () => {
   it('are safe to run twice', async () => {
     await migrate(db);
     const rows = await db.query<{ id: number }>('SELECT id FROM schema_migrations ORDER BY id');
-    expect(rows.map((r) => r.id)).toEqual([1, 2, 3, 4, 5]);
+    expect(rows.map((r) => r.id)).toEqual(MIGRATIONS.map((m) => m.id));
   });
 });
 
@@ -162,5 +163,30 @@ describe('password reset links', () => {
     expect(await checkPasswordReset(db, second)).not.toBeNull();
     await db.query("UPDATE password_resets SET expires_at = now() - interval '1 minute'");
     expect(await checkPasswordReset(db, second)).toBeNull();
+  });
+});
+
+describe('emailed password reset', () => {
+  it('issues a short-lived token with no creator, which redeems once', async () => {
+    const { createPasswordReset, checkPasswordReset, redeemPasswordReset, EMAILED_RESET_HOURS } = await import('@/lib/auth');
+    const u = await createUser(db, { email: 'reset@example.com', name: 'R', password: 'old-password-123' });
+    const token = await createPasswordReset(db, u.id, null, EMAILED_RESET_HOURS);
+    const rows = await db.query<{ hours: number }>(`SELECT EXTRACT(EPOCH FROM (expires_at - now())) / 3600 AS hours FROM password_resets`);
+    expect(Number(rows[0].hours)).toBeLessThanOrEqual(1);
+    expect(await checkPasswordReset(db, token)).toMatchObject({ id: u.id });
+    expect(await redeemPasswordReset(db, token, 'new-password-456')).toBe(u.id);
+    expect(await redeemPasswordReset(db, token, 'again-password-789')).toBeNull();
+    expect(await authenticate(db, 'reset@example.com', 'new-password-456')).not.toBeNull();
+  });
+});
+
+describe('email', () => {
+  it('sends nothing without a provider, and escapes the HTML version', async () => {
+    const { sendEmail, renderEmailHtml } = await import('@/lib/email');
+    delete process.env.RESEND_API_KEY;
+    expect(await sendEmail({ to: 'a@example.com', subject: 's', text: 'hi' })).toEqual({ sent: false });
+    const html = renderEmailHtml({ to: 'a@example.com', subject: 's', text: '<b>x</b>', action: { label: 'Go', href: 'https://e.test/?a=1&b=2' } });
+    expect(html).toContain('&lt;b&gt;x&lt;/b&gt;');
+    expect(html).toContain('a=1&amp;b=2');
   });
 });

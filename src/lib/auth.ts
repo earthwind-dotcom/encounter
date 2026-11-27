@@ -167,19 +167,20 @@ export const throttle = {
 };
 
 /**
- * Password reset without email: an admin issues a single-use link that expires in 24 hours and
- * passes it to the person directly. Only the token's hash is stored. Using it signs the person
- * out everywhere else. Replace with an emailed link once an email provider exists.
+ * Password reset links are single use, and only the token's hash is stored. Using one signs the
+ * person out everywhere else. Two ways in: the person asks for one by email (`/forgot`, valid an
+ * hour), or an admin issues one and passes it on directly (valid 24 hours, the no-email stopgap).
  */
-const RESET_HOURS = 24;
+export const RESET_HOURS = 24;
+export const EMAILED_RESET_HOURS = 1;
 
-export async function createPasswordReset(db: Db, userId: number, createdBy: number): Promise<string> {
+export async function createPasswordReset(db: Db, userId: number, createdBy: number | null, hours = RESET_HOURS): Promise<string> {
   const token = randomBytes(32).toString('base64url');
   await db.query('UPDATE password_resets SET used_at = now() WHERE user_id = $1 AND used_at IS NULL', [userId]);
   await db.query('INSERT INTO password_resets (id, user_id, expires_at, created_by) VALUES ($1, $2, $3, $4)', [
     sha256(token),
     userId,
-    new Date(Date.now() + RESET_HOURS * 3_600_000).toISOString(),
+    new Date(Date.now() + hours * 3_600_000).toISOString(),
     createdBy,
   ]);
   return token;

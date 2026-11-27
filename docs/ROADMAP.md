@@ -122,16 +122,18 @@ The platform's worth is its content.
 
 - **Cohorts.** *Done 2026-09-28 (`/facilitate/groups`).* Still to add: scheduling each week's
   session date, attendance, and a facilitator note per member that the member can see.
-- **Printable handouts** per session (a print stylesheet exists; add a one-page layout).
+- **Printable handouts** per session. *Started 2026-11-27: a print button on every session.*
 - **Self-paced mode** with gentle nudges: "one session a week" email reminders (needs an email
   provider; see Phase 5) and a weekly practice card.
 - **Practices tracker**: the course's weekly practices (silence, examen, lectio) as a simple
-  daily check-in, the habit loop YouVersion does well, pointed at Jesus.
-- **Passage reader**: open the session's primary text inline (licensed translation needed:
-  NRSVue, NET or WEB; the WEB is public domain and a safe start).
+  daily check-in, the habit loop YouVersion does well, pointed at Jesus. *Done 2026-11-27: "I did it
+  today" on each session, a four-week calendar and streak on Your path.*
+- **Passage reader**: open the session's primary text inline. *Done 2026-11-27 with the World
+  English Bible (public domain), `content/bible/web`. Spanish still reads the English text.*
 - **Search** across questions, sessions and library. *Done 2026-09-28 (`/search`).*
 - **Video and audio**: a short (5 to 8 minute) talk per session and per Hard Question, the thing
-  Alpha and RightNow do well. Audio versions for commuters.
+  Alpha and RightNow do well. Audio versions for commuters. *The player is built (2026-11-27): add a
+  `media` block to a session's frontmatter; see `src/components/lms/README.md`.*
 - **Accessibility**: WCAG 2.2 AA audit; screen-reader pass. *Partly done 2026-10-29: an automated
   axe WCAG 2.1 AA scan is clean on 18 screens in light and dark. The manual 2.2 audit and the
   screen-reader pass are still to do.*
@@ -140,6 +142,13 @@ The platform's worth is its content.
   "On this page" contents on questions and sessions, colored confidence labels, and a dashboard-style
   Your path and facilitator desk. Glass falls back to solid paper when blur isn't supported or the
   reader asks for less transparency.
+
+**Course player (2026-11-27, branch `irwin/lms-upgrade`).** The session page became a lesson player
+(outline rail, sticky steps, complete and continue, phone bar), the course page a journey map, and the
+components were written to be reused for another course (`src/components/lms`). Six licensed dawn
+photographs of the Gospel places now carry the home, course, questions and About pages
+(`src/lib/photos.ts`, credited on the page). A citation audit of all 13 sessions is in
+`docs/reviews/2026-11-content-audit.md`.
 
 ### Phase 4: Guided conversation (AI, carefully)
 
@@ -156,8 +165,8 @@ A "pastor AI" was raised in the vault. The honest version:
 
 - **A real domain** (the single biggest gap from Marginalia) and a contact address that isn't a
   personal Gmail. Set `SITE_URL` in Railway.
-- **Email** (Postmark or Resend): password reset, cohort invites, reminders. Password reset is
-  the first thing that needs it.
+- **Email** (Postmark or Resend): password reset, cohort invites, reminders. *Password reset done
+  2026-11-27 (`/forgot`, Resend): switch on with `RESEND_API_KEY` and `EMAIL_FROM` in Railway.*
 - **Instagram account** (the vault's front door, Stage 0) linking to specific Hard Questions.
 - **Privacy review** for the jurisdiction it operates in; analytics that are cookie-free
   (Plausible) if any.

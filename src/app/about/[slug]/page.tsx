@@ -5,6 +5,8 @@ import { getLang } from '@/lib/lang';
 import { getAboutMd, getAboutPages, renderMarkdown } from '@/lib/content';
 import { pick, t } from '@/lib/i18n';
 import { ArticleHtml } from '@/components/article-html';
+import { PhotoFrame } from '@/components/photo';
+import { PHOTOS } from '@/lib/photos';
 
 export function generateStaticParams() {
   return getAboutPages().map((a) => ({ slug: a.slug }));
@@ -26,7 +28,7 @@ export default async function AboutArticle({ params }: { params: Promise<{ slug:
 
   return (
     <div className="shell grid gap-8 pt-10 lg:grid-cols-[250px_minmax(0,1fr)] lg:gap-10">
-      <nav aria-label={t('navAbout', lang)} className="no-print lg:sticky lg:top-24 lg:self-start">
+      <nav aria-label={t('navAbout', lang)} className="no-print min-w-0 lg:sticky lg:top-24 lg:self-start">
         <div className="glass p-4">
         <p className="kicker mb-3 px-2">{t('navAbout', lang)}</p>
         <ol className="-mx-1 flex list-none gap-1.5 overflow-x-auto p-0 px-1 pb-1 lg:mx-0 lg:block lg:space-y-0.5 lg:overflow-visible lg:px-0 lg:pb-0">
@@ -50,7 +52,9 @@ export default async function AboutArticle({ params }: { params: Promise<{ slug:
         </ol>
         </div>
       </nav>
-      <div className="glass rise min-w-0 rounded-[24px] p-6 sm:p-10 lg:p-12">
+      <div className="min-w-0">
+      {slug === 'what' && <PhotoFrame photo={PHOTOS.about} priority className="rise mb-[-64px] h-[220px] !rounded-[28px] sm:h-[300px]" sizes="(min-width: 1280px) 900px, 100vw" />}
+      <div className={`glass rise relative z-[3] min-w-0 rounded-[24px] p-6 sm:p-10 lg:p-12 ${slug === 'what' ? 'mx-2 sm:mx-6' : ''}`}>
         <div className="max-w-[var(--measure)]">
         {page.html ? (
           <ArticleHtml html={page.html} />
@@ -71,6 +75,7 @@ export default async function AboutArticle({ params }: { params: Promise<{ slug:
           )
         )}
         </div>
+      </div>
       </div>
     </div>
   );

@@ -26,6 +26,7 @@ export function LearnerTools({
   initialNote,
   labels,
   notes = true,
+  progress = true,
   returnTo,
 }: {
   itemKey: string;
@@ -34,6 +35,8 @@ export function LearnerTools({
   initialNote: string;
   labels: Labels;
   notes?: boolean;
+  /** False when the page has its own completion control (course lessons). */
+  progress?: boolean;
   returnTo: string;
 }) {
   const [done, setDone] = useState(initialDone);
@@ -41,6 +44,7 @@ export function LearnerTools({
   const [savedNote, setSavedNote] = useState(initialNote);
   const [pending, start] = useTransition();
 
+  if (!signedIn && !progress) return null;
   if (!signedIn) {
     return (
       <div className="glass no-print flex flex-wrap items-center gap-4 p-5">
@@ -63,7 +67,7 @@ export function LearnerTools({
         </label>
       )}
       <div className="flex flex-wrap items-center gap-3">
-        <button
+        {progress && <button
           type="button"
           className={done ? 'btn btn-ghost !text-[var(--ok)]' : 'btn'}
           aria-pressed={done}
@@ -72,7 +76,7 @@ export function LearnerTools({
         >
           {done ? <CheckCircle2 size={16} /> : <Circle size={16} />}
           {done ? labels.done : labels.markDone}
-        </button>
+        </button>}
         {notes && (
           <button
             type="button"

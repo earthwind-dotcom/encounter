@@ -8,6 +8,8 @@ import { pick, t, type Lang } from '@/lib/i18n';
 import { ArrowRight, Check, CheckCircle2, MessageCircle } from 'lucide-react';
 import { ConfDots, IconTile, PageHeader } from '@/components/ui';
 import { FilterChips } from '@/components/filter-chips';
+import { PhotoFrame } from '@/components/photo';
+import { PHOTOS } from '@/lib/photos';
 
 export async function generateMetadata(): Promise<Metadata> {
   const lang = await getLang();
@@ -50,34 +52,45 @@ export default async function QuestionsPage() {
         )}
       </PageHeader>
 
+      <PhotoFrame photo={PHOTOS.questionsPage} className="rise rise-2 mt-10 mb-2 h-[180px] !rounded-[28px] sm:h-[240px]" sizes="(min-width: 1280px) 1200px, 100vw">
+        <p className="absolute bottom-5 left-6 z-[2] m-0 max-w-[34ch] text-[clamp(1.1rem,.9rem+.8vw,1.5rem)] italic leading-snug text-white [text-shadow:0_2px_14px_rgb(0_0_0/.5)] sm:left-8">
+          {pick({ en: 'Doubt was never a disqualifier. Bring all of it.', es: 'La duda nunca descalificó a nadie. Trae todo.', pt: 'A dúvida nunca desqualificou ninguém. Traga tudo.' }, lang)}
+        </p>
+      </PhotoFrame>
+
       <FilterChips
         allLabel={pick({ en: 'All', es: 'Todas', pt: 'Todas' }, lang)}
         options={themes.map((th) => ({ id: th, label: THEMES[th]?.[lang] ?? th, count: questions.filter((q) => q.theme === th).length }))}
       >
         {themes.map((theme) => (
-          <section key={theme} data-group={theme} className="mt-12" aria-labelledby={`theme-${theme}`}>
-            <h2 id={`theme-${theme}`} className="kicker kicker-accent mb-4 flex items-center gap-3">
-              {THEMES[theme]?.[lang] ?? theme}
-              <span className="h-px flex-1 bg-[var(--rule)]" />
-            </h2>
-            <ul className="m-0 grid list-none gap-4 p-0 md:grid-cols-2 lg:grid-cols-3">
+          <section key={theme} data-group={theme} className="mt-10 grid gap-4 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-10" aria-labelledby={`theme-${theme}`}>
+            <div className="lg:sticky lg:top-28 lg:self-start lg:pt-6">
+              <h2 id={`theme-${theme}`} className="text-[1.5rem] font-medium leading-tight tracking-[-.01em]">{THEMES[theme]?.[lang] ?? theme}</h2>
+              <p className="sans mt-1 text-[.82rem] text-[var(--faint)]">
+                {questions.filter((q) => q.theme === theme).length} {pick({ en: 'questions', es: 'preguntas', pt: 'perguntas' }, lang)}
+              </p>
+            </div>
+            <ul className="glass m-0 list-none divide-y divide-[var(--rule)] overflow-hidden !rounded-[24px] p-0">
               {questions
                 .filter((q) => q.theme === theme)
                 .map((q) => {
                   const isDone = done.has(`question:${q.slug}`);
                   return (
                     <li key={q.slug}>
-                      <Link href={`/questions/${q.slug}`} className="glass lift group flex h-full flex-col p-6 text-[var(--ink)]">
-                        <span className="flex items-center justify-between gap-3">
-                          <span className="mono text-[.72rem] text-[var(--accent)]">{String(q.order).padStart(2, '0')}</span>
-                          {isDone && <span className="pill pill-ok"><Check size={12} /> {t('done', lang)}</span>}
+                      <Link href={`/questions/${q.slug}`} className="group grid grid-cols-[minmax(0,1fr)_auto] sm:grid-cols-[2.4rem_minmax(0,1fr)_auto] gap-x-4 gap-y-2 p-5 text-[var(--ink)] transition-colors hover:bg-[var(--glass-inner-hover)] sm:p-6">
+                        <span className="mono hidden pt-1.5 text-[.76rem] text-[var(--accent)] sm:block">{String(q.order).padStart(2, '0')}</span>
+                        <span className="min-w-0">
+                          <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                            <span className="text-[1.22rem] font-medium leading-snug group-hover:text-[var(--accent)]">{q.title}</span>
+                            {isDone && <span className="pill pill-ok"><Check size={12} /> {t('done', lang)}</span>}
+                          </span>
+                          <span className="mt-1.5 line-clamp-2 max-w-[68ch] text-[.95rem] leading-normal text-[var(--ink-soft)]">{q.short}</span>
+                          <span className="mt-3 flex items-center gap-2.5">
+                            <ConfDots labels={q.standing.map((s) => s.label)} lang={lang} />
+                            <span className="sans text-[.7rem] text-[var(--faint)]">{q.standing.length} {pick({ en: 'labelled claims', es: 'afirmaciones con etiqueta', pt: 'afirmações com rótulo' }, lang)}</span>
+                          </span>
                         </span>
-                        <span className="mt-2 block text-[1.18rem] font-medium leading-snug">{q.title}</span>
-                        <span className="mt-2 line-clamp-3 block flex-1 text-[.93rem] leading-normal text-[var(--ink-soft)]">{q.short}</span>
-                        <span className="mt-4 flex items-center justify-between">
-                          <ConfDots labels={q.standing.map((s) => s.label)} lang={lang} />
-                          <ArrowRight size={16} className="text-[var(--faint)] transition-all group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
-                        </span>
+                        <ArrowRight size={18} className="mt-1.5 text-[var(--faint)] transition-all group-hover:translate-x-1 group-hover:text-[var(--accent)]" />
                       </Link>
                     </li>
                   );
