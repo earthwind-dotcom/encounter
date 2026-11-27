@@ -10,6 +10,9 @@ import type { LessonStep } from './types';
 export function LessonSteps({ steps, label }: { steps: LessonStep[]; label: string }) {
   const [active, setActive] = useState(0);
   const rail = useRef<HTMLOListElement>(null);
+  // While a tapped jump is scrolling, the tapped step stays lit instead of the lit step
+  // walking through every section the page passes on the way.
+  const jumping = useRef(false);
 
   useEffect(() => {
     const els = steps.map((s) => document.getElementById(s.id)).filter((e): e is HTMLElement => !!e);
@@ -18,11 +21,14 @@ export function LessonSteps({ steps, label }: { steps: LessonStep[]; label: stri
     const update = () => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
+        if (jumping.current) return;
         const line = 170;
         let idx = 0;
         els.forEach((el, i) => {
           if (el.getBoundingClientRect().top - line <= 0) idx = i;
         });
+        // A short last section can never reach the reading line: at the bottom, it's the one you're on.
+        if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) idx = els.length - 1;
         setActive(idx);
       });
     };
@@ -46,6 +52,37 @@ export function LessonSteps({ steps, label }: { steps: LessonStep[]; label: stri
     row.scrollTo({ left: Math.max(0, left), behavior: reduce ? 'auto' : 'smooth' });
   }, [active]);
 
+  // Tapping a step: light it now, then scroll its heading to just under this bar.
+  const jump = (e: React.MouseEvent<HTMLAnchorElement>, i: number, id: string) => {
+    const target = document.getElementById(id);
+    const bar = rail.current;
+    if (!target || !bar || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    setActive(i);
+    jumping.current = true;
+    // Measure where the bar sits once stuck, not where it is now (from the top of the page it hasn't stuck yet).
+    const stuckTop = parseFloat(getComputedStyle(bar.parentElement ?? bar).top) || 0;
+    const top = target.getBoundingClientRect().top + scrollY - (stuckTop + bar.offsetHeight + 16);
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let settle = 0;
+    const done = () => {
+      clearTimeout(settle);
+      removeEventListener('scroll', wait);
+      jumping.current = false;
+    };
+    // Release once the scroll has been still for a moment (works where scrollend doesn't).
+    const wait = () => {
+      clearTimeout(settle);
+      settle = window.setTimeout(done, 140);
+    };
+    addEventListener('scroll', wait, { passive: true });
+    wait();
+    scrollTo({ top: Math.max(0, top), behavior: reduce ? 'auto' : 'smooth' });
+    history.replaceState(null, '', `#${id}`);
+    if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+    target.focus({ preventScroll: true });
+  };
+
   if (steps.length < 2) return null;
   return (
     <nav aria-label={label} className="no-print sticky top-[78px] z-20 -mx-1 lg:top-[88px]">
@@ -54,6 +91,7 @@ export function LessonSteps({ steps, label }: { steps: LessonStep[]; label: stri
           <li key={s.id} className="shrink-0">
             <a
               href={`#${s.id}`}
+              onClick={(e) => jump(e, i, s.id)}
               aria-current={i === active ? 'step' : undefined}
               className={`sans flex items-center gap-2 whitespace-nowrap rounded-full px-3 py-1.5 text-[.78rem] font-medium transition-colors duration-300 ${
                 i === active

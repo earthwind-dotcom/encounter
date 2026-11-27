@@ -530,7 +530,8 @@ kbd {
   letter-spacing: -.04em; padding-top: .12em;
   background: linear-gradient(160deg, var(--accent), var(--gold)); -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-.lesson-prose h2 { scroll-margin-top: 150px; }
+.lesson-prose h2 { scroll-margin-top: 44px; }
+.lesson-prose h2:focus { outline: none; } /* adds to html's 6rem scroll-padding: lands just under the step bar */
 .lesson-prose h2::before {
   content: ""; display: block; width: 28px; height: 3px; border-radius: 3px; margin-bottom: .9rem;
   background: linear-gradient(90deg, var(--accent), var(--gold));
